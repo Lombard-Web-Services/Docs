@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <title>Points forts et limites des solutions pour gérer des fichiers web locaux sur Android natif</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 40px;
+      background: #f8f8f8;
+    }
+    h1, p {
+      text-align: center;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      background: #fff;
+    }
+    th, td {
+      border: 1px solid #999;
+      padding: 12px;
+      vertical-align: top;
+    }
+    th {
+      background: #333;
+      color: #fff;
+      text-align: center;
+    }
+    tr:nth-child(even) {
+      background: #f2f2f2;
+    }
+    .signature {
+      margin-top: 30px;
+      text-align: right;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+
+<h1>Points forts et limites des solutions pour gérer des fichiers web locaux sur Android natif</h1>
+<p><strong>Thibaut Lombard</strong> — 2 juillet 2025</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Méthode</th>
+      <th>Forces (S)</th>
+      <th>Faiblesses (W)</th>
+      <th>Opportunités (O)</th>
+      <th>Menaces (T)</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Chargement direct via file:///android_asset/</td>
+      <td>
+        Simple à implémenter<br>
+        Pas de serveur requis<br>
+        Fonctionne sur toutes versions Android<br>
+        localStorage supporté<br>
+        IndexedDB partiellement supporté<br>
+        Compatible hors ligne<br>
+        Support WebGL possible selon version WebView
+      </td>
+      <td>
+        Restrictions SOP (Same Origin Policy)<br>
+        Pas d’accès réseau<br>
+        CORS bloqué pour AJAX/fetch<br>
+        JS limité côté fichier local<br>
+        IndexedDB instable sur certains devices<br>
+        WebGPU non disponible
+      </td>
+      <td>
+        Usage simple pour apps statiques<br>
+        Compatible hors ligne<br>
+        localStorage utilisable<br>
+        WebGL suffisant pour rendus 3D simples
+      </td>
+      <td>
+        Problèmes de compatibilité pour WebGL avancé<br>
+        Limitations fetch/ajax<br>
+        Impossible d’exploiter WebGPU sans serveur HTTP natif
+      </td>
+    </tr>
+    <tr>
+      <td>NanoHTTPD (serveur HTTP local embarqué)</td>
+      <td>
+        Serveur HTTP réel (pas de SOP/CORS)<br>
+        Support total JS/JSON/CSS<br>
+        Rechargement dynamique<br>
+        Compatible toutes versions Android<br>
+        localStorage et IndexedDB pleinement fonctionnels<br>
+        WebGL et WebGPU exploitables si WebView supporte
+      </td>
+      <td>
+        Ajoute une dépendance externe<br>
+        Poids APK augmente<br>
+        Complexité de configuration<br>
+        Consommation CPU/mémoire<br>
+        Gestion cycle de vie serveur
+      </td>
+      <td>
+        Développement rapide sans rebuild<br>
+        Débogage facile<br>
+        Compatible contenus interactifs 3D (WebGL, WebGPU)<br>
+        Chargement dynamique de ressources lourdes
+      </td>
+      <td>
+        Bugs liés au serveur<br>
+        Surcharge CPU<br>
+        Complexité sécurité<br>
+        Risques bugs WebGPU sur versions WebView non à jour
+      </td>
+    </tr>
+    <tr>
+      <td>WebViewAssetLoader (API 28+)</td>
+      <td>
+        Intégré Android<br>
+        Sert les assets via HTTP interne<br>
+        Pas de SOP/CORS bloquant<br>
+        Exécution JS complète<br>
+        localStorage et IndexedDB fiables<br>
+        Léger<br>
+        Support WebGL natif stable<br>
+        WebGPU partiel (selon WebView récent)
+      </td>
+      <td>
+        Android 9+ uniquement (API 28)<br>
+        Pas supporté sur Android plus anciens<br>
+        Limité aux ressources du APK<br>
+        WebGPU non garanti sur vieux Chromium WebView<br>
+        Moins flexible qu’un vrai serveur
+      </td>
+      <td>
+        Solution moderne sécurisée<br>
+        Idéal pour apps récentes<br>
+        Bon support des API Web modernes (WebGL)<br>
+        Déploiement simple et sécurisé
+      </td>
+      <td>
+        Problèmes compatibilité WebGPU<br>
+        Limitations fichiers hors APK<br>
+        Risques bugs versions WebView anciennes
+      </td>
+    </tr>
+    <tr>
+      <td>Chargement via serveur HTTP externe</td>
+      <td>
+        Chargement complet sans blocage<br>
+        Très flexible<br>
+        Déploiement simplifié<br>
+        localStorage et IndexedDB supportés<br>
+        WebGL et WebGPU supportés à pleine capacité
+      </td>
+      <td>
+        Connexion Internet obligatoire<br>
+        Dépendance au réseau<br>
+        Déploiement et maintenance serveur<br>
+        Risques sécurité<br>
+        Gestion CORS côté serveur
+      </td>
+      <td>
+        Idéal pour apps hybrides lourdes<br>
+        Contenus interactifs avancés<br>
+        Compatible rendu 3D haute performance<br>
+        Update dynamique facile
+      </td>
+      <td>
+        Pannes réseau<br>
+        Latence variable<br>
+        Fuite de données si mal sécurisé<br>
+        Dépendance serveur distant
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<p class="signature">Thibaut Lombard</p>
+
+</body>
+</html>
