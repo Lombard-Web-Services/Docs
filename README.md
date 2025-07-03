@@ -1,5 +1,7 @@
 # Docs
-🇬🇧 Docs on random subjects, topics. 🇫🇷 La Documentation sur divers sujets et thèmes. 
+🇫🇷 La Documentation sur divers sujets et thèmes. 
+
+🇬🇧 Docs on random subjects, topics. 
 
 ### 🇫🇷 Ressources pour le Prompt engineering : 
 Un tableau récapitulatif des ressources présente sur le thème du Prompt Engineering.
