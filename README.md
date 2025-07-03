@@ -11,7 +11,7 @@ A summary table of resources available on the topic of Prompt Engineering.
 
 👉 Link : [here](https://lombard-web-services.github.io/Docs/resources_for_prompt_engineering_EN.html)
 
-### Points forts et faiblesses de la lecture de fichiers locaux Web sur android
+### 🇫🇷 Points forts et faiblesses de la lecture de fichiers locaux Web sur android
 Un tableau récapitulatif des forces et faiblesses de la lecture des fichiers web locaux sur les application android, dans l'optique du développement d'applications Native/Non native sur technologie android.
 👉 Lien  : [ici](https://lombard-web-services.github.io/Docs/android_local_file_access_swot_FR.html)
 
