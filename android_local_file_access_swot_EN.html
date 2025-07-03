@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Strengths and Weaknesses of Solutions for Handling Local Web Files on Native Android</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 40px;
+      background: #f8f8f8;
+    }
+    h1, p {
+      text-align: center;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      background: #fff;
+    }
+    th, td {
+      border: 1px solid #999;
+      padding: 12px;
+      vertical-align: top;
+    }
+    th {
+      background: #333;
+      color: #fff;
+      text-align: center;
+    }
+    tr:nth-child(even) {
+      background: #f2f2f2;
+    }
+    .signature {
+      margin-top: 30px;
+      text-align: right;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+
+<h1>Strengths and Weaknesses of Solutions for Handling Local Web Files on Native Android</h1>
+<p><strong>Thibaut Lombard</strong> — July 2025</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Method</th>
+      <th>Strengths (S)</th>
+      <th>Weaknesses (W)</th>
+      <th>Opportunities (O)</th>
+      <th>Threats (T)</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Direct load via file:///android_asset/</td>
+      <td>
+        Easy to implement<br>
+        No server needed<br>
+        Works on all Android versions<br>
+        localStorage supported<br>
+        IndexedDB partially supported<br>
+        Fully offline compatible<br>
+        WebGL support possible depending on WebView version
+      </td>
+      <td>
+        Same Origin Policy restrictions (SOP)<br>
+        No network access<br>
+        CORS blocked for AJAX/fetch<br>
+        JS limited for local files<br>
+        IndexedDB unstable on some devices<br>
+        WebGPU not available
+      </td>
+      <td>
+        Simple static apps<br>
+        Full offline mode<br>
+        localStorage usable<br>
+        WebGL sufficient for basic 3D rendering
+      </td>
+      <td>
+        Compatibility issues for advanced WebGL<br>
+        Limitations on fetch/ajax<br>
+        Cannot run WebGPU without native HTTP serving
+      </td>
+    </tr>
+    <tr>
+      <td>NanoHTTPD (embedded local HTTP server)</td>
+      <td>
+        Real HTTP server (no SOP/CORS restrictions)<br>
+        Full JS/JSON/CSS support<br>
+        Dynamic reloading<br>
+        Compatible with all Android versions<br>
+        Fully functional localStorage & IndexedDB<br>
+        WebGL and WebGPU possible if WebView supports it
+      </td>
+      <td>
+        Adds an extra dependency<br>
+        APK size slightly larger<br>
+        More complex setup<br>
+        Uses CPU/memory<br>
+        Server lifecycle management needed
+      </td>
+      <td>
+        Fast dev without rebuilds<br>
+        Easy debugging<br>
+        Supports heavy interactive 3D content (WebGL/WebGPU)<br>
+        Dynamic loading of large resources
+      </td>
+      <td>
+        Bugs related to server handling<br>
+        CPU/memory overhead<br>
+        Security management<br>
+        Possible WebGPU issues on outdated WebViews
+      </td>
+    </tr>
+    <tr>
+      <td>WebViewAssetLoader (API 28+)</td>
+      <td>
+        Built into Android<br>
+        Serves assets via simulated HTTP<br>
+        No SOP/CORS issues<br>
+        Full JS execution<br>
+        Stable localStorage and IndexedDB<br>
+        Lightweight<br>
+        Native stable WebGL support<br>
+        Partial WebGPU (recent WebView only)
+      </td>
+      <td>
+        Requires Android 9+ (API 28)<br>
+        Not available on older Android<br>
+        Limited to resources inside APK<br>
+        WebGPU not guaranteed on older Chromium WebView<br>
+        Less flexible than a full server
+      </td>
+      <td>
+        Modern and secure<br>
+        Ideal for recent apps<br>
+        Good support for modern Web APIs (WebGL)<br>
+        Simple and secure deployment
+      </td>
+      <td>
+        WebGPU compatibility issues<br>
+        Limited to in-APK files<br>
+        Possible bugs with JSON files on old WebViews
+      </td>
+    </tr>
+    <tr>
+      <td>Load via external HTTP server</td>
+      <td>
+        Full loading, no SOP/CORS issues<br>
+        Very flexible<br>
+        Simplifies development<br>
+        Works remotely<br>
+        Full localStorage and IndexedDB support<br>
+        Best WebGL and WebGPU performance
+      </td>
+      <td>
+        Requires internet connection<br>
+        Depends on network<br>
+        More complex server setup<br>
+        Data/security risks<br>
+        CORS configuration needed server-side
+      </td>
+      <td>
+        Perfect for hybrid or heavy apps<br>
+        Advanced interactive content<br>
+        High-performance 3D rendering<br>
+        Easy hot updates
+      </td>
+      <td>
+        Network outages stop the app<br>
+        Variable latency<br>
+        Potential privacy leaks if unsecured<br>
+        Server dependency
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<p class="signature">Thibaut Lombard</p>
+
+</body>
+</html>
