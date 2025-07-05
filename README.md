@@ -23,3 +23,13 @@ A summary table SWOT strenghts and weakness of android local files reading techn
 
 👉 Link : [here](https://lombard-web-services.github.io/Docs/android_local_file_access_swot_EN.html)
 
+### 🇫🇷 Récapitulatif des techniques de télémétrie pour les apps Android
+Un tableau récapitulatif des technologies de télémétries et leurs méthodes, pour la supervision des utilisateurs android.
+
+👉 Lien : [ici](https://lombard-web-services.github.io/Docs/android_telemetry_FR.html)
+
+### 🇬🇧 Telemetry technologies for Android Apps
+A summary table of telemetry technologies and their methods, for the supervision of Android users.
+
+👉 Link : [here](https://lombard-web-services.github.io/Docs/android_local_file_access_swot_EN.html)
+
