@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Telemetry Recap Techs for Android Apps — Thibaut Lombard</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 40px;
+      background: #f9f9f9;
+      color: #222;
+    }
+    h1 {
+      text-align: center;
+      margin-bottom: 5px;
+    }
+    .header, .footer {
+      font-weight: bold;
+      text-align: center;
+      margin: 10px 0;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      background: #fff;
+      font-size: 14px;
+    }
+    th, td {
+      border: 1px solid #bbb;
+      padding: 8px 12px;
+      vertical-align: top;
+    }
+    th {
+      background: #333;
+      color: #fff;
+      text-align: left;
+    }
+    tr:nth-child(even) {
+      background: #f1f1f1;
+    }
+  </style>
+</head>
+<body>
+
+<h1>Telemetry technologies for Android Apps</h1>
+
+<div class="header">5 July 2025 — Thibaut Lombard — @lombardweb</div>
+
+<table>
+  <thead>
+    <tr>
+      <th>Category</th>
+      <th>Example JSON Key</th>
+      <th>API/Source</th>
+      <th>Notes</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td colspan="4"><strong>1️⃣ System & Device Info</strong> — All accessible without permissions; safe for analytics/debug.</td>
+    </tr>
+    <tr><td>Device model</td><td>"device_model": "Pixel 7"</td><td>Build.MODEL</td><td>Identifies device model (e.g., "Pixel 7").</td></tr>
+    <tr><td>Manufacturer</td><td>"manufacturer": "Google"</td><td>Build.MANUFACTURER</td><td>Device manufacturer (e.g., "Google").</td></tr>
+    <tr><td>Android version</td><td>"android_version": "14"</td><td>Build.VERSION.RELEASE</td><td>OS version (e.g., "14").</td></tr>
+    <tr><td>SDK version</td><td>"sdk_int": 34</td><td>Build.VERSION.SDK_INT</td><td>API level (e.g., 34 for Android 14).</td></tr>
+    <tr><td>Device name</td><td>"device_name": "walleye"</td><td>Build.DEVICE</td><td>Internal device codename (e.g., "walleye" for Pixel).</td></tr>
+    <tr><td>Brand</td><td>"brand": "Samsung"</td><td>Build.BRAND</td><td>Device brand (e.g., "Samsung").</td></tr>
+    <tr><td>Hardware</td><td>"hardware": "exynos9820"</td><td>Build.HARDWARE</td><td>Hardware identifier (e.g., "exynos9820").</td></tr>
+    <tr><td>CPU architecture</td><td>"cpu_abi": ["arm64-v8a"]</td><td>Build.SUPPORTED_ABIS</td><td>Array of supported ABIs (e.g., ["arm64-v8a", "armeabi-v7a"]).</td></tr>
+    <tr><td>System language</td><td>"locale": "en-US"</td><td>Locale.getDefault().toString()</td><td>Device language and region (e.g., "en-US").</td></tr>
+    <tr><td>Timezone</td><td>"timezone": "Europe/Paris"</td><td>TimeZone.getDefault().getID()</td><td>Device timezone (e.g., "Europe/Paris").</td></tr>
+
+    <tr>
+      <td colspan="4"><strong>2️⃣ Network Info (Basic)</strong> — Limited network data without ACCESS_NETWORK_STATE.</td>
+    </tr>
+    <tr><td>Approx. connection type (WebView)</td><td>"network_type": "4g"</td><td>navigator.connection.type (WebView JS)</td><td>Requires WebView; returns "4g", "wifi", etc.</td></tr>
+    <tr><td>Public IP</td><td>"ip_address": "logged_server_side"</td><td>Backend logging</td><td>Client can’t reliably get public IP; log server-side.</td></tr>
+    <tr><td>Proxy info</td><td>"proxy": "none"</td><td>System.getProperty("http.proxyHost")</td><td>Rarely useful; returns proxy host or "none".</td></tr>
+
+    <tr>
+      <td colspan="4"><strong>3️⃣ App Info</strong> — App-specific, always accessible.</td>
+    </tr>
+    <tr><td>App version</td><td>"app_version": "1.0.0"</td><td>PackageManager.getPackageInfo().versionName</td><td>Version name from build.gradle.</td></tr>
+    <tr><td>Version code</td><td>"version_code": 1</td><td>PackageManager.getPackageInfo().versionCode</td><td>Version code from build.gradle.</td></tr>
+    <tr><td>Package name</td><td>"package_name": "com.example.myapp"</td><td>context.packageName</td><td>Unique app ID (e.g., "com.example.myapp").</td></tr>
+    <tr><td>First launch flag</td><td>"first_launch": true</td><td>SharedPreferences</td><td>Track first launch; persist in SharedPreferences.</td></tr>
+    <tr><td>Local UUID</td><td>"device_uuid": "generated-uuid"</td><td>UUID.randomUUID() + SharedPreferences</td><td>Generate & persist unique device ID.</td></tr>
+
+    <tr>
+      <td colspan="4"><strong>4️⃣ Usage Data (Basic Analytics)</strong> — App-specific; no permission needed.</td>
+    </tr>
+    <tr><td>Current date/time</td><td>"timestamp": "2025-07-05T23:03:00Z"</td><td>System.currentTimeMillis() + SimpleDateFormat</td><td>UTC timestamp (ISO 8601).</td></tr>
+    <tr><td>Session duration</td><td>"session_duration": 145</td><td>App logic</td><td>Time in ms or sec; use lifecycle tracking.</td></tr>
+    <tr><td>Screen/page views</td><td>"screen_view": "Home"</td><td>App logic</td><td>Track screen or Activity name.</td></tr>
+    <tr><td>Clicks/taps</td><td>"event": "button_clicked"</td><td>App logic</td><td>Log user interactions.</td></tr>
+    <tr><td>JS errors</td><td>"js_error": "TypeError at script.js:10"</td><td>window.onerror (WebView JS)</td><td>Capture JS errors; requires `window.onerror`.</td></tr>
+
+    <tr>
+      <td colspan="4"><strong>5️⃣ Local Storage (WebView)</strong> — Sandboxed, no permissions needed.</td>
+    </tr>
+    <tr><td>Local storage</td><td>"local_storage": {"key": "value"}</td><td>localStorage (WebView JS)</td><td>Key-value pairs in WebView.</td></tr>
+    <tr><td>Cookies</td><td>"cookies": {"session_id": "abc123"}</td><td>document.cookie (WebView JS)</td><td>Domain cookies via WebView JS.</td></tr>
+
+    <tr>
+      <td colspan="4"><strong>6️⃣ Device Capabilities</strong> — Hardware/software, no permissions needed.</td>
+    </tr>
+    <tr><td>Screen orientation</td><td>"orientation": "portrait"</td><td>context.resources.configuration.orientation</td><td>"portrait" or "landscape".</td></tr>
+    <tr><td>Screen width</td><td>"screen_width": 1080</td><td>context.resources.displayMetrics.widthPixels</td><td>Width in pixels.</td></tr>
+    <tr><td>Screen height</td><td>"screen_height": 1920</td><td>context.resources.displayMetrics.heightPixels</td><td>Height in pixels.</td></tr>
+    <tr><td>Screen density</td><td>"density": 3.0</td><td>context.resources.displayMetrics.density</td><td>Density (e.g., 3.0 for xxxhdpi).</td></tr>
+    <tr><td>Dark mode</td><td>"dark_mode": true</td><td>UI_MODE_NIGHT_MASK</td><td>True if dark mode is active.</td></tr>
+    <tr><td>Battery level</td><td>"battery_level": 87</td><td>BatteryManager.getIntProperty()</td><td>Battery % (API 21+).</td></tr>
+
+    <tr>
+      <td colspan="4"><strong>❌ Restricted Data</strong> — Requires explicit user permission; never bypass.</td>
+    </tr>
+    <tr><td>Contacts</td><td>N/A</td><td>READ_CONTACTS</td><td>Dangerous permission required.</td></tr>
+    <tr><td>SMS</td><td>N/A</td><td>READ_SMS</td><td>Dangerous permission required.</td></tr>
+    <tr><td>Phone number / IMEI</td><td>N/A</td><td>READ_PHONE_STATE</td><td>Restricted; permission required.</td></tr>
+    <tr><td>Call logs</td><td>N/A</td><td>READ_CALL_LOG</td><td>Dangerous permission required.</td></tr>
+    <tr><td>GPS location</td><td>N/A</td><td>ACCESS_FINE_LOCATION</td><td>Dangerous permission required.</td></tr>
+    <tr><td>Unique device serial</td><td>N/A</td><td>Restricted since API 26+</td><td>Inaccessible without permission.</td></tr>
+
+  </tbody>
+</table>
+
+<div class="footer">Thibaut Lombard — @lombardweb</div>
+
+</body>
+</html>
