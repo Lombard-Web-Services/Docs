@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <title>Récapitulatif des techniques de télémétrie pour les apps Android — Thibaut Lombard</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 40px;
+      background: #f9f9f9;
+      color: #222;
+    }
+    h1 {
+      text-align: center;
+      margin-bottom: 5px;
+    }
+    .header, .footer {
+      font-weight: bold;
+      text-align: center;
+      margin: 10px 0;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      background: #fff;
+      font-size: 14px;
+    }
+    th, td {
+      border: 1px solid #bbb;
+      padding: 8px 12px;
+      vertical-align: top;
+    }
+    th {
+      background: #333;
+      color: #fff;
+      text-align: left;
+    }
+    tr:nth-child(even) {
+      background: #f1f1f1;
+    }
+  </style>
+</head>
+<body>
+
+<h1>Récapitulatif des techniques de télémétrie pour les apps Android</h1>
+
+<div class="header">5 juillet 2025 — Thibaut Lombard — @lombardweb</div>
+
+<table>
+  <thead>
+    <tr>
+      <th>Catégorie</th>
+      <th>Exemple clé JSON</th>
+      <th>API/Source</th>
+      <th>Notes</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td colspan="4"><strong>1️⃣ Infos système & appareil</strong> — Toutes accessibles sans autorisation ; sûres pour l’analyse/télémétrie.</td>
+    </tr>
+    <tr><td>Modèle de l'appareil</td><td>"device_model": "Pixel 7"</td><td>Build.MODEL</td><td>Identifie le modèle (ex. : « Pixel 7 »).</td></tr>
+    <tr><td>Fabricant</td><td>"manufacturer": "Google"</td><td>Build.MANUFACTURER</td><td>Fabricant de l’appareil (ex. : « Google »).</td></tr>
+    <tr><td>Version Android</td><td>"android_version": "14"</td><td>Build.VERSION.RELEASE</td><td>Version de l’OS (ex. : « 14 »).</td></tr>
+    <tr><td>Version SDK</td><td>"sdk_int": 34</td><td>Build.VERSION.SDK_INT</td><td>Niveau API (ex. : 34 pour Android 14).</td></tr>
+    <tr><td>Nom de l’appareil</td><td>"device_name": "walleye"</td><td>Build.DEVICE</td><td>Nom de code interne (ex. : « walleye »).</td></tr>
+    <tr><td>Marque</td><td>"brand": "Samsung"</td><td>Build.BRAND</td><td>Marque de l’appareil (ex. : « Samsung »).</td></tr>
+    <tr><td>Matériel</td><td>"hardware": "exynos9820"</td><td>Build.HARDWARE</td><td>Identifiant matériel (ex. : « exynos9820 »).</td></tr>
+    <tr><td>Architecture CPU</td><td>"cpu_abi": ["arm64-v8a"]</td><td>Build.SUPPORTED_ABIS</td><td>Tableau des ABIs supportés.</td></tr>
+    <tr><td>Langue du système</td><td>"locale": "fr-FR"</td><td>Locale.getDefault().toString()</td><td>Langue et région (ex. : « fr-FR »).</td></tr>
+    <tr><td>Fuseau horaire</td><td>"timezone": "Europe/Paris"</td><td>TimeZone.getDefault().getID()</td><td>Fuseau de l’appareil.</td></tr>
+
+    <tr>
+      <td colspan="4"><strong>2️⃣ Infos réseau (basiques)</strong> — Données réseau limitées sans ACCESS_NETWORK_STATE.</td>
+    </tr>
+    <tr><td>Type de connexion (WebView)</td><td>"network_type": "4g"</td><td>navigator.connection.type (JS WebView)</td><td>Via WebView ; ex. : « 4g », « wifi ».</td></tr>
+    <tr><td>IP publique</td><td>"ip_address": "logged_server_side"</td><td>Journal côté serveur</td><td>Le client ne peut pas l’obtenir de façon fiable.</td></tr>
+    <tr><td>Proxy</td><td>"proxy": "none"</td><td>System.getProperty("http.proxyHost")</td><td>Souvent inutile ; renvoie l’hôte proxy ou « none ».</td></tr>
+
+    <tr>
+      <td colspan="4"><strong>3️⃣ Infos sur l’app</strong> — Toujours accessibles.</td>
+    </tr>
+    <tr><td>Version de l’app</td><td>"app_version": "1.0.0"</td><td>PackageManager.getPackageInfo().versionName</td><td>Depuis build.gradle.</td></tr>
+    <tr><td>Code version</td><td>"version_code": 1</td><td>PackageManager.getPackageInfo().versionCode</td><td>Depuis build.gradle.</td></tr>
+    <tr><td>Nom du package</td><td>"package_name": "com.example.myapp"</td><td>context.packageName</td><td>Identifiant unique.</td></tr>
+    <tr><td>Premier lancement</td><td>"first_launch": true</td><td>SharedPreferences</td><td>Flag conservé en SharedPreferences.</td></tr>
+    <tr><td>UUID local</td><td>"device_uuid": "generated-uuid"</td><td>UUID.randomUUID() + SharedPreferences</td><td>Généré & sauvegardé localement.</td></tr>
+
+    <tr>
+      <td colspan="4"><strong>4️⃣ Données d’usage (analytics basique)</strong> — Sans autorisation.</td>
+    </tr>
+    <tr><td>Date/heure actuelle</td><td>"timestamp": "2025-07-05T23:03:00Z"</td><td>System.currentTimeMillis() + SimpleDateFormat</td><td>Format UTC ISO 8601.</td></tr>
+    <tr><td>Durée de session</td><td>"session_duration": 145</td><td>Logique de l’app</td><td>Temps en ms ou s.</td></tr>
+    <tr><td>Pages/écrans vus</td><td>"screen_view": "Accueil"</td><td>Logique de l’app</td><td>Nom de l’écran ou de l’Activity.</td></tr>
+    <tr><td>Clics/taps</td><td>"event": "button_clicked"</td><td>Logique de l’app</td><td>Interactions utilisateur.</td></tr>
+    <tr><td>Erreurs JS</td><td>"js_error": "TypeError at script.js:10"</td><td>window.onerror (JS WebView)</td><td>Capturer erreurs JS ; `window.onerror` requis.</td></tr>
+
+    <tr>
+      <td colspan="4"><strong>5️⃣ Stockage local (WebView)</strong> — Sécurisé, sans autorisation.</td>
+    </tr>
+    <tr><td>LocalStorage</td><td>"local_storage": {"key": "value"}</td><td>localStorage (JS WebView)</td><td>Clés/valeurs internes.</td></tr>
+    <tr><td>Cookies</td><td>"cookies": {"session_id": "abc123"}</td><td>document.cookie (JS WebView)</td><td>Cookies du domaine WebView.</td></tr>
+
+    <tr>
+      <td colspan="4"><strong>6️⃣ Capacités de l’appareil</strong> — Sans autorisation.</td>
+    </tr>
+    <tr><td>Orientation</td><td>"orientation": "portrait"</td><td>context.resources.configuration.orientation</td><td>« portrait » ou « landscape ».</td></tr>
+    <tr><td>Largeur écran</td><td>"screen_width": 1080</td><td>context.resources.displayMetrics.widthPixels</td><td>En pixels.</td></tr>
+    <tr><td>Hauteur écran</td><td>"screen_height": 1920</td><td>context.resources.displayMetrics.heightPixels</td><td>En pixels.</td></tr>
+    <tr><td>Densité écran</td><td>"density": 3.0</td><td>context.resources.displayMetrics.density</td><td>Ex. : 3.0 pour xxxhdpi.</td></tr>
+    <tr><td>Mode sombre</td><td>"dark_mode": true</td><td>UI_MODE_NIGHT_MASK</td><td>Vrai si activé.</td></tr>
+    <tr><td>Niveau batterie</td><td>"battery_level": 87</td><td>BatteryManager.getIntProperty()</td><td>% batterie (API 21+).</td></tr>
+
+    <tr>
+      <td colspan="4"><strong>❌ Données restreintes</strong> — Autorisation explicite requise ; jamais contourner.</td>
+    </tr>
+    <tr><td>Contacts</td><td>N/A</td><td>READ_CONTACTS</td><td>Permission « dangereuse ».</td></tr>
+    <tr><td>SMS</td><td>N/A</td><td>READ_SMS</td><td>Permission « dangereuse ».</td></tr>
+    <tr><td>Numéro/IMEI</td><td>N/A</td><td>READ_PHONE_STATE</td><td>Restreint.</td></tr>
+    <tr><td>Historique appels</td><td>N/A</td><td>READ_CALL_LOG</td><td>Permission « dangereuse ».</td></tr>
+    <tr><td>Localisation GPS</td><td>N/A</td><td>ACCESS_FINE_LOCATION</td><td>Permission « dangereuse ».</td></tr>
+    <tr><td>Numéro série unique</td><td>N/A</td><td>API 26+</td><td>Inaccessible sans autorisation.</td></tr>
+
+  </tbody>
+</table>
+
+<div class="footer">Thibaut Lombard — @lombardweb</div>
+
+</body>
+</html>
