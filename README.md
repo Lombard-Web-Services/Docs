@@ -31,5 +31,5 @@ Un tableau récapitulatif des technologies de télémétries et leurs méthodes,
 ### 🇬🇧 Telemetry technologies for Android Apps
 A summary table of telemetry technologies and their methods, for the supervision of Android users.
 
-👉 Link : [here](https://lombard-web-services.github.io/Docs/android_local_file_access_swot_EN.html)
+👉 Link : [here](https://lombard-web-services.github.io/Docs/android_telemetry_EN.html)
 
