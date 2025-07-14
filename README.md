@@ -1,6 +1,6 @@
 # 📚 Docs
 
-🇫🇷 **La documentation sur divers sujets et thèmes.**  
+🇫🇷 **La documentation sur des sujets et thèmes variés.**  
 🇬🇧 **Docs on various subjects and topics.**
 
 
