@@ -5,19 +5,20 @@
 
 
 
-## 🇫🇷 Ressources pour le Prompt Engineering
 
-Un tableau récapitulatif des ressources disponibles sur le thème du Prompt Engineering.
+## 🇫🇷 Murs Scientifiques : Équations, Découvreurs, Nationalités, Descriptions, Applications et Sources
 
-👉 [Accéder ici](https://lombard-web-services.github.io/Docs/ressources_pour_prompt_engineering_FR.html)
+Compilation des principaux "murs scientifiques" en physique et cosmologie : équations (LaTeX via MathJax), découvreurs, nationalités, descriptions détaillées, applications et sources Wikipédia.
+
+👉 [Accéder ici](https://lombard-web-services.github.io/Docs/Scientific_walls_FR.html)
 
 
 
-## 🇬🇧 Resources for Prompt Engineering
+## 🇬🇧 Scientific Walls: Equations, Builders, Nationalities, Descriptions, Applications, and Sources
 
-A summary table of resources on the topic of Prompt Engineering.
+A compilation of key "scientific walls" in physics and cosmology: equations (LaTeX via MathJax), discoverers, nationalities, detailed descriptions, applications, and Wikipedia sources.
 
-👉 [Access here](https://lombard-web-services.github.io/Docs/resources_for_prompt_engineering_EN.html)
+👉 [Access here](https://lombard-web-services.github.io/Docs/Scientific_walls_EN.html)
 
 
 
@@ -53,20 +54,19 @@ A summary table of telemetry technologies and their methods for monitoring Andro
 
 
 
-## 🇫🇷 Murs Scientifiques : Équations, Découvreurs, Nationalités, Descriptions, Applications et Sources
+## 🇫🇷 Ressources pour le Prompt Engineering
 
-Compilation des principaux "murs scientifiques" en physique et cosmologie : équations (LaTeX via MathJax), découvreurs, nationalités, descriptions détaillées, applications et sources Wikipédia.
+Un tableau récapitulatif des ressources disponibles sur le thème du Prompt Engineering.
 
-👉 [Accéder ici](https://lombard-web-services.github.io/Docs/Scientific_walls_FR.html)
+👉 [Accéder ici](https://lombard-web-services.github.io/Docs/ressources_pour_prompt_engineering_FR.html)
 
 
 
-## 🇬🇧 Scientific Walls: Equations, Builders, Nationalities, Descriptions, Applications, and Sources
+## 🇬🇧 Resources for Prompt Engineering
 
-A compilation of key "scientific walls" in physics and cosmology: equations (LaTeX via MathJax), discoverers, nationalities, detailed descriptions, applications, and Wikipedia sources.
+A summary table of resources on the topic of Prompt Engineering.
 
-👉 [Access here](https://lombard-web-services.github.io/Docs/Scientific_walls_EN.html)
-
+👉 [Access here](https://lombard-web-services.github.io/Docs/resources_for_prompt_engineering_EN.html)
 
 
 ## 📜 License
