@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tableau des Murs Scientifiques</title>
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: linear-gradient(135deg, #f4f4f9 0%, #e0e7ff 100%);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            color: #333;
+        }
+        .container {
+            flex: 1;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        .title {
+            text-align: center;
+            font-size: 1.8em;
+            font-weight: bold;
+            color: #000;
+            margin-bottom: 10px;
+        }
+        .signature {
+            text-align: center;
+            font-style: italic;
+            font-size: 1.1em;
+            color: #333;
+            margin-bottom: 20px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: #fff;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            overflow: hidden;
+            margin-bottom: 20px;
+        }
+        th, td {
+            padding: 12px;
+            text-align: left;
+            border: 1px solid #ccc;
+        }
+        th {
+            background: #333;
+            color: #fff;
+            font-weight: bold;
+            text-transform: uppercase;
+        }
+        tr:nth-child(even) {
+            background-color: #f8f8f8;
+        }
+        tr:hover {
+            background-color: #e0e0e0;
+            transition: background-color 0.3s ease;
+        }
+        a {
+            color: #000;
+            text-decoration: underline;
+        }
+        a:hover {
+            color: #555;
+        }
+        footer {
+            text-align: center;
+            padding: 20px;
+            font-size: 0.9em;
+            color: #333;
+        }
+        footer a {
+            color: #000;
+            text-decoration: underline;
+        }
+        footer a:hover {
+            color: #555;
+        }
+        /* Responsive Design */
+        @media screen and (max-width: 768px) {
+            table {
+                display: block;
+                overflow-x: auto;
+            }
+            th, td {
+                font-size: 0.9em;
+                padding: 10px;
+            }
+            .title {
+                font-size: 1.5em;
+            }
+            .signature {
+                font-size: 1em;
+            }
+        }
+        @media screen and (max-width: 480px) {
+            th, td {
+                font-size: 0.8em;
+                padding: 8px;
+            }
+            .title {
+                font-size: 1.2em;
+            }
+            .signature {
+                font-size: 0.9em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="title">
+            Murs Scientifiques : Équations, Découvreurs, Nationalités, Descriptions, Applications et Sources
+        </div>
+        <div class="signature">
+            Par Thibaut LOMBARD (@lombardweb)<br>
+            Juillet 2025
+        </div>
+        <table>
+            <tr>
+                <th>Nom du Mur</th>
+                <th>Équation/Définition</th>
+                <th>Découvreur(s)</th>
+                <th>Nationalité</th>
+                <th>Description Détaillée</th>
+                <th>Application en Sciences Appliquées</th>
+                <th>Source</th>
+            </tr>
+            <tr>
+                <td>Mur de Planck</td>
+                <td>\( t_P \approx 5.39 \times 10^{-44} \, \text{s} \)</td>
+                <td>Max Planck</td>
+                <td>Allemand (🇩🇪)</td>
+                <td>Une frontière théorique où les effets de la gravité quantique dominent, rendant les notions conventionnelles d'espace et de temps inopérantes.</td>
+                <td>Oriente la recherche en gravité quantique et en cosmologie de l'univers primordial.</td>
+                <td><a href="https://fr.wikipedia.org/wiki/Temps_de_Planck" target="_blank">Wikipédia : Temps de Planck</a></td>
+            </tr>
+            <tr>
+                <td>Mur du Son</td>
+                <td>\( \text{Mach 1}, \, v = c_s \)</td>
+                <td>Ernst Mach, Chuck Yeager</td>
+                <td>Autrichien-Tchèque (🇦🇹🇨🇿), Américain (🇺🇸)</td>
+                <td>La barrière à la vitesse du son, provoquant des ondes de choc et une augmentation de la résistance.</td>
+                <td>Clé en aérodynamique pour la conception de véhicules supersoniques.</td>
+                <td><a href="https://fr.wikipedia.org/wiki/Mur_du_son" target="_blank">Wikipédia : Mur du Son</a></td>
+            </tr>
+            <tr>
+                <td>Mur de Feu</td>
+                <td>\( E \sim \frac{\hbar c^3}{G M} \text{ à } r \approx r_s \)</td>
+                <td>Ahmed Almheiri, Donald Marolf, Joseph Polchinski, James Sully</td>
+                <td>Émirati (🇦🇪), Américain (🇺🇸), Canadien (🇨🇦)</td>
+                <td>Une barrière énergétique proposée à l’horizon des événements d’un trou noir (\( r_s \)) pour résoudre le paradoxe de l’information.</td>
+                <td>Éclaire la physique des trous noirs et la théorie de l’information quantique.</td>
+                <td><a href="https://en.wikipedia.org/wiki/Firewall_(physics)" target="_blank">Wikipédia : Mur de Feu (EN)</a></td>
+            </tr>
+            <tr>
+                <td>Mur de Hubble</td>
+                <td>\( v = H_0 d \geq c \)</td>
+                <td>Edwin Hubble</td>
+                <td>Américain (🇺🇸)</td>
+                <td>La frontière où les galaxies s’éloignent plus vite que la lumière en raison de l’expansion cosmique.</td>
+                <td>Définit l’univers observable en cosmologie.</td>
+                <td><a href="https://fr.wikipedia.org/wiki/Volume_de_Hubble" target="_blank">Wikipédia : Volume de Hubble</a></td>
+            </tr>
+            <tr>
+                <td>Mur de la TGU</td>
+                <td>\( E \approx 10^{16} \, \text{GeV} \)</td>
+                <td>Abdus Salam, Sheldon Glashow, Steven Weinberg</td>
+                <td>Pakistanais (🇵🇰), Américain (🇺🇸)</td>
+                <td>L’échelle d’énergie où les forces fondamentales s’unifient dans l’univers primordial.</td>
+                <td>Oriente la physique des particules et les modèles de l’univers primordial.</td>
+                <td><a href="https://fr.wikipedia.org/wiki/Th%C3%A9orie_de_la_grande_unification" target="_blank">Wikipédia : TGU</a></td>
+            </tr>
+            <tr>
+                <td>Murs de Domaine</td>
+                <td>\( \sigma \sim \frac{\phi_0^2}{\lambda} \text{ (densité d'énergie)} \)</td>
+                <td>Tom Kibble, Andrei Linde</td>
+                <td>Britannique (🇬🇧), Russo-Américain (🇷🇺🇺🇸)</td>
+                <td>Défauts bidimensionnels issus de la rupture de symétrie, caractérisés par une densité d’énergie.</td>
+                <td>Étudiés en cosmologie pour les transitions de phase.</td>
+                <td><a href="https://fr.wikipedia.org/wiki/Mur_de_domaine" target="_blank">Wikipédia : Mur de Domaine</a></td>
+            </tr>
+            <tr>
+                <td>Mur du CMB</td>
+                <td>\( z \approx 1100 \)</td>
+                <td>Arno Penzias, Robert Wilson, George Gamow, Ralph Alpher, Robert Herman</td>
+                <td>Américain (🇺🇸), Russo-Américain (🇷🇺🇺🇸)</td>
+                <td>La surface de dernière diffusion, marquant l’origine du CMB ~380 000 ans après le Big Bang.</td>
+                <td>Utilisé pour étudier l’évolution cosmique et la formation des structures.</td>
+                <td><a href="https://fr.wikipedia.org/wiki/Fond_diffus_cosmologique" target="_blank">Wikipédia : CMB</a></td>
+            </tr>
+            <tr>
+                <td>Mur Électrofaible</td>
+                <td>\( t \approx 10^{-12} \, \text{s}, \, E \approx 100 \, \text{GeV} \)</td>
+                <td>Sheldon Glashow, Steven Weinberg, Abdus Salam</td>
+                <td>Américain (🇺🇸), Pakistanais (🇵🇰)</td>
+                <td>La transition de phase où les forces électromagnétique et faible se séparent.</td>
+                <td>Soutient le Modèle Standard et les expériences à haute énergie.</td>
+                <td><a href="https://fr.wikipedia.org/wiki/Interaction_%C3%A9lectrofaible" target="_blank">Wikipédia : Interaction Électrofaible</a></td>
+            </tr>
+            <tr>
+                <td>Mur d'Énergie</td>
+                <td>\( E < 10 \, \text{TeV}–\text{PeV} \)</td>
+                <td>Équipes du CERN, Fermilab</td>
+                <td>International (🌐)</td>
+                <td>La limite technologique des accélérateurs de particules pour l’exploration à haute énergie.</td>
+                <td>Stimule les avancées en technologie des accélérateurs.</td>
+                <td><a href="https://fr.wikipedia.org/wiki/Acc%C3%A9l%C3%A9rateur_de_particules" target="_blank">Wikipédia : Accélérateur de Particules</a></td>
+            </tr>
+            <tr>
+                <td>Mur de Masse</td>
+                <td>\( M_{\text{Chandra}} \approx 1.4 M_\odot, \, M_{\text{TOV}} \approx 2–3 M_\odot \)</td>
+                <td>Subrahmanyan Chandrasekhar, Richard Tolman, J. Robert Oppenheimer, George Volkoff</td>
+                <td>Indo-Américain (🇮🇳🇺🇸), Américain (🇺🇸), Canadien (🇨🇦)</td>
+                <td>Limites de masse pour les naines blanches et les étoiles à neutrons avant leur effondrement.</td>
+                <td>Éclaire l’évolution stellaire et les études des ondes gravitationnelles.</td>
+                <td><a href="https://fr.wikipedia.org/wiki/Limite_de_Chandrasekhar" target="_blank">Wikipédia : Limite de Chandrasekhar</a></td>
+            </tr>
+            <tr>
+                <td>Mur Thermodynamique</td>
+                <td>\( \Delta m = 0, \, \Delta Q \neq 0 \)</td>
+                <td>Sadi Carnot, Rudolf Clausius, Ludwig Boltzmann</td>
+                <td>Français (🇫🇷), Allemand (🇩🇪), Autrichien (🇦🇹)</td>
+                <td>Une frontière permettant le transfert d’énergie mais pas de masse dans les systèmes thermodynamiques.</td>
+                <td>Utilisé dans la conception de moteurs thermiques et l’analyse des transferts d’énergie.</td>
+                <td><a href="https://fr.wikipedia.org/wiki/Syst%C3%A8me_thermodynamique" target="_blank">Wikipédia : Système Thermodynamique</a></td>
+            </tr>
+            <tr>
+                <td>Mur d'Information</td>
+                <td>\( S \sim \frac{A}{4 \ell_P^2} \text{ (entropie de Bekenstein-Hawking)} \)</td>
+                <td>Stephen Hawking, Leonard Susskind, Gerard ’t Hooft</td>
+                <td>Britannique (🇬🇧), Américain (🇺🇸), Néerlandais (🇳🇱)</td>
+                <td>Une frontière (par exemple, l’horizon d’un trou noir) où l’information devient inaccessible.</td>
+                <td>Façonne la théorie de l’information quantique et la recherche sur les trous noirs.</td>
+                <td><a href="https://fr.wikipedia.org/wiki/Paradoxe_de_l%27information_des_trous_noirs" target="_blank">Wikipédia : Paradoxe de l’Information</a></td>
+            </tr>
+            <tr>
+                <td>Mur de Choc/Pression</td>
+                <td>\( \Delta P, \Delta T \text{ à } v \geq c_s \)</td>
+                <td>Er Ascendant Ernst Mach</td>
+                <td>Autrichien-Tchèque (🇦🇹🇨🇿)</td>
+                <td>Une région de forte augmentation de la pression et de la température dans un écoulement supersonique.</td>
+                <td>Crucial pour la conception de véhicules à haute vitesse et la gestion des ondes de choc.</td>
+                <td><a href="https://fr.wikipedia.org/wiki/Onde_de_choc" target="_blank">Wikipédia : Onde de Choc</a></td>
+            </tr>
+        </table>
+    </div>
+    <footer>
+        © 2025 Lombard Web | <a href="https://github.com/Lombard-Web-Services/Docs" target="_blank">GitHub : Lombard Web Services</a>
+    </footer>
+</body>
+</html>
