@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Scientific Walls Table</title>
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: linear-gradient(135deg, #f4f4f9 0%, #e0e7ff 100%);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            color: #333;
+        }
+        .container {
+            flex: 1;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        .title {
+            text-align: center;
+            font-size: 1.8em;
+            font-weight: bold;
+            color: #000;
+            margin-bottom: 10px;
+        }
+        .signature {
+            text-align: center;
+            font-style: italic;
+            font-size: 1.1em;
+            color: #333;
+            margin-bottom: 20px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: #fff;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            overflow: hidden;
+            margin-bottom: 20px;
+        }
+        th, td {
+            padding: 12px;
+            text-align: left;
+            border: 1px solid #ccc;
+        }
+        th {
+            background: #333;
+            color: #fff;
+            font-weight: bold;
+            text-transform: uppercase;
+        }
+        tr:nth-child(even) {
+            background-color: #f8f8f8;
+        }
+        tr:hover {
+            background-color: #e0e0e0;
+            transition: background-color 0.3s ease;
+        }
+        a {
+            color: #000;
+            text-decoration: underline;
+        }
+        a:hover {
+            color: #555;
+        }
+        footer {
+            text-align: center;
+            padding: 20px;
+            font-size: 0.9em;
+            color: #333;
+        }
+        footer a {
+            color: #000;
+            text-decoration: underline;
+        }
+        footer a:hover {
+            color: #555;
+        }
+        /* Responsive Design */
+        @media screen and (max-width: 768px) {
+            table {
+                display: block;
+                overflow-x: auto;
+            }
+            th, td {
+                font-size: 0.9em;
+                padding: 10px;
+            }
+            .title {
+                font-size: 1.5em;
+            }
+            .signature {
+                font-size: 1em;
+            }
+        }
+        @media screen and (max-width: 480px) {
+            th, td {
+                font-size: 0.8em;
+                padding: 8px;
+            }
+            .title {
+                font-size: 1.2em;
+            }
+            .signature {
+                font-size: 0.9em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="title">
+            Scientific Walls: Equations, Builders, Nationalities, Descriptions, Applications, and Sources
+        </div>
+        <div class="signature">
+            By Thibaut LOMBARD (@lombardweb)<br>
+            July 2025
+        </div>
+        <table>
+            <tr>
+                <th>Wall Name</th>
+                <th>Equation/Definition</th>
+                <th>Builder(s)</th>
+                <th>Nationality</th>
+                <th>Detailed Description</th>
+                <th>Purpose in Applied Science</th>
+                <th>Source</th>
+            </tr>
+            <tr>
+                <td>Planck Wall</td>
+                <td>\( t_P \approx 5.39 \times 10^{-44} \, \text{s} \)</td>
+                <td>Max Planck</td>
+                <td>German (🇩🇪)</td>
+                <td>A theoretical boundary where quantum gravity effects dominate, rendering conventional space and time meaningless.</td>
+                <td>Guides quantum gravity research and early universe cosmology.</td>
+                <td><a href="https://en.wikipedia.org/wiki/Planck_time" target="_blank">Wikipedia: Planck Time</a></td>
+            </tr>
+            <tr>
+                <td>Sound Wall</td>
+                <td>\( \text{Mach 1}, \, v = c_s \)</td>
+                <td>Ernst Mach, Chuck Yeager</td>
+                <td>Austrian-Czech (🇦🇹🇨🇿), American (🇺🇸)</td>
+                <td>The barrier at the speed of sound, causing shock waves and increased resistance.</td>
+                <td>Key in aerodynamics for supersonic vehicle design.</td>
+                <td><a href="https://en.wikipedia.org/wiki/Sound_barrier" target="_blank">Wikipedia: Sound Barrier</a></td>
+            </tr>
+            <tr>
+                <td>Firewall</td>
+                <td>\( E \sim \frac{\hbar c^3}{G M} \text{ at } r \approx r_s \)</td>
+                <td>Ahmed Almheiri, Donald Marolf, Joseph Polchinski, James Sully</td>
+                <td>Emirati (🇦🇪), American (🇺🇸), Canadian (🇨🇦)</td>
+                <td>A proposed high-energy barrier at a black hole’s event horizon (\( r_s \)) to resolve the information paradox.</td>
+                <td>Informs black hole physics and quantum information theory.</td>
+                <td><a href="https://en.wikipedia.org/wiki/Firewall_(physics)" target="_blank">Wikipedia: Firewall</a></td>
+            </tr>
+            <tr>
+                <td>Hubble Wall</td>
+                <td>\( v = H_0 d \geq c \)</td>
+                <td>Edwin Hubble</td>
+                <td>American (🇺🇸)</td>
+                <td>The boundary where galaxies recede faster than light due to cosmic expansion.</td>
+                <td>Defines the observable universe in cosmology.</td>
+                <td><a href="https://en.wikipedia.org/wiki/Hubble_volume" target="_blank">Wikipedia: Hubble Volume</a></td>
+            </tr>
+            <tr>
+                <td>GUT Wall</td>
+                <td>\( E \approx 10^{16} \, \text{GeV} \)</td>
+                <td>Abdus Salam, Sheldon Glashow, Steven Weinberg</td>
+                <td>Pakistani (🇵🇰), American (🇺🇸)</td>
+                <td>The energy scale where fundamental forces unify in the early universe.</td>
+                <td>Guides particle physics and early universe models.</td>
+                <td><a href="https://en.wikipedia.org/wiki/Grand_Unified_Theory" target="_blank">Wikipedia: GUT</a></td>
+            </tr>
+            <tr>
+                <td>Domain Walls</td>
+                <td>\( \sigma \sim \frac{\phi_0^2}{\lambda} \text{ (energy density)} \)</td>
+                <td>Tom Kibble, Andrei Linde</td>
+                <td>British (🇬🇧), Russian-American (🇷🇺🇺🇸)</td>
+                <td>Two-dimensional defects from symmetry breaking, characterized by energy density.</td>
+                <td>Studied in cosmology for phase transitions.</td>
+                <td><a href="https://en.wikipedia.org/wiki/Domain_wall" target="_blank">Wikipedia: Domain Wall</a></td>
+            </tr>
+            <tr>
+                <td>CMB Wall</td>
+                <td>\( z \approx 1100 \)</td>
+                <td>Arno Penzias, Robert Wilson, George Gamow, Ralph Alpher, Robert Herman</td>
+                <td>American (🇺🇸), Russian-American (🇷🇺🇺🇸)</td>
+                <td>The surface of last scattering, marking the CMB’s origin ~380,000 years post-Big Bang.</td>
+                <td>Used to study cosmic evolution and structure formation.</td>
+                <td><a href="https://en.wikipedia.org/wiki/Cosmic_microwave_background" target="_blank">Wikipedia: CMB</a></td>
+            </tr>
+            <tr>
+                <td>Electroweak Wall</td>
+                <td>\( t \approx 10^{-12} \, \text{s}, \, E \approx 100 \, \text{GeV} \)</td>
+                <td>Sheldon Glashow, Steven Weinberg, Abdus Salam</td>
+                <td>American (🇺🇸), Pakistani (🇵🇰)</td>
+                <td>The phase transition where electromagnetic and weak forces separated.</td>
+                <td>Underpins the Standard Model and high-energy experiments.</td>
+                <td><a href="https://en.wikipedia.org/wiki/Electroweak_interaction" target="_blank">Wikipedia: Electroweak Interaction</a></td>
+            </tr>
+            <tr>
+                <td>Energy Wall</td>
+                <td>\( E < 10 \, \text{TeV}–\text{PeV} \)</td>
+                <td>CERN, Fermilab teams</td>
+                <td>International (🌐)</td>
+                <td>The technological limit of particle accelerators for high-energy exploration.</td>
+                <td>Drives advancements in accelerator technology.</td>
+                <td><a href="https://en.wikipedia.org/wiki/Particle_accelerator" target="_blank">Wikipedia: Particle Accelerator</a></td>
+            </tr>
+            <tr>
+                <td>Mass Wall</td>
+                <td>\( M_{\text{Chandra}} \approx 1.4 M_\odot, \, M_{\text{TOV}} \approx 2–3 M_\odot \)</td>
+                <td>Subrahmanyan Chandrasekhar, Richard Tolman, J. Robert Oppenheimer, George Volkoff</td>
+                <td>Indian-American (🇮🇳🇺🇸), American (🇺🇸), Canadian (🇨🇦)</td>
+                <td>Mass limits for white dwarfs and neutron stars before collapse.</td>
+                <td>Informs stellar evolution and gravitational wave studies.</td>
+                <td><a href="https://en.wikipedia.org/wiki/Chandrasekhar_limit" target="_blank">Wikipedia: Chandrasekhar Limit</a></td>
+            </tr>
+            <tr>
+                <td>Thermodynamic Wall</td>
+                <td>\( \Delta m = 0, \, \Delta Q \neq 0 \)</td>
+                <td>Sadi Carnot, Rudolf Clausius, Ludwig Boltzmann</td>
+                <td>French (🇫🇷), German (🇩🇪), Austrian (🇦🇹)</td>
+                <td>A boundary allowing energy transfer but not mass transfer in thermodynamic systems.</td>
+                <td>Used in heat engine design and energy transfer analysis.</td>
+                <td><a href="https://en.wikipedia.org/wiki/Thermodynamic_system" target="_blank">Wikipedia: Thermodynamic System</a></td>
+            </tr>
+            <tr>
+                <td>Information Wall</td>
+                <td>\( S \sim \frac{A}{4 \ell_P^2} \text{ (Bekenstein-Hawking entropy)} \)</td>
+                <td>Stephen Hawking, Leonard Susskind, Gerard ’t Hooft</td>
+                <td>British (🇬🇧), American (🇺🇸), Dutch (🇳🇱)</td>
+                <td>A boundary (e.g., black hole horizon) where information becomes inaccessible.</td>
+                <td>Shapes quantum information and black hole research.</td>
+                <td><a href="https://en.wikipedia.org/wiki/Black_hole_information_paradox" target="_blank">Wikipedia: Information Paradox</a></td>
+            </tr>
+            <tr>
+                <td>Shock/Pressure Wall</td>
+                <td>\( \Delta P, \Delta T \text{ at } v \geq c_s \)</td>
+                <td>Ernst Mach</td>
+                <td>Austrian-Czech (🇦🇹🇨🇿)</td>
+                <td>A region of sudden pressure and temperature increase in supersonic flow.</td>
+                <td>Critical for high-speed vehicle design and shock wave management.</td>
+                <td><a href="https://en.wikipedia.org/wiki/Shock_wave" target="_blank">Wikipedia: Shock Wave</a></td>
+            </tr>
+        </table>
+    </div>
+    <footer>
+        © 2025 Lombard Web | <a href="https://github.com/Lombard-Web-Services/Docs" target="_blank">GitHub: Lombard Web Services</a>
+    </footer>
+</body>
+</html>
