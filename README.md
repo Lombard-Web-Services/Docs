@@ -33,8 +33,8 @@ A summary table of telemetry technologies and their methods, for the supervision
 
 👉 Link : [here](https://lombard-web-services.github.io/Docs/android_telemetry_EN.html)
 
-### 🇫🇷 Murs Scientifiques : Équations, découvreurs, Nationalités, Descriptions, Applications et Sources
-Ce tableau présente une compilation des "murs scientifiques" en physique et cosmologie, incluant leurs équations (en LaTeX via MathJax), les bâtisseurs, leurs nationalités, des descriptions détaillées, leurs applications en sciences appliquées, et des liens vers des sources Wikipédia.
+### 🇫🇷 Murs Scientifiques : Équations, Découvreurs, Nationalités, Descriptions, Applications et Sources
+Ce tableau présente une compilation des "murs scientifiques" en physique et cosmologie, incluant leurs équations (en LaTeX via MathJax), les découvreurs, leurs nationalités, des descriptions détaillées, leurs applications en sciences appliquées, et des liens vers des sources Wikipédia.
 
 👉 Lien : [ici](https://lombard-web-services.github.io/Docs/Scientific_walls_FR.html)
 
