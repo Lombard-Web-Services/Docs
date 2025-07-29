@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Méthodes de Paiement pour la Monétisation des Extensions Chrome</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f4f6f9;
+            margin: 20px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background-color: #ffffff;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        th, td {
+            border: 1px solid #e0e0e0;
+            padding: 12px;
+            text-align: left;
+        }
+        th {
+            background-color: #4a90e2;
+            color: #ffffff;
+            font-weight: bold;
+        }
+        tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+        tr:hover {
+            background-color: #e6f0fa;
+        }
+        caption {
+            font-size: 1.2em;
+            font-weight: bold;
+            padding: 12px;
+            background-color: #2a2a2a;
+            color: #ffffff;
+            border-radius: 8px 8px 0 0;
+        }
+        ul {
+            margin: 0;
+            padding-left: 20px;
+        }
+        .footer {
+            text-align: center;
+            font-size: 0.9em;
+            color: #333;
+            margin-top: 20px;
+        }
+        .footer a, td a {
+            color: #4a90e2;
+            text-decoration: none;
+        }
+        .footer a:hover, td a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <table>
+        <caption>Guide Complet des Méthodes de Paiement pour Monétiser les Extensions Chrome Web Store</caption>
+        <thead>
+            <tr>
+                <th>Méthode de Paiement</th>
+                <th>Frais (approx.)</th>
+                <th>Intégration Technique (API, Docs)</th>
+                <th>Facilité d'Utilisation (Utilisateur)</th>
+                <th>Compatible avec Extensions Chrome</th>
+                <th>Fonctionnalités Proposées</th>
+                <th>Lien Officiel</th>
+                <th>Notes</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>Marketing d'Affiliation</td>
+                <td>0% (revenus via commissions)</td>
+                <td>Modéré : Nécessite l'intégration de liens ou programmes d'affiliation, plus systèmes de suivi</td>
+                <td>Modéré : Fluide si les liens sont pertinents, mais peut sembler intrusif</td>
+                <td>✅ Oui</td>
+                <td>
+                    <ul>
+                        <li>Commissions pour la promotion de produits/services</li>
+                        <li>Aucun paiement direct des utilisateurs</li>
+                        <li>Intégration avec réseaux d'affiliation</li>
+                    </ul>
+                </td>
+                <td><a href="https://www.amazon.com/associates" target="_blank">Amazon Associates</a> (exemple de réseau)</td>
+                <td>Monétise en promouvant des produits/services tiers via des liens d'affiliation. Nécessite un alignement avec les intérêts des utilisateurs pour éviter de dégrader l'expérience.</td>
+            </tr>
+            <tr>
+                <td>ExtensionPay</td>
+                <td>0% initial, 2,9% + 0,30 $ par transaction (via Stripe)</td>
+                <td>Très Facile : API JavaScript simple (ExtPay.js), open-source, aucun backend requis</td>
+                <td>✅ Très facile : Flux de paiement fluide</td>
+                <td>✅ Oui</td>
+                <td>
+                    <ul>
+                        <li>Paiements uniques et abonnements récurrents</li>
+                        <li>Essais gratuits</li>
+                        <li>Support multi-navigateurs (Chrome, Firefox, Edge)</li>
+                        <li>Connexion utilisateur pour utilisation multi-appareils</li>
+                        <li>Paiements sécurisés via Stripe</li>
+                    </ul>
+                </td>
+                <td><a href="https://extensionpay.com" target="_blank">ExtensionPay</a></td>
+                <td>Service convivial pour les développeurs d'extensions, aucun code côté serveur requis. Supporte plusieurs navigateurs, contrairement aux paiements Chrome Web Store obsolètes.</td>
+            </tr>
+            <tr>
+                <td>Stripe</td>
+                <td>1,4% + 0,25 € (cartes UE), 2,9% + 0,30 $ (international)</td>
+                <td>✅ Excellents SDKs & docs, mais nécessite un backend personnalisé et une authentification</td>
+                <td>✅ Très facile : Interface claire, marque de confiance</td>
+                <td>✅ Oui</td>
+                <td>
+                    <ul>
+                        <li>Paiements uniques et récurrents</li>
+                        <li>Support de paiement global</li>
+                        <li>Flux de paiement personnalisables</li>
+                        <li>Gestion d'abonnements</li>
+                        <li>Traitement sécurisé des paiements</li>
+                    </ul>
+                </td>
+                <td><a href="https://stripe.com" target="_blank">Stripe</a></td>
+                <td>Processeur de paiement robuste nécessitant une intégration backend personnalisée. Offre une grande flexibilité mais demande un effort de développement important.</td>
+            </tr>
+            <tr>
+                <td>PayPal</td>
+                <td>2,9–4,4% + frais fixes (varie selon le pays)</td>
+                <td>⚠️ APIs obsolètes, plugins corrects, nécessite une intégration côté serveur</td>
+                <td>✅ Familier : Très reconnu</td>
+                <td>✅ Oui</td>
+                <td>
+                    <ul>
+                        <li>Paiements uniques et récurrents</li>
+                        <li>Support de paiement global</li>
+                        <li>Gestion d'abonnements</li>
+                        <li>Support des achats in-app</li>
+                    </ul>
+                </td>
+                <td><a href="https://www.paypal.com" target="_blank">PayPal</a></td>
+                <td>Taux de litiges plus élevés et friction pour l'utilisateur. Convient aux extensions mais les APIs sont moins modernes que Stripe ou Paddle.</td>
+            </tr>
+            <tr>
+                <td>Paddle</td>
+                <td>~5% + gestion de la TVA</td>
+                <td>✅ Gère automatiquement la TVA UE, bonnes APIs pour SaaS</td>
+                <td>✅ Facile : Paiement simplifié</td>
+                <td>✅ Oui</td>
+                <td>
+                    <ul>
+                        <li>Paiements uniques et récurrents</li>
+                        <li>Gestion automatique de la TVA/taxes</li>
+                        <li>Gestion d'abonnements</li>
+                        <li>Génération de clés de licence</li>
+                        <li>Support de paiement global</li>
+                    </ul>
+                </td>
+                <td><a href="https://www.paddle.com" target="_blank">Paddle</a></td>
+                <td>Idéal pour les extensions UE/Royaume-Uni avec monétisation de type SaaS. Gère automatiquement la conformité fiscale, réduisant la charge des développeurs.</td>
+            </tr>
+            <tr>
+                <td>Lemon Squeezy</td>
+                <td>5% + 0,50 $ par transaction</td>
+                <td>✅ APIs modernes, axées sur les biens numériques et licences</td>
+                <td>✅ Facile : Paiement convivial</td>
+                <td>✅ Oui</td>
+                <td>
+                    <ul>
+                        <li>Paiements uniques et récurrents</li>
+                        <li>Gestion de la TVA/taxes</li>
+                        <li>Support de licences logicielles</li>
+                        <li>Support de paiement global</li>
+                        <li>Gestion d'abonnements</li>
+                    </ul>
+                </td>
+                <td><a href="https://www.lemonsqueezy.com" target="_blank">Lemon Squeezy</a></td>
+                <td>Conçu pour les produits numériques, gère la TVA et les licences. Une alternative solide à Paddle pour les extensions Chrome.</td>
+            </tr>
+            <tr>
+                <td>Modèle Freemium</td>
+                <td>Variable (dépend des prix premium, souvent via Stripe/Paddle)</td>
+                <td>Modéré à Complexe : Nécessite l'implémentation de fonctionnalités gratuites/premium et une intégration avec un processeur de paiement tiers</td>
+                <td>✅ Facile : Accès gratuit réduit la barrière pour l'utilisateur</td>
+                <td>✅ Oui</td>
+                <td>
+                    <ul>
+                        <li>Fonctionnalités de base gratuites avec améliorations premium</li>
+                        <li>Abonnement ou paiement unique pour le premium</li>
+                        <li>Essais gratuits ou utilisation gratuite limitée</li>
+                        <li>Niveaux de fonctionnalités personnalisables</li>
+                    </ul>
+                </td>
+                <td>N/A (dépend du processeur de paiement utilisé)</td>
+                <td>Attire les utilisateurs avec des fonctionnalités gratuites, monétise via des améliorations premium. Souvent associé à Stripe, Paddle ou Gumroad pour les paiements.</td>
+            </tr>
+            <tr>
+                <td>FastSpring</td>
+                <td>~8–10% (varie)</td>
+                <td>✅ Solution complète pour licences SaaS, APIs robustes</td>
+                <td>✅ Facile : Expérience de paiement fluide</td>
+                <td>✅ Oui</td>
+                <td>
+                    <ul>
+                        <li>Paiements uniques et récurrents</li>
+                        <li>Conformité fiscale globale</li>
+                        <li>Gestion d'abonnements</li>
+                        <li>Génération de clés de licence</li>
+                        <li>Support multi-devises</li>
+                    </ul>
+                </td>
+                <td><a href="https://www.fastspring.com" target="_blank">FastSpring</a></td>
+                <td>Coûteux mais solution complète pour les extensions. Gère les taxes globales et les licences, adapté aux besoins de monétisation complexes.</td>
+            </tr>
+            <tr>
+                <td>Gumroad</td>
+                <td>10% (plan gratuit), 3,5% + 0,30 $ (plan Pro)</td>
+                <td>✅ Simple à intégrer pour les téléchargements, support des clés de licence</td>
+                <td>✅ Très facile : Paiement familier</td>
+                <td>⚠️ Non natif : Nécessite une page de paiement externe</td>
+                <td>
+                    <ul>
+                        <li>Paiements uniques</li>
+                        <li>Génération de clés de licence</li>
+                        <li>Support d'abonnements</li>
+                        <li>Traitement de paiement global</li>
+                    </ul>
+                </td>
+                <td><a href="https://gumroad.com" target="_blank">Gumroad</a></td>
+                <td>Idéal pour vendre des licences mais nécessite une page de paiement externe et une validation manuelle des licences dans l'extension.</td>
+            </tr>
+            <tr>
+                <td>Facturation Google Play (via WebAPK)</td>
+                <td>15% (pour revenus &lt;1M$/an)</td>
+                <td>⚠️ Complexe : Uniquement pour applications hybrides web-Android, nécessite configuration WebAPK</td>
+                <td>⚠️ Limité : Spécifique à Android</td>
+                <td>❌ Non pour les extensions</td>
+                <td>
+                    <ul>
+                        <li>Achats in-app</li>
+                        <li>Support d'abonnements</li>
+                        <li>Flux de paiement spécifique à Android</li>
+                    </ul>
+                </td>
+                <td><a href="https://developer.android.com/google/play/billing" target="_blank">Facturation Google Play</a></td>
+                <td>Uniquement viable pour les applications hybrides/PWA, pas pour les extensions Chrome standard. Applicabilité limitée.</td>
+            </tr>
+            <tr>
+                <td>Paiements Chrome Web Store</td>
+                <td>❌ Obsolète (était 5%)</td>
+                <td>❌ Retiré : Plus supporté</td>
+                <td>❌ Non utilisable</td>
+                <td>❌ Plus autorisé</td>
+                <td>
+                    <ul>
+                        <li>Supportait auparavant les paiements uniques</li>
+                        <li>Abonnements mensuels/annuels</li>
+                        <li>Essais gratuits</li>
+                        <li>Achats in-app</li>
+                    </ul>
+                </td>
+                <td><a href="https://developer.chrome.com/docs/webstore/payments-iap" target="_blank">Chrome Web Store (Archivé)</a></td>
+                <td>Supprimé en 2020 en raison de problèmes de fraude. Plus une option pour la monétisation des extensions Chrome.</td>
+            </tr>
+        </tbody>
+    </table>
+    <div class="footer">
+        Par Thibaut LOMBARD, Juillet 2025<br>
+        Authored by <a href="https://x.com/lombardweb" target="_blank">LombardWeb</a> | 
+        <a href="https://github.com/Lombard-Web-Services/Docs" target="_blank">GitHub</a>
+    </div>
+</body>
+</html>
