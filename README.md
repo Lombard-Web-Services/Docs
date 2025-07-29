@@ -3,16 +3,11 @@
 🇫🇷 **La documentation sur des sujets et thèmes variés.**  
 🇬🇧 **Docs on various subjects and topics.**
 
-
-
-
 ## 🇫🇷 Murs Scientifiques : Équations, Découvreurs, Nationalités, Descriptions, Applications et Sources
 
 Compilation des principaux "murs scientifiques" en physique et cosmologie : équations (LaTeX via MathJax), découvreurs, nationalités, descriptions détaillées, applications et sources Wikipédia.
 
 👉 [Accéder ici](https://lombard-web-services.github.io/Docs/Scientific_walls_FR.html)
-
-
 
 ## 🇬🇧 Scientific Walls: Equations, Builders, Nationalities, Descriptions, Applications, and Sources
 
@@ -20,15 +15,11 @@ A compilation of key "scientific walls" in physics and cosmology: equations (LaT
 
 👉 [Access here](https://lombard-web-services.github.io/Docs/Scientific_walls_EN.html)
 
-
-
 ## 🇫🇷 Points forts et faiblesses de la lecture de fichiers locaux Web sur Android
 
 Un tableau récapitulatif des forces et faiblesses de la lecture des fichiers web locaux sur les applications Android, dans l'optique du développement d'applications Native/Non Native.
 
 👉 [Accéder ici](https://lombard-web-services.github.io/Docs/android_local_file_access_swot_FR.html)
-
-
 
 ## 🇬🇧 SWOT: Android Local File Reading Technologies
 
@@ -36,15 +27,11 @@ A summary table of the strengths and weaknesses of Android local file reading te
 
 👉 [Access here](https://lombard-web-services.github.io/Docs/android_local_file_access_swot_EN.html)
 
-
-
 ## 🇫🇷 Récapitulatif des techniques de télémétrie pour les apps Android
 
 Un tableau récapitulatif des technologies de télémétrie et de leurs méthodes pour la supervision des utilisateurs Android.
 
 👉 [Accéder ici](https://lombard-web-services.github.io/Docs/android_telemetry_FR.html)
-
-
 
 ## 🇬🇧 Telemetry Technologies for Android Apps
 
@@ -52,15 +39,11 @@ A summary table of telemetry technologies and their methods for monitoring Andro
 
 👉 [Access here](https://lombard-web-services.github.io/Docs/android_telemetry_EN.html)
 
-
-
 ## 🇫🇷 Ressources pour le Prompt Engineering
 
 Un tableau récapitulatif des ressources disponibles sur le thème du Prompt Engineering.
 
 👉 [Accéder ici](https://lombard-web-services.github.io/Docs/ressources_pour_prompt_engineering_FR.html)
-
-
 
 ## 🇬🇧 Resources for Prompt Engineering
 
@@ -68,6 +51,17 @@ A summary table of resources on the topic of Prompt Engineering.
 
 👉 [Access here](https://lombard-web-services.github.io/Docs/resources_for_prompt_engineering_EN.html)
 
+## 🇫🇷 Guide Complet des Méthodes de Paiement pour Monétiser les Extensions Chrome Web Store
+
+Un tableau récapitulatif des méthodes de paiement disponibles pour monétiser les extensions Chrome, incluant les frais, l'intégration technique, la facilité d'utilisation, la compatibilité, les fonctionnalités proposées et les liens officiels.
+
+👉 [Accéder ici](https://lombard-web-services.github.io/Docs/Chrome_Extension_Monetization_Payment_Methods_FR.html)
+
+## 🇬🇧 Comprehensive Guide to Payment Methods for Monetizing Chrome Web Store Extensions
+
+A summary table of available payment methods for monetizing Chrome extensions, including fees, technical integration, ease of use, compatibility, proposed features, and official links.
+
+👉 [Access here](https://lombard-web-services.github.io/Docs/Chrome_Extension_Monetization_Payment_Methods_EN.html)
 
 ## 📜 License
 
@@ -85,7 +79,5 @@ This work is licensed under the **Creative Commons Attribution-NonCommercial-NoD
 - **NoDerivatives (ND)** — If you remix, transform, or build upon the material, you may not distribute the modified material.
 
 For full legal terms, see the [Creative Commons page](https://creativecommons.org/licenses/by-nc-nd/4.0/).
-
-
 
 ✨ _Made with care by Thibaut LOMBARD – Lombard Web Services._
