@@ -63,6 +63,18 @@ A summary table of available payment methods for monetizing Chrome extensions, i
 
 👉 [Access here](https://lombard-web-services.github.io/Docs/Chrome_Extension_Monetization_Payment_Methods_EN.html)
 
+## 🇫🇷 Liste des sites d'enchères en France : véhicules, high-tech, immobilier, judiciaires, industriels
+
+Un tableau récapitulatif des principales plateformes d'enchères en France pour les véhicules, produits high-tech, biens immobiliers, ventes judiciaires, et matériels industriels/agricoles/BTP, incluant descriptions, liens, frais, livraison, périodicité, et estimations d'utilisateurs ou chiffres d'affaires.
+
+👉 [Accéder ici](https://lombard-web-services.github.io/Docs/auctions_websites_FR.html)
+
+## 🇬🇧 List of Auction Sites in France: Vehicles, High-Tech, Real Estate, Judicial, Industrial
+
+A summary table of the main auction platforms in France for vehicles, high-tech products, real estate, judicial sales, and industrial/agricultural/BTP equipment, including descriptions, links, fees, delivery, periodicity, and estimated users or revenue.
+
+👉 [Access here](https://lombard-web-services.github.io/Docs/auctions_websites_EN.html)
+
 ## 📜 License
 
 ![License: CC BY-NC-ND](https://github.com/Lombard-Web-Services/Docs/blob/main/CC_BY-NC-ND.png)
