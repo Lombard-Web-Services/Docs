@@ -69,7 +69,7 @@ Un tableau récapitulatif des principales plateformes d'enchères en France pour
 
 👉 [Accéder ici](https://lombard-web-services.github.io/Docs/auctions_websites_FR.html)
 
-## 🇬🇧 List of Auction Sites in France: Vehicles, High-Tech, Real Estate, Judicial, Industrial
+## 🇬🇧 List of Auction Sites in United-Kingdom: Vehicles, High-Tech, Real Estate, Judicial, Industrial
 
 A summary table of the main auction platforms in France for vehicles, high-tech products, real estate, judicial sales, and industrial/agricultural/BTP equipment, including descriptions, links, fees, delivery, periodicity, and estimated users or revenue.
 
