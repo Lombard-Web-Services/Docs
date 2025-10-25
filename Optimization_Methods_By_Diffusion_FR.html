@@ -8,8 +8,9 @@
   <!-- MathJax pour TeX -->
   <script>
     window.MathJax = {
-      tex: { inlineMath: [['\\(','\\)'], ['\\[','\\]']] },
-      svg: { fontCache: 'global' }
+      tex: { inlineMath: [['\\(','\\)'], ['\\[','\\]']], tags: 'none' },
+      svg: { fontCache: 'global', linebreaks: { automatic: true, width: 'container' } },
+      options: { renderActions: { addMenu: [] } }
     };
   </script>
   <script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
@@ -41,21 +42,21 @@
       background:var(--bg-primary); color:var(--text-primary); line-height:1.6;
     }
 
-    /* Switch refondu type iOS */
+    /* Switch glissière compact et sans débord */
     .theme-toggle {
-      position:fixed; top:14px; right:14px; z-index:1000;
+      position:fixed; top:12px; right:12px; z-index:1000;
       display:inline-flex; align-items:center; gap:10px;
       padding:6px 10px; border-radius:999px;
       background:var(--bg-secondary); color:var(--text-primary);
       border:1px solid var(--border-color);
       box-shadow:var(--shadow);
+      max-width:220px;
     }
     .toggle {
-      --w:46px; --h:26px;
+      --w:48px; --h:26px;
       position:relative; width:var(--w); height:var(--h);
-      border-radius:var(--h); background:#c9d3ea; transition:.2s;
-      border:1px solid var(--border-color); cursor:pointer;
-      flex-shrink:0;
+      border-radius:var(--h); background:#c9d3ea; transition:background .2s ease;
+      border:1px solid var(--border-color); cursor:pointer; flex-shrink:0;
     }
     .toggle::after {
       content:''; position:absolute; top:2px; left:2px;
@@ -65,7 +66,10 @@
     }
     .toggle[aria-pressed="true"] { background:#7a3ff2; }
     .toggle[aria-pressed="true"]::after { transform:translateX(20px); }
-    .toggle-label { font-size:.9rem; color:var(--text-secondary); }
+    .toggle-label {
+      font-size:.9rem; color:var(--text-secondary);
+      white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width:140px;
+    }
 
     .container { width:100%; padding:16px; }
 
@@ -108,6 +112,7 @@
       padding:14px 10px; text-align:left; font-weight:700; font-size:.9rem;
       color:#fff; text-transform:uppercase; letter-spacing:.4px; cursor:pointer; user-select:none;
       border-bottom:3px solid rgba(255,255,255,.25);
+      word-break:break-word; overflow-wrap:anywhere; white-space:normal;
     }
     thead th .arrow { margin-left:6px; opacity:.9; font-size:.85rem; }
     thead th.sort-asc .arrow::after { content:"▲"; }
@@ -122,33 +127,25 @@
       font-size:.92rem; color:var(--text-primary); vertical-align:top;
       word-break:break-word; overflow-wrap:anywhere; white-space:normal;
     }
-    td.index { width:52px; text-align:right; color:#8a94b5; font-weight:700; }
+    /* Colonne # plus étroite */
+    th[data-key="index"] { width:36px; max-width:42px; }
+    td.index { width:36px; max-width:42px; text-align:right; color:#8a94b5; font-weight:700; white-space:nowrap; }
+
     td.method { color:var(--accent-primary); font-weight:600; }
 
-    /* Fix rendu TeX: pas de tag code visible + wrap doux */
-    .tex-inline {
-      display:inline; white-space:normal; word-break:break-word; overflow-wrap:anywhere;
-    }
-    /* Si une formule devient vraiment longue, on la bloque en block pour casser les lignes */
-    .tex-inline.long { display:block; }
+    /* Rendu TeX: spans + contraintes MathJax pour rester dans la cellule */
+    .tex-inline { display:inline; word-break:break-word; overflow-wrap:anywhere; white-space:normal; }
+    .tex-inline.long { display:block; font-size:0.95em; line-height:1.35; }
 
-    .badge { display:inline-block; padding:4px 10px; border-radius:16px; font-size:.72rem; font-weight:700; text-transform:uppercase; letter-spacing:.4px; }
-    .low{background:rgba(46,213,115,.16); color:#1f9d63;}
-    .med{background:rgba(255,159,67,.16); color:#c06a18;}
-    .high{background:rgba(238,82,83,.16); color:#b53a3b;}
-    .lin{background:rgba(52,172,224,.16); color:#1f7ea1;}
-    .sup{background:rgba(123,47,247,.16); color:#5a2cbb;}
-    .quad{background:rgba(0,212,255,.16); color:#0b7b8a;}
+    /* Forcer MathJax SVG à ne pas dépasser */
+    td:nth-child(3) .mjx-svg,
+    td:nth-child(9) .mjx-svg { max-width:100% !important; height:auto !important; }
+    .mjx-container { overflow:hidden !important; text-overflow:clip !important; white-space:normal !important; }
+    .mjx-container svg { max-width:100% !important; height:auto !important; }
 
-    a { color:var(--accent-primary); text-decoration:none; }
-    a:hover { color:var(--accent-secondary); }
-
-    .footer {
-      width:100%; background:var(--bg-secondary); border-radius:16px; box-shadow:var(--shadow);
-      margin:16px 0 24px; padding:18px; text-align:center; color:var(--text-secondary);
-    }
-
-    @media (max-width: 900px) {
+    @media (max-width: 600px) {
+      td:nth-child(3) .mjx-svg,
+      td:nth-child(9) .mjx-svg { transform:scale(0.96); transform-origin:left top; }
       .title { font-size:1.6rem; }
       thead th, td { padding:10px 8px; font-size:.86rem; }
       .theme-toggle { gap:8px; padding:6px 8px; }
@@ -225,18 +222,23 @@
       return `<span class="badge quad">${s}</span>`;
     }
 
-    // IMPORTANT: on utilise des spans .tex-inline au lieu de <code>, et on insère les délimiteurs \( \)
+    // Générateur de span TeX avec soft breaks
     function texSpan(texString){
-      // heuristique: si la chaîne est longue, on ajoute .long pour casser en block
-      const long = texString.length > 80 ? ' long' : '';
-      return `<span class="tex-inline${long}">\\(${texString}\\)</span>`;
+      const soft = String(texString)
+        .replaceAll('+', '\\, +\\, ')
+        .replaceAll('=', '\\, =\\, ')
+        .replaceAll(',', ',\\, ');
+      const long = soft.length > 72 ? ' long' : '';
+      return `<span class="tex-inline${long}">\\(${soft}\\)</span>`;
     }
 
+    // Données: vos méthodes uniquement (pas de compléments synthétiques)
     const dataRows = [
       {method:"Gradient Descent",formula:"x_{k+1}=x_k-\\alpha\\,\\nabla f(x_k)",memory:"Low O(n)",conv:"Linear",deriv:"1st Order",cond:"Poor (ill‑cond.)",diff:"Locale linéaire",diffFormula:"\\Delta f=\\nabla\\cdot(\\nabla f)",nature:"Isotrope",desc:"Descente de gradient classique.",link:"https://en.wikipedia.org/wiki/Gradient_descent"},
       {method:"Optimal Transport (Wasserstein)",formula:"W_2^2(p,q)=\\inf_{\\pi\\in\\Pi(p,q)}\\int\\|x-y\\|^2\\,d\\pi(x,y)",memory:"High O(n^3)",conv:"Superlinear",deriv:"Implicit Gradient",cond:"Excellent (géométrie lisse)",diff:"Géométrique",diffFormula:"\\Delta_W f=\\mathrm{div}_W(\\nabla_W f)",nature:"Wasserstein",desc:"Optimisation sur l’espace des mesures.",link:"https://en.wikipedia.org/wiki/Wasserstein_metric"},
       {method:"Fisher (Natural Gradient)",formula:"\\theta_{k+1}=\\theta_k-\\alpha\\,F(\\theta_k)^{-1}\\nabla_\\theta L(\\theta_k)",memory:"Medium–High O(n^2)",conv:"Superlinear",deriv:"Quasi‑2nd Order",cond:"Stable (Fisher metric)",diff:"Informationnelle",diffFormula:"\\Delta_F f=F^{-1}\\nabla\\cdot(F\\nabla f)",nature:"Naturel",desc:"Gradient naturel d’Amari.",link:"https://en.wikipedia.org/wiki/Natural_gradient"},
       {method:"Fisher–Rao",formula:"\\langle u,v\\rangle_{\\theta}=\\mathbb E[\\partial_\\theta\\log p_\\theta\\,\\partial_\\theta\\log p_\\theta]",memory:"Medium–High O(n^2)",conv:"Superlinear",deriv:"Quasi‑2nd Order",cond:"Stable (Fisher–Rao)",diff:"Info‑géométrique",diffFormula:"\\Delta_{FR} f=\\mathrm{div}_{FR}(\\nabla_{FR} f)",nature:"Riemannienne proba",desc:"Métrique canonique des distributions.",link:"https://en.wikipedia.org/wiki/Fisher_information_metric"},
+
       {method:"Newton's Method",formula:"x_{k+1}=x_k-H^{-1}\\nabla f(x_k)",memory:"High O(n^2)",conv:"Quadratic",deriv:"2nd Order",cond:"Good (Hessian)",diff:"Locale isotrope",diffFormula:"\\Delta f=\\operatorname{Tr}(H)",nature:"Isotrope linéaire",desc:"Newton classique.",link:"https://en.wikipedia.org/wiki/Newton%27s_method"},
       {method:"Gauss–Newton",formula:"x_{k+1}=x_k-(J^T J)^{-1}J^T r",memory:"Medium O(n^2)",conv:"Superlinear",deriv:"Quasi-Newton",cond:"Stable (Info)",diff:"Anisotrope",diffFormula:"\\Delta\\approx J^T J",nature:"Anisotrope",desc:"Moindres carrés NL.",link:"https://en.wikipedia.org/wiki/Gauss%E2%80%93Newton_algorithm"},
       {method:"Levenberg–Marquardt",formula:"\\Delta x=-(J^T J+\\lambda I)^{-1}J^T r",memory:"Medium O(n^2)",conv:"Quadratic",deriv:"2nd Order",cond:"Stable (Damped)",diff:"Amortie",diffFormula:"\\Delta=H+\\lambda I",nature:"Contrôlée",desc:"Damping entre GN et GD.",link:"https://en.wikipedia.org/wiki/Levenberg%E2%80%93Marquardt_algorithm"},
@@ -304,7 +306,7 @@
       {method:"Entropic Reg QN",formula:"QN + \\varepsilon\\,\\mathcal H",memory:"Medium O(n^2)",conv:"Linear–Super",deriv:"Entropic QN",cond:"Good",diff:"Entropique",diffFormula:"\\Delta_\\varepsilon",nature:"OT‑like",desc:"Régularisation.",link:"https://arxiv.org/abs/1610.06519"},
       {method:"Bayesian Hessian",formula:"H\\approx-\\mathbb E[\\nabla^2\\log p(\\theta|D)]",memory:"High O(n^2)",conv:"Quadratic",deriv:"Bayes 2nd",cond:"Good",diff:"Bayésienne",diffFormula:"-\\mathbb E[\\nabla^2\\log p]",nature:"Incertitude",desc:"Courbure post.",link:"https://arxiv.org/abs/1703.04977"},
       {method:"Spectral Block Newton",formula:"B=U\\Lambda U^T (bloc)",memory:"High O(b^3)",conv:"Superlinear",deriv:"Spectral",cond:"Good",diff:"Spectrale bloc",diffFormula:"U\\Lambda U^T",nature:"Parallèle",desc:"EVD bloc.",link:"https://arxiv.org/abs/1808.08865"}
-      ];
+    ];
 
     const tbody = document.getElementById('tableBody');
     const thead = document.querySelector('thead');
@@ -373,7 +375,7 @@
       const q = searchBox.value.trim().toLowerCase();
       const src = dataRows.map((r,i)=>({...r,index:i+1}));
       view = !q ? src : src.filter(r => Object.values(r).some(v => String(v).toLowerCase().includes(q)));
-      // conserver le tri courant
+      // conserver tri
       view.sort((a,b)=>{
         const va = normalizeForSort(a[sortState.key]);
         const vb = normalizeForSort(b[sortState.key]);
