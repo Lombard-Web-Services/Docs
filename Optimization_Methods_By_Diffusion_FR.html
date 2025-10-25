@@ -5,21 +5,27 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>méthodes d'optimisation classées</title>
 
-  <!-- MathJax CSP-safe : tex-html.js (sans eval), AMS pour symboles -->
+  <!-- MathJax CSP-safe : tex-html.js (sans eval), AMS, scale pour fit -->
 <script>
   window.MathJax = {
     tex: {
       inlineMath: [['\\(','\\)'], ['\\[','\\]']],
       displayMath: [['\\[','\\]']],
       processEscapes: true,
-      packages: {'[+]': ['ams']}  // AMS synchrone pour \nabla, etc.
+      packages: {'[+]': ['ams']}  // AMS pour \nabla, \inf
+    },
+    // Options pour adaptation largeur (scale auto, wrap)
+    html: {
+      scale: 1,
+      minScale: 0.8,
+      matchFontHeight: false
     },
     startup: {
       pageReady() {
         return MathJax.startup.defaultPageReady().then(() => {
-          // Re-rendu après typesetting initial pour intégration parfaite
+          // Force re-init après MathJax prêt : réinitialise état et re-rendu
           if (typeof initTable === 'function') {
-            initTable();
+            initTable(true);  // true = force MathJax mode
           }
         });
       }
@@ -120,6 +126,9 @@
       color:#fff; text-transform:uppercase; letter-spacing:.4px; cursor:pointer; user-select:none;
       border-bottom:3px solid rgba(255,255,255,.25);
     }
+    /* Largeurs colonnes pour fit : formules 15% chacune, adaptées */
+    thead th:nth-child(3), td:nth-child(3) { width: 15%; } /* Formule */
+    thead th:nth-child(9), td:nth-child(9) { width: 15%; } /* Diff Formula */
     thead th .arrow { margin-left:6px; opacity:.9; font-size:.85rem; }
     thead th.sort-asc .arrow::after { content:"▲"; }
     thead th.sort-desc .arrow::after { content:"▼"; }
@@ -127,21 +136,24 @@
     tbody tr { background:var(--bg-secondary); transition:background .15s ease; }
     tbody tr:nth-child(even) { background:var(--bg-tertiary); }
     tbody tr:hover { background:var(--bg-primary); }
-    .MathJax { display: inline-block; }
+    .MathJax { display: inline-block; max-width: 100%; }
     .MathJax .merror { color: red; background: yellow; }
+    /* Adaptation largeur pour MathJax HTML output */
+    .MathJax span { max-width: 100%; word-wrap: break-word; }
+    .tex-inline { 
+      display: inline-block; max-width: 100%; 
+      overflow-wrap: break-word; word-break: break-all; 
+      vertical-align: middle; 
+    }
+    .tex-inline.long { display: block; } /* Block pour longues */
     td {
       padding:12px; border-bottom:1px solid var(--border-color);
       font-size:.92rem; color:var(--text-primary); vertical-align:top;
       word-break:break-word; overflow-wrap:anywhere; white-space:normal;
-      max-width: 0; overflow-wrap: break-word;
+      max-width: 0; overflow: hidden; text-overflow: ellipsis; /* Anti-overflow */
     }
     td.index { width:52px; text-align:right; color:#8a94b5; font-weight:700; }
     td.method { color:var(--accent-primary); font-weight:600; }
-
-    .tex-inline {
-      display:inline; white-space:normal; word-break:break-word; overflow-wrap:anywhere;
-    }
-    .tex-inline.long { display:block; }
 
     .badge { display:inline-block; padding:4px 10px; border-radius:16px; font-size:.72rem; font-weight:700; text-transform:uppercase; letter-spacing:.4px; }
     .low{background:rgba(46,213,115,.16); color:#1f9d63;}
@@ -163,6 +175,7 @@
       .title { font-size:1.6rem; }
       thead th, td { padding:10px 8px; font-size:.86rem; }
       .theme-toggle { gap:8px; padding:6px 8px; }
+      thead th:nth-child(3), td:nth-child(3), thead th:nth-child(9), td:nth-child(9) { width: 20%; } /* Plus large mobile */
     }
   </style>
 </head>
@@ -212,7 +225,11 @@
   </div>
 
   <script>
-    // Données et fonctions définies en amont pour indépendance
+    // Variables globales pour état partagé
+    let globalView = [];
+    let globalSortState = { key:'index', dir:'asc' };
+    let globalHasMathJax = false;  // Mise à jour dynamique
+
     function escapeHTML(x){ return String(x).replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('>','&gt;'); }
     function badgeMemory(s){
       if(s.startsWith('Low')) return `<span class="badge low">${s}</span>`;
@@ -224,13 +241,11 @@
       if(s.startsWith('Superlinear')) return `<span class="badge sup">${s}</span>`;
       return `<span class="badge quad">${s}</span>`;
     }
-    function texSpan(texString, useMathJax = true){
+    function texSpan(texString){
       const long = texString.length > 80 ? ' long' : '';
-      if (useMathJax) {
-        return `<span class="tex-inline${long}">\( ${texString} \)</span>`;
-      } else {
-        return `<span class="tex-inline${long}">${escapeHTML(texString)}</span>`;  // Texte brut si pas de MathJax
-      }
+      return globalHasMathJax 
+        ? `<span class="tex-inline${long}">\( ${texString} \)</span>`  // TeX pour MathJax
+        : `<span class="tex-inline${long}">${escapeHTML(texString)}</span>`;  // Plaintext sinon
     }
 
     const dataRows = [
@@ -275,29 +290,36 @@
       }
     ];
 
-    function initTable() {
+    function initTable(forceMathJax = false) {
       const tbody = document.getElementById('tableBody');
-      if (!tbody) return;  // Sécurité si DOM pas prêt
+      if (!tbody) return;
 
       const thead = document.querySelector('thead');
       const searchBox = document.getElementById('searchBox');
 
-      let sortState = { key:'index', dir:'asc' };
-      let view = dataRows.map((r,i)=>({...r, index:i+1}));
-      const hasMathJax = typeof window.MathJax !== 'undefined' && MathJax.typesetPromise;
+      // Mise à jour globale hasMathJax si forcé ou détecté
+      if (forceMathJax || (typeof window.MathJax !== 'undefined' && MathJax.typesetPromise)) {
+        globalHasMathJax = true;
+      }
+
+      // Réinitialise view si premier appel ou force
+      if (forceMathJax || globalView.length === 0) {
+        globalView = dataRows.map((r,i)=>({...r, index:i+1}));
+        applySearch();  // Applique recherche courante sur nouvelle view
+      }
 
       function rowHTML(r){
         return `
           <tr>
             <td class="index">${r.index}</td>
             <td class="method">${escapeHTML(r.method)}</td>
-            <td>${texSpan(r.formula, hasMathJax)}</td>
+            <td>${texSpan(r.formula)}</td>
             <td>${badgeMemory(r.memory)}</td>
             <td>${badgeConv(r.conv)}</td>
             <td>${escapeHTML(r.deriv)}</td>
             <td>${escapeHTML(r.cond)}</td>
             <td>${escapeHTML(r.diff)}</td>
-            <td>${texSpan(r.diffFormula, hasMathJax)}</td>
+            <td>${texSpan(r.diffFormula)}</td>
             <td>${escapeHTML(r.nature)}</td>
             <td>${escapeHTML(r.desc)}</td>
             <td><a href="${r.link}" target="_blank" rel="noopener">Lien</a></td>
@@ -306,13 +328,13 @@
       }
 
       async function render(){
-        tbody.innerHTML = view.map(rowHTML).join('');
-        if (hasMathJax) {
+        tbody.innerHTML = globalView.map(rowHTML).join('');
+        if (globalHasMathJax) {
           try {
             MathJax.typesetClear([tbody]);
             await MathJax.typesetPromise([tbody]);
           } catch (e) {
-            console.warn('MathJax re-rendu échoué :', e);  // Ne bloque pas l'affichage
+            console.warn('MathJax typeset échoué :', e);
           }
         }
       }
@@ -326,18 +348,18 @@
       function sortBy(key){
         if (!thead) return;
         thead.querySelectorAll('th').forEach(th=>th.classList.remove('sort-asc','sort-desc'));
-        if (sortState.key===key) sortState.dir = (sortState.dir==='asc')?'desc':'asc';
-        else { sortState.key=key; sortState.dir='asc'; }
-        view.sort((a,b)=>{
+        if (globalSortState.key===key) globalSortState.dir = (globalSortState.dir==='asc')?'desc':'asc';
+        else { globalSortState.key=key; globalSortState.dir='asc'; }
+        globalView.sort((a,b)=>{
           const va = normalizeForSort(a[key]);
           const vb = normalizeForSort(b[key]);
           if (typeof va === 'number' && typeof vb === 'number') return va - vb;
           return String(va).localeCompare(String(vb),'fr',{numeric:true,sensitivity:'base'});
         });
-        if (sortState.dir==='desc') view.reverse();
-        view.forEach((r,i)=>r.index=i+1);
+        if (globalSortState.dir==='desc') globalView.reverse();
+        globalView.forEach((r,i)=>r.index=i+1);
         const th = thead.querySelector(`th[data-key="${key}"]`);
-        if (th) th.classList.add(sortState.dir==='asc'?'sort-asc':'sort-desc');
+        if (th) th.classList.add(globalSortState.dir==='asc'?'sort-asc':'sort-desc');
         render();
       }
       if (thead) {
@@ -350,15 +372,15 @@
         if (!searchBox) return;
         const q = searchBox.value.trim().toLowerCase();
         const src = dataRows.map((r,i)=>({...r,index:i+1}));
-        view = !q ? src : src.filter(r => Object.values(r).some(v => String(v).toLowerCase().includes(q)));
-        view.sort((a,b)=>{
-          const va = normalizeForSort(a[sortState.key]);
-          const vb = normalizeForSort(b[sortState.key]);
+        globalView = !q ? src : src.filter(r => Object.values(r).some(v => String(v).toLowerCase().includes(q)));
+        globalView.sort((a,b)=>{
+          const va = normalizeForSort(a[globalSortState.key]);
+          const vb = normalizeForSort(b[globalSortState.key]);
           if (typeof va === 'number' && typeof vb === 'number') return va - vb;
           return String(va).localeCompare(String(vb),'fr',{numeric:true,sensitivity:'base'});
         });
-        if (sortState.dir==='desc') view.reverse();
-        view.forEach((r,i)=>r.index=i+1);
+        if (globalSortState.dir==='desc') globalView.reverse();
+        globalView.forEach((r,i)=>r.index=i+1);
         render();
       }
       function clearSearch(){ 
@@ -370,11 +392,11 @@
         searchBox.addEventListener('input', applySearch);
       }
 
-      // Rendu initial immédiat
-      sortBy('index');
+      // Rendu immédiat avec état actuel
+      render();
     }
 
-    // Thème toggle (indépendant)
+    // Thème toggle
     const htmlEl = document.documentElement;
     const btn = document.getElementById('toggleBtn');
     const txt = document.getElementById('toggleText');
@@ -387,9 +409,16 @@
       });
     }
 
-    // Initialisation sur DOM prêt (garantit affichage des rows)
+    // Initialisation DOM + écoute MathJax load pour force re-init
     document.addEventListener('DOMContentLoaded', () => {
-      initTable();
+      initTable();  // Initial plaintext
+      // Écoute load MathJax pour re-init auto
+      const mathJaxScript = document.getElementById('MathJax-script');
+      if (mathJaxScript) {
+        mathJaxScript.addEventListener('load', () => {
+          setTimeout(() => initTable(true), 100);  // Petit délai pour startup
+        });
+      }
     });
   </script>
 </body>
