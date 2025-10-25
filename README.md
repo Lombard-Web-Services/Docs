@@ -17,13 +17,13 @@ A compilation of key "scientific walls" in physics and cosmology: equations (LaT
 
 ## 🇫🇷 Cartographie spectrale des mécanismes d'émission
 
-Un tableau élégant et responsive qui cartographie les mécanismes d'émission de lumière (photoluminescence, chimiluminescence, triboluminescence, radioluminescence/scintillation, thermoluminescence, plasma de décharge, sonoluminescence, électroluminescence) vers leurs gammes spectrales typiques, déterminants physiques et caractéristiques clés. Inclut un switch Dark/Light mode et un footer signé.
+Cartographie visuelle et interactive des mécanismes d’émission de lumière, reliant chaque processus à ses gammes spectrales typiques et déterminants physiques.
 
 👉 [Accéder ici](https://lombard-web-services.github.io/Docs/carto-spectrale-mecanismes-emission_FR.html)
 
 ## 🇬🇧 Spectral Map of Light-Emission Mechanisms
 
-A polished, responsive table mapping light-emission mechanisms (photoluminescence, chemiluminescence, triboluminescence, radioluminescence/scintillation, thermoluminescence, plasma discharge, sonoluminescence, electroluminescence) to their typical spectral ranges, physical determinants and key features. Includes a Dark/Light mode switch and signed footer.
+An interactive visual map of light‑emission mechanisms linking each process to its typical spectral ranges and physical determinants.
 
 👉 [Access here](https://lombard-web-services.github.io/Docs/carto-spectrale-mecanismes-emission_EN.html)
 
