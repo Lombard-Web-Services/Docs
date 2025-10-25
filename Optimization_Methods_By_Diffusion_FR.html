@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="fr" data-theme="light">
 <head>
@@ -1178,9 +1177,9 @@
 "deriv": "Quasi-2nd Order",
 "cond": "Noise consistent",
 "diff": "BFGS bruitée",
-"diffFormula": "\Delta f = \operatorname{Tr}(B) + \xi",
+"diffFormula": "\Delta f = \operatorname{Tr}(B) + \\xi",
 "nature": "Diffusion BFGS bruitée",
-"desc": "BFGS stochastique utilisant même \xi pour gradients consécutifs, pour secant condition. Diffusion BFGS bruitée — Propagation avec mise à jour stable malgré stochasticité.",
+"desc": "BFGS stochastique utilisant même \\xi pour gradients consécutifs, pour secant condition. Diffusion BFGS bruitée — Propagation avec mise à jour stable malgré stochasticité.",
 "link": "https://arxiv.org/abs/1606.08879"
 },
 {
@@ -1289,7 +1288,7 @@
 },
 {
 "method": "Riemannian Robbins-Monro (RRM)",
-"formula": "x_{k+1} = \Retr (x_k - \alpha_k \nabla F(x_k, \xi_k))",
+"formula": "x_{k+1} = \Retr (x_k - \alpha_k \nabla F(x_k, \\xi_k))",
 "memory": "Low O(n)",
 "conv": "Sublinear stochastic",
 "deriv": "1st Order",
@@ -2147,15 +2146,15 @@
 },
 {
 "method": "Schraudolph Stochastic BFGS",
-"formula": "BFGS with same \xi for all secant: y = \xi (s^T y / s^T s)",
+"formula": "BFGS with same \xi for all secant: y = \\xi (s^T y / s^T s)",
 "memory": "Low O(m n)",
 "conv": "Sublinear improved SGD",
 "deriv": "Quasi-2nd Order",
 "cond": "Stochastic secant",
 "diff": "Schraudolph BFGS",
-"diffFormula": "\Delta_{Sch} f = BFGS_{\xi} \div \nabla f",
+"diffFormula": "\Delta_{Sch} f = BFGS_{\\xi} \div \nabla f",
 "nature": "Diffusion Schraudolph BFGS",
-"desc": "BFGS stochastique Schraudolph, même \xi pour secant.",
+"desc": "BFGS stochastique Schraudolph, même \\xi pour secant.",
 "link": "https://arxiv.org/abs/cond-mat/0002188"
 },
 {
