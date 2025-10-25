@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>Emission Mechanisms and Spectral Domains Map</title>
+  <style>
+    :root {
+      --bg: #0b0f17;
+      --panel: #111826;
+      --ink: #e6f0ff;
+      --muted: #9bb3d3;
+      --accent: #6ae3ff;
+      --glow: #2bd4ff55;
+      --grid: #1b2333;
+      --ok: #7cfaa0;
+      --warn: #ffd166;
+    }
+    [data-theme="light"] {
+      --bg: #f8f9fc;
+      --panel: #ffffff;
+      --ink: #1a1f36;
+      --muted: #6b7a99;
+      --accent: #0091ff;
+      --glow: #0091ff33;
+      --grid: #e5e9f2;
+    }
+    html, body {
+      background: var(--bg);
+      color: var(--ink);
+      font-family: Inter, Segoe UI, Roboto, system-ui, -apple-system, sans-serif;
+      margin: 0;
+      padding: 0;
+      transition: background 0.3s ease, color 0.3s ease;
+    }
+    .wrap {
+      max-width: 1200px;
+      margin: 4rem auto 2rem;
+      padding: 0 1.25rem;
+    }
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1.25rem;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+    .title {
+      font-weight: 800;
+      letter-spacing: .3px;
+      line-height: 1.15;
+      font-size: clamp(1.6rem, 2.5vw, 2.2rem);
+      display: flex;
+      align-items: center;
+      gap: .6rem;
+    }
+    .title .dot {
+      width: .85rem;
+      height: .85rem;
+      border-radius: 50%;
+      background: radial-gradient(circle at 30% 30%, var(--accent), transparent 70%), var(--accent);
+      box-shadow: 0 0 16px var(--accent), 0 0 32px var(--glow);
+    }
+    .theme-switch {
+      position: relative;
+      width: 60px;
+      height: 30px;
+      background: var(--grid);
+      border-radius: 30px;
+      cursor: pointer;
+      border: 1px solid var(--accent);
+      transition: background 0.3s ease;
+    }
+    .theme-switch::before {
+      content: '';
+      position: absolute;
+      top: 3px;
+      left: 3px;
+      width: 22px;
+      height: 22px;
+      background: var(--accent);
+      border-radius: 50%;
+      transition: transform 0.3s ease;
+      box-shadow: 0 0 8px var(--glow);
+    }
+    [data-theme="light"] .theme-switch::before {
+      transform: translateX(30px);
+    }
+    .card {
+      background: linear-gradient(180deg, var(--panel) 0%, var(--bg) 100%);
+      border: 1px solid var(--grid);
+      border-radius: 16px;
+      overflow: hidden;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+    }
+    .table {
+      width: 100%;
+      border-collapse: separate;
+      border-spacing: 0;
+    }
+    .table thead th {
+      position: sticky;
+      top: 0;
+      z-index: 2;
+      background: var(--panel);
+      color: var(--ink);
+      text-transform: uppercase;
+      letter-spacing: .08em;
+      font-size: .78rem;
+      font-weight: 700;
+      padding: 14px 16px;
+      border-bottom: 2px solid var(--accent);
+    }
+    .table tbody td {
+      padding: 16px;
+      font-size: .96rem;
+      line-height: 1.45;
+      vertical-align: top;
+      border-bottom: 1px solid var(--grid);
+    }
+    .table tbody tr:hover td {
+      background: var(--glow);
+    }
+    .tag {
+      display: inline-block;
+      padding: .18rem .55rem;
+      border-radius: 999px;
+      font-size: .72rem;
+      letter-spacing: .03em;
+      border: 1px solid var(--accent);
+      color: var(--accent);
+      background: var(--glow);
+      margin: .08rem .18rem .08rem 0;
+    }
+    .range {
+      color: var(--accent);
+      font-weight: 700;
+    }
+    .note {
+      color: var(--muted);
+    }
+    .legend-row {
+      background: var(--panel);
+      border-top: 2px solid var(--accent);
+    }
+    .legend-row td {
+      padding: 16px !important;
+      text-align: center;
+      color: var(--muted);
+      font-size: .88rem;
+      border-bottom: none !important;
+    }
+    .footer {
+      text-align: center;
+      padding: 2rem 1.25rem;
+      color: var(--muted);
+      font-size: .9rem;
+      margin-top: 3rem;
+      border-top: 1px solid var(--grid);
+    }
+    .footer a {
+      color: var(--accent);
+      text-decoration: none;
+      font-weight: 500;
+    }
+    .footer a:hover {
+      text-decoration: underline;
+    }
+    @media (max-width: 860px) {
+      .table thead {
+        display: none;
+      }
+      .table, .table tbody, .table tr, .table td {
+        display: block;
+        width: 100%;
+      }
+      .table tbody tr {
+        border-bottom: 1px solid var(--grid);
+        margin-bottom: 1rem;
+      }
+      .table tbody td {
+        border: none;
+        padding: 12px 16px;
+      }
+      .table tbody td::before {
+        content: attr(data-label);
+        display: block;
+        font-size: .72rem;
+        letter-spacing: .08em;
+        color: var(--muted);
+        margin-bottom: .35rem;
+        text-transform: uppercase;
+      }
+      .legend-row td {
+        display: block !important;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="header">
+      <div class="title">
+        <span class="dot"></span>
+        Map of Emission Mechanisms and Their Spectral Domains
+      </div>
+      <div class="theme-switch" onclick="toggleTheme()" title="Toggle dark/light mode"></div>
+    </div>
+    <div class="card">
+      <table class="table">
+        <thead>
+          <tr>
+            <th style="width:18%">Mechanism</th>
+            <th style="width:29%">Typical spectral range</th>
+            <th style="width:29%">Physical determinants</th>
+            <th style="width:24%">Key feature</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td data-label="Mechanism">
+              Photoluminescence
+              <span class="tag">Fluorescence</span>
+              <span class="tag">Phosphorescence</span>
+            </td>
+            <td data-label="Range">
+              <span class="range">UV 200–400 nm; Vis 400–700 nm; NIR 700–1100 nm</span>
+            </td>
+            <td data-label="Physical determinants">
+              Bandgap, defect states, thermal quenching; quantum yield/lifetime
+            </td>
+            <td data-label="Key feature" class="note">
+              Broad spectral engineering via materials/dopants
+            </td>
+          </tr>
+          <tr>
+            <td data-label="Mechanism">
+              Chemiluminescence
+              <span class="tag">Bioluminescence</span>
+            </td>
+            <td data-label="Range">
+              <span class="range">Vis 430–600 nm; NIR 650–900 nm (probes)</span>
+            </td>
+            <td data-label="Physical determinants">
+              ΔG of reaction, excitation pathways, energy transfer
+            </td>
+            <td data-label="Key feature" class="note">
+              “Cold” light; kinetic/thermochemical control
+            </td>
+          </tr>
+          <tr>
+            <td data-label="Mechanism">
+              Triboluminescence
+              <span class="tag">Mechanoluminescence</span>
+            </td>
+            <td data-label="Range">
+              <span class="range">Vis 400–700 nm; sometimes NIR</span>
+            </td>
+            <td data-label="Physical determinants">
+              Charge separation upon fracture, micro‑discharge, host PL
+            </td>
+            <td data-label="Key feature" class="note">
+              Spectrum close to host fluorescence
+            </td>
+          </tr>
+          <tr>
+            <td data-label="Mechanism">
+              Radioluminescence
+              <span class="tag">Scintillation</span>
+            </td>
+            <td data-label="Range">
+              <span class="range">UV–Vis–NIR 200–900 nm</span>
+            </td>
+            <td data-label="Physical determinants">
+              LET, transfer to luminescent centers; non‑linearity (Birks’ law)
+            </td>
+            <td data-label="Key feature" class="note">
+              Birks ∝ yield vs dE/dx (band set by host/dopant)
+            </td>
+          </tr>
+          <tr>
+            <td data-label="Mechanism">
+              Thermoluminescence
+            </td>
+            <td data-label="Range">
+              <span class="range">Vis ~350–650 nm</span>
+            </td>
+            <td data-label="Physical determinants">
+              Thermal release (E, s), kinetic (order 1/2)
+            </td>
+            <td data-label="Key feature" class="note">
+              “Glow” curves vs T (dosimetry/archaeology)
+            </td>
+          </tr>
+          <tr>
+            <td data-label="Mechanism">
+              Plasma discharge
+              <span class="tag">LTE</span>
+              <span class="tag">non‑LTE</span>
+            </td>
+            <td data-label="Range">
+              <span class="range">Planck continuum (Wien λ<sub>max</sub>≈2.9×10<sup>−3</sup>/T)</span><br/>
+              <span class="range">Lines/bands UV–IR, VUV possible</span>
+            </td>
+            <td data-label="Physical determinants">
+              Temperature, composition, pressure, opacity; equilibrium vs non‑LTE
+            </td>
+            <td data-label="Key feature" class="note">
+              Continuum (opaque) or atomic/ionic emission lines
+            </td>
+          </tr>
+          <tr>
+            <td data-label="Mechanism">
+              Sonoluminescence
+            </td>
+            <td data-label="Range">
+              <span class="range">Vis–near-UV, peak ~300–500 nm (T≈4–10 kK)</span>
+            </td>
+            <td data-label="Physical determinants">
+              Adiabatic compression of a bubble, gas/opacity, stability window
+            </td>
+            <td data-label="Key feature" class="note">
+              Quasi-thermal flash, micrometric, ultra-fast
+            </td>
+          </tr>
+          <tr>
+            <td data-label="Mechanism">
+              Electroluminescence
+              <span class="tag">LED/OLED</span>
+              <span class="tag">EL panel</span>
+            </td>
+            <td data-label="Range">
+              <span class="range">UV → NIR, by bandgap (≈315–950+ nm)</span>
+            </td>
+            <td data-label="Physical determinants">
+              Radiative e<sup>−</sup>/hole recombination; material (InGaN, GaAsP, organics…)
+            </td>
+            <td data-label="Key feature" class="note">
+              Color set by E<sub>g</sub> (E=hc/λ); narrowband, efficient
+            </td>
+          </tr>
+        </tbody>
+        <tfoot>
+          <tr class="legend-row">
+            <td colspan="4">
+              Ranges are typical, not absolute; spectrum can shift with material or condition engineering.
+            </td>
+          </tr>
+        </tfoot>
+      </table>
+    </div>
+  </div>
+  <div class="footer">
+    <p>© 2025 Thibaut Lombard — <a href="https://github.com/Lombard-Web-Services" target="_blank" rel="noopener">Lombard Web Services</a></p>
+  </div>
+  <script>
+    function toggleTheme() {
+      const html = document.documentElement;
+      const currentTheme = html.getAttribute('data-theme');
+      const newTheme = currentTheme === 'light' ? 'dark' : 'light';
+      html.setAttribute('data-theme', newTheme);
+      localStorage.setItem('theme', newTheme);
+    }
+    window.addEventListener('DOMContentLoaded', () => {
+      const savedTheme = localStorage.getItem('theme') || 'dark';
+      document.documentElement.setAttribute('data-theme', savedTheme);
+    });
+  </script>
+</body>
+</html>
