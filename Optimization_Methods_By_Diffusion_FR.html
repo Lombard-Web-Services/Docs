@@ -112,11 +112,12 @@
     table { width:100%; border-collapse:separate; border-spacing:0; table-layout:fixed; }
     thead { position:sticky; top:0; background:var(--accent-gradient); z-index:2; }
     thead th {
-      padding:14px 10px; text-align:left; font-weight:700; font-size:.9rem;
-      color:#fff; text-transform:uppercase; letter-spacing:.4px; cursor:pointer; user-select:none;
+      padding:14px 8px; text-align:left; font-weight:700; font-size:.85rem;
+      color:#fff; text-transform:uppercase; letter-spacing:.3px; cursor:pointer; user-select:none;
       border-bottom:3px solid rgba(255,255,255,.25);
+      white-space:normal; word-break:break-word; overflow-wrap:anywhere; line-height:1.2;
     }
-    thead th .arrow { margin-left:6px; opacity:.9; font-size:.85rem; }
+    thead th .arrow { margin-left:4px; opacity:.9; font-size:.8rem; display:block; }
     thead th.sort-asc .arrow::after { content:"▲"; }
     thead th.sort-desc .arrow::after { content:"▼"; }
 
@@ -125,25 +126,25 @@
     tbody tr:hover { background:var(--bg-primary); }
 
     td {
-      padding:12px; border-bottom:1px solid var(--border-color);
+      padding:12px 8px; border-bottom:1px solid var(--border-color);
       font-size:.92rem; color:var(--text-primary); vertical-align:top;
-      word-break:break-word; overflow-wrap:anywhere; white-space:normal;
+      word-break:break-word; overflow-wrap:anywhere; white-space:normal; max-width:0;
     }
-    /* Largeurs colonnes pour équilibre */
-    th[data-key="index"], td.index { width:52px; }
-    th[data-key="method"], td:nth-child(2) { width:15%; }
-    th[data-key="formula"], td:nth-child(3) { width:20%; }
-    th[data-key="memory"], td:nth-child(4) { width:8%; }
-    th[data-key="conv"], td:nth-child(5) { width:8%; }
-    th[data-key="deriv"], td:nth-child(6) { width:8%; }
-    th[data-key="cond"], td:nth-child(7) { width:10%; }
-    th[data-key="diff"], td:nth-child(8) { width:10%; }
-    th[data-key="diffFormula"], td:nth-child(9) { width:20%; }
-    th[data-key="nature"], td:nth-child(10) { width:8%; }
-    th[data-key="desc"], td:nth-child(11) { width:15%; }
-    th[data-key="link"], td:nth-child(12) { width:60px; } /* Réduit au strict nécessaire */
+    /* Largeurs colonnes ajustées pour sum <=100% et plus d'espace pour formules/headers */
+    th[data-key="index"], td.index { width:50px; }
+    th[data-key="method"], td:nth-child(2) { width:12%; }
+    th[data-key="formula"], td:nth-child(3) { width:16%; }
+    th[data-key="memory"], td:nth-child(4) { width:7%; }
+    th[data-key="conv"], td:nth-child(5) { width:7%; }
+    th[data-key="deriv"], td:nth-child(6) { width:7%; }
+    th[data-key="cond"], td:nth-child(7) { width:8%; }
+    th[data-key="diff"], td:nth-child(8) { width:8%; }
+    th[data-key="diffFormula"], td:nth-child(9) { width:16%; }
+    th[data-key="nature"], td:nth-child(10) { width:6%; }
+    th[data-key="desc"], td:nth-child(11) { width:13%; }
+    th[data-key="link"], td:nth-child(12) { width:50px; }
     td.method { color:var(--accent-primary); font-weight:600; }
-    td.index { text-align:right; color:#8a94b5; font-weight:700; }
+    td.index { text-align:right; color:#8a94b5; font-weight:700; white-space:nowrap; }
 
     /* Fix rendu TeX: adaptation automatique à 100% largeur cellule, sans débord */
     .tex-inline {
@@ -154,11 +155,18 @@
     /* Si une formule est longue, force block pour retours à la ligne via MathJax */
     .tex-inline.long { display:block; }
 
-    /* Contrainte MathJax SVG à la largeur de la cellule */
-    .tex-inline .mjx-container { max-width:100% !important; overflow:hidden !important; display:block !important; }
-    .tex-inline .mjx-svg { max-width:100% !important; height:auto !important; }
+    /* Contrainte MathJax SVG à la largeur de la cellule, force wrap */
+    .tex-inline .mjx-container { 
+      max-width:100% !important; overflow:hidden !important; display:block !important; 
+      word-break:break-word !important; 
+    }
+    .tex-inline .mjx-svg { 
+      max-width:100% !important; height:auto !important; 
+      word-break:break-word !important; overflow-wrap:anywhere !important;
+    }
+    .mjx-mrow { white-space:normal !important; }
 
-    .badge { display:inline-block; padding:4px 10px; border-radius:16px; font-size:.72rem; font-weight:700; text-transform:uppercase; letter-spacing:.4px; }
+    .badge { display:inline-block; padding:4px 8px; border-radius:16px; font-size:.72rem; font-weight:700; text-transform:uppercase; letter-spacing:.4px; }
     .low{background:rgba(46,213,115,.16); color:#1f9d63;}
     .med{background:rgba(255,159,67,.16); color:#c06a18;}
     .high{background:rgba(238,82,83,.16); color:#b53a3b;}
@@ -176,12 +184,15 @@
 
     @media (max-width: 900px) {
       .title { font-size:1.6rem; }
-      thead th, td { padding:10px 8px; font-size:.86rem; }
+      thead th, td { padding:10px 6px; font-size:.82rem; }
       .theme-toggle { gap:8px; padding:6px 8px; }
       /* Sur mobile, colonnes formules prennent plus d'espace */
       th[data-key="formula"], td:nth-child(3),
-      th[data-key="diffFormula"], td:nth-child(9) { width:25%; }
-      th[data-key="link"], td:nth-child(12) { width:50px; }
+      th[data-key="diffFormula"], td:nth-child(9) { width:20%; }
+      th[data-key="method"], td:nth-child(2) { width:14%; }
+      th[data-key="desc"], td:nth-child(11) { width:16%; }
+      th[data-key="link"], td:nth-child(12) { width:40px; }
+      thead th { font-size:.8rem; letter-spacing:.2px; }
     }
   </style>
 </head>
