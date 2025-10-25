@@ -20,8 +20,8 @@
     :root {
       --bg-primary:#f7f9fc; --bg-secondary:#ffffff; --bg-tertiary:#eef2f8;
       --text-primary:#141a2a; --text-secondary:#4b5568;
-      --accent-primary:#0b66ff; --accent-secondary:#7a3ff2;
-      --accent-gradient:linear-gradient(135deg,#0b66ff 0%,#7a3ff2 100%);
+      --accent-primary:#6a2cff; --accent-secondary:#0bb2ff;
+      --accent-gradient:linear-gradient(135deg,#6a2cff 0%,#0bb2ff 100%);
       --border-color:#d9e1f2;
       --shadow:0 8px 24px rgba(11,102,255,.08);
       --hover-shadow:0 12px 36px rgba(11,102,255,.12);
@@ -29,8 +29,8 @@
     [data-theme="dark"] {
       --bg-primary:#0a0e27; --bg-secondary:#151932; --bg-tertiary:#1e2139;
       --text-primary:#e4e7f5; --text-secondary:#a0a6c9;
-      --accent-primary:#00d4ff; --accent-secondary:#7b2ff7;
-      --accent-gradient:linear-gradient(135deg,#00d4ff 0%,#7b2ff7 100%);
+      --accent-primary:#7b2ff7; --accent-secondary:#00d4ff;
+      --accent-gradient:linear-gradient(135deg,#7b2ff7 0%,#00d4ff 100%);
       --border-color:#20304d;
       --shadow:0 8px 32px rgba(0,212,255,.10);
       --hover-shadow:0 12px 48px rgba(0,212,255,.18);
@@ -44,35 +44,29 @@
 
     .container { width:100%; padding:16px; }
 
-    /* Barre de titre avec switch aligné à droite, relatif, bloc unique */
+    /* HEADER */
     .header {
       width:100%; background:var(--bg-secondary); border-radius:16px;
-      padding:18px 16px; margin:20px 0 16px; box-shadow:var(--shadow);
-      position:relative; display:flex; align-items:center; justify-content:space-between;
-      gap:12px;
+      padding:14px 16px; margin:10px 0 16px; box-shadow:var(--shadow);
+      position:relative; display:flex; align-items:center; justify-content:space-between; gap:12px;
     }
     .header::before { content:''; position:absolute; top:0; left:0; right:0; height:4px; background:var(--accent-gradient); border-top-left-radius:16px; border-top-right-radius:16px; }
-    .title-wrap { display:block; text-align:center; flex:1 1 auto; }
+    .brand { display:flex; align-items:center; gap:10px; min-width:54px; }
+    .title-wrap { flex:1 1 auto; text-align:center; }
     .title {
-      font-size:1.9rem; font-weight:800; margin-bottom:4px;
+      font-size:1.9rem; font-weight:800; margin-bottom:2px;
       background:var(--accent-gradient); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text;
     }
     .subtitle { color:var(--text-secondary); font-size:1.0rem; }
 
-    /* Switch glissière (UN SEUL), position relative, côté droit du header */
-    .theme-toggle {
-      display:block; position:relative; flex:0 0 auto;
-      align-self:flex-start;
-      background:transparent; border:none; padding:0; margin:0;
-    }
+    /* Switch unique dans la barre */
+    .theme-toggle { display:block; position:relative; flex:0 0 auto; }
     .toggle {
-      --w:54px; --h:28px;
+      --w:56px; --h:28px;
       position:relative; display:inline-block; width:var(--w); height:var(--h);
       border-radius:var(--h); background:#c9d3ea;
       border:1px solid var(--border-color);
-      cursor:pointer;
-      vertical-align:middle;
-      transition:background .2s ease;
+      cursor:pointer; vertical-align:middle; transition:background .2s ease;
     }
     .toggle::after {
       content:''; position:absolute; top:2px; left:2px;
@@ -80,12 +74,9 @@
       background:#fff; box-shadow:0 2px 6px rgba(0,0,0,.15);
       transition:transform .2s ease;
     }
-    .toggle[aria-pressed="true"] { background:#7a3ff2; }
-    .toggle[aria-pressed="true"]::after { transform:translateX(24px); }
-    .toggle-label {
-      display:block; margin-top:6px; text-align:center;
-      font-size:.85rem; color:var(--text-secondary);
-    }
+    .toggle[aria-pressed="true"] { background:#6a2cff; }
+    .toggle[aria-pressed="true"]::after { transform:translateX(26px); }
+    .toggle-label { display:block; margin-top:6px; text-align:center; font-size:.85rem; color:var(--text-secondary); white-space:nowrap; }
 
     .tools {
       width:100%; display:flex; gap:10px; align-items:center; justify-content:space-between;
@@ -109,12 +100,13 @@
       overflow:hidden; /* pas de scroll X */
     }
     table { width:100%; border-collapse:separate; border-spacing:0; table-layout:fixed; }
+
     thead { position:sticky; top:0; background:var(--accent-gradient); z-index:2; }
     thead th {
       padding:14px 10px; text-align:left; font-weight:700; font-size:.9rem;
       color:#fff; text-transform:uppercase; letter-spacing:.4px; cursor:pointer; user-select:none;
       border-bottom:3px solid rgba(255,255,255,.25);
-      word-break:break-word; overflow-wrap:anywhere; white-space:normal;
+      white-space:normal; word-break:normal; overflow-wrap:anywhere;
     }
     thead th .arrow { margin-left:6px; opacity:.9; font-size:.85rem; }
     thead th.sort-asc .arrow::after { content:"▲"; }
@@ -127,56 +119,54 @@
     td {
       padding:12px; border-bottom:1px solid var(--border-color);
       font-size:.92rem; color:var(--text-primary); vertical-align:top;
-      word-break:break-word; overflow-wrap:anywhere; white-space:normal;
+      white-space:normal; word-break:break-word; overflow-wrap:anywhere;
     }
+
     /* Colonne # étroite */
     th[data-key="index"] { width:36px; max-width:42px; }
     td.index { width:36px; max-width:42px; text-align:right; color:#8a94b5; font-weight:700; white-space:nowrap; }
 
     td.method { color:var(--accent-primary); font-weight:600; }
 
-    /* WRAP robuste pour TeX: chaque cellule TeX a un conteneur .tex-wrap */
-    .tex-wrap {
-      display:block;
-      max-width:100%;
-      overflow:hidden; /* empêche d’empiéter sur la colonne voisine */
+    /* Colonnes formules larges et stables */
+    th[data-key="formula"], td:nth-child(3),
+    th[data-key="diffFormula"], td:nth-child(9) {
+      min-width: 300px;
+      width: 30%;
     }
-    .tex-inline {
-      display:inline;
-      word-break:break-word; overflow-wrap:anywhere; white-space:normal;
-      line-height:1.35;
-    }
-    .tex-inline.long { display:block; font-size:0.95em; }
+    th[data-key="method"], td:nth-child(2) { width: 16%; }
+    th[data-key="desc"], td:nth-child(11) { width: 18%; }
 
-    /* Contraindre le SVG MathJax à rester dans la cellule */
+    /* Conteneur TeX full width */
+    .tex-wrap { display:block; width:100%; max-width:100%; overflow:hidden; }
+    .tex-inline { display:block; width:100%; line-height:1.35; white-space:normal; word-break:normal; overflow-wrap:normal; }
+
+    /* Contraindre MathJax dans la cellule */
     td:nth-child(3) .mjx-svg,
     td:nth-child(9) .mjx-svg { max-width:100% !important; height:auto !important; }
-    .mjx-container {
-      overflow:hidden !important; text-overflow:clip !important; white-space:normal !important;
-      display:block !important; /* important pour limiter la largeur */
-      max-width:100% !important;
-    }
+    .mjx-container { overflow:hidden !important; text-overflow:clip !important; white-space:normal !important; display:block !important; max-width:100% !important; }
     .mjx-container svg { max-width:100% !important; height:auto !important; }
 
-    @media (max-width: 720px) {
+    @media (max-width: 900px) {
       .title { font-size:1.6rem; }
       thead th, td { padding:10px 8px; font-size:.86rem; }
-      .toggle { --w:50px; --h:26px; }
+      th[data-key="formula"], td:nth-child(3),
+      th[data-key="diffFormula"], td:nth-child(9) { min-width:260px; width:100%; }
+      .toggle { --w:52px; --h:26px; }
       .toggle::after { width:22px; height:22px; }
-      .toggle[aria-pressed="true"]::after { transform:translateX(22px); }
+      .toggle[aria-pressed="true"]::after { transform:translateX(24px); }
     }
   </style>
 </head>
 <body>
   <div class="container">
-    <!-- Header en flex: titre centré, switch à droite (relatif, 1 seul) -->
     <header class="header">
-      <div style="flex:0 0 54px;"></div> <!-- espace de symétrie à gauche -->
+      <div class="brand"></div>
       <div class="title-wrap">
         <h1 class="title">méthodes d'optimisation classées</h1>
         <p class="subtitle">Tri par colonne, recherche, numérotation, rendu TeX, thème clair/sombre</p>
       </div>
-      <div class="theme-toggle">
+      <div class="theme-toggle" aria-live="polite">
         <button id="toggleBtn" class="toggle" aria-pressed="false" aria-label="Basculer clair/sombre"></button>
         <span id="toggleText" class="toggle-label">Light</span>
       </div>
@@ -206,17 +196,17 @@
             <th data-key="link">Lien <span class="arrow"></span></th>
           </tr>
         </thead>
-        <tbody id="tableBody"><!-- rendu JS --></tbody>
+        <tbody id="tableBody"></tbody>
       </table>
     </section>
 
-    <footer class="footer" style="text-align:center; margin:16px 0 24px;">
+    <footer style="text-align:center; margin:16px 0 24px;">
       © 2025 thibaut LOMBARD — <a href="https://github.com/Lombard-Web-Services/Docs/" target="_blank" rel="noopener">https://github.com/Lombard-Web-Services/Docs/</a>
     </footer>
   </div>
 
   <script>
-    // Thème (unique switch, relatif)
+    // Thème (unique switch)
     const htmlEl = document.documentElement;
     const btn = document.getElementById('toggleBtn');
     const txt = document.getElementById('toggleText');
@@ -239,24 +229,19 @@
       return `<span class="badge quad">${s}</span>`;
     }
 
-    // Générateur TeX dans un wrap bloc pour empêcher tout débord
+    // TeX full-width dans le td
     function texSpan(texString){
-      const soft = String(texString)
-        .replaceAll('+', '\\, +\\, ')
-        .replaceAll('=', '\\, =\\, ')
-        .replaceAll(',', ',\\, ');
-      const long = soft.length > 72 ? ' long' : '';
-      return `<div class="tex-wrap"><span class="tex-inline${long}">\\(${soft}\\)</span></div>`;
+      const s = String(texString);
+      return `<div class="tex-wrap"><span class="tex-inline">\\(${s}\\)</span></div>`;
     }
 
-    // Données (placez ici l’ensemble de votre liste complète)
+    // Données: insère ici l'intégralité de ta liste (exemples)
     const dataRows = [
-      {method:"Gradient Descent",formula:"x_{k+1}=x_k-\\alpha\\,\\nabla f(x_k)",memory:"Low O(n)",conv:"Linear",deriv:"1st Order",cond:"Poor (ill‑cond.)",diff:"Locale linéaire",diffFormula:"\\Delta f=\\nabla\\cdot(\\nabla f)",nature:"Isotrope",desc:"Descente de gradient classique.",link:"https://en.wikipedia.org/wiki/Gradient_descent"},
-      {method:"Optimal Transport (Wasserstein)",formula:"W_2^2(p,q)=\\inf_{\\pi\\in\\Pi(p,q)}\\int\\|x-y\\|^2\\,d\\pi(x,y)",memory:"High O(n^3)",conv:"Superlinear",deriv:"Implicit Gradient",cond:"Excellent (géométrie lisse)",diff:"Géométrique",diffFormula:"\\Delta_W f=\\mathrm{div}_W(\\nabla_W f)",nature:"Wasserstein",desc:"Optimisation sur l’espace des mesures.",link:"https://en.wikipedia.org/wiki/Wasserstein_metric"},
-      {method:"Fisher (Natural Gradient)",formula:"\\theta_{k+1}=\\theta_k-\\alpha\\,F(\\theta_k)^{-1}\\nabla_\\theta L(\\theta_k)",memory:"Medium–High O(n^2)",conv:"Superlinear",deriv:"Quasi‑2nd Order",cond:"Stable (Fisher metric)",diff:"Informationnelle",diffFormula:"\\Delta_F f=F^{-1}\\nabla\\cdot(F\\nabla f)",nature:"Naturel",desc:"Gradient naturel d’Amari.",link:"https://en.wikipedia.org/wiki/Natural_gradient"},
-      {method:"Fisher–Rao",formula:"\\langle u,v\\rangle_{\\theta}=\\mathbb E[\\partial_\\theta\\log p_\\theta\\,\\partial_\\theta\\log p_\\theta]",memory:"Medium–High O(n^2)",conv:"Superlinear",deriv:"Quasi‑2nd Order",cond:"Stable (Fisher–Rao)",diff:"Info‑géométrique",diffFormula:"\\Delta_{FR} f=\\mathrm{div}_{FR}(\\nabla_{FR} f)",nature:"Riemannienne proba",desc:"Métrique canonique.",link:"https://en.wikipedia.org/wiki/Fisher_information_metric"},
-      {method:"Newton's Method",formula:"x_{k+1}=x_k-H^{-1}\\nabla f(x_k)",memory:"High O(n^2)",conv:"Quadratic",deriv:"2nd Order",cond:"Good (Hessian)",diff:"Locale isotrope",diffFormula:"\\Delta f=\\operatorname{Tr}(H)",nature:"Isotrope linéaire",desc:"Newton classique.",link:"https://en.wikipedia.org/wiki/Newton%27s_method"}
-      // ... ajoutez ici toutes vos autres lignes au même format
+      {method:"Newton's Method",formula:"x_{k+1}=x_k-H^{-1}\\nabla f(x_k)",memory:"High O(n^2)",conv:"Quadratic",deriv:"2nd Order",cond:"Good (Hessian)",diff:"Locale isotrope",diffFormula:"\\Delta f=\\operatorname{Tr}(H)",nature:"Isotrope linéaire",desc:"Newton classique.",link:"https://en.wikipedia.org/wiki/Newton%27s_method"},
+      {method:"Fisher–Rao",formula:"\\langle u,v\\rangle_{\\theta}=\\mathbb E\\big[\\partial_\\theta \\log p_\\theta\\;\\partial_\\theta \\log p_\\theta\\big]",memory:"Medium–High O(n^2)",conv:"Superlinear",deriv:"Quasi-2nd Order",cond:"Stable (Fisher–Rao)",diff:"Info‑géométrique",diffFormula:"\\Delta_{FR} f=\\mathrm{div}_{FR}(\\nabla_{FR} f)",nature:"Riemannienne proba",desc:"Métrique canonique.",link:"https://en.wikipedia.org/wiki/Fisher_information_metric"},
+      {method:"Fisher (Natural Gradient)",formula:"\\theta_{k+1}=\\theta_k-\\alpha\\,F(\\theta_k)^{-1}\\nabla_\\theta L(\\theta_k)",memory:"Medium–High O(n^2)",conv:"Superlinear",deriv:"Quasi‑2nd Order",cond:"Stable (Fisher metric)",diff:"Informationnelle",diffFormula:"\\Delta_F f=F^{-1}\\nabla\\cdot(F\\nabla f)",nature:"Naturel",desc:"Gradient naturel.",link:"https://en.wikipedia.org/wiki/Natural_gradient"},
+      {method:"Optimal Transport (Wasserstein)",formula:"W_2^2(p,q)=\\inf_{\\pi\\in\\Pi(p,q)}\\int\\|x-y\\|^2\\,d\\pi(x,y)",memory:"High O(n^3)",conv:"Superlinear",deriv:"Implicit Gradient",cond:"Excellent (géométrie lisse)",diff:"Géométrique",diffFormula:"\\Delta_W f=\\mathrm{div}_W(\\nabla_W f)",nature:"Wasserstein",desc:"Optimisation mesures.",link:"https://en.wikipedia.org/wiki/Wasserstein_metric"},
+      {method:"Gradient Descent",formula:"x_{k+1}=x_k-\\alpha\\,\\nabla f(x_k)",memory:"Low O(n)",conv:"Linear",deriv:"1st Order",cond:"Poor (ill‑cond.)",diff:"Locale linéaire",diffFormula:"\\Delta f=\\nabla\\cdot(\\nabla f)",nature:"Isotrope",desc:"Descente de gradient.",link:"https://en.wikipedia.org/wiki/Gradient_descent"}
     ];
 
     const tbody = document.getElementById('tableBody');
