@@ -15,6 +15,18 @@ A compilation of key "scientific walls" in physics and cosmology: equations (LaT
 
 👉 [Access here](https://lombard-web-services.github.io/Docs/Scientific_walls_EN.html)
 
+## 🇫🇷 Cartographie spectrale des mécanismes d'émission
+
+Un tableau élégant et responsive qui cartographie les mécanismes d'émission de lumière (photoluminescence, chimiluminescence, triboluminescence, radioluminescence/scintillation, thermoluminescence, plasma de décharge, sonoluminescence, électroluminescence) vers leurs gammes spectrales typiques, déterminants physiques et caractéristiques clés. Inclut un switch Dark/Light mode et un footer signé.
+
+👉 [Accéder ici](https://lombard-web-services.github.io/Docs/carto-spectrale-mecanismes-emission_FR.html)
+
+## 🇬🇧 Spectral Map of Light-Emission Mechanisms
+
+A polished, responsive table mapping light-emission mechanisms (photoluminescence, chemiluminescence, triboluminescence, radioluminescence/scintillation, thermoluminescence, plasma discharge, sonoluminescence, electroluminescence) to their typical spectral ranges, physical determinants and key features. Includes a Dark/Light mode switch and signed footer.
+
+👉 [Access here](https://lombard-web-services.github.io/Docs/carto-spectrale-mecanismes-emission_EN.html)
+
 ## 🇫🇷 Points forts et faiblesses de la lecture de fichiers locaux Web sur Android
 
 Un tableau récapitulatif des forces et faiblesses de la lecture des fichiers web locaux sur les applications Android, dans l'optique du développement d'applications Native/Non Native.
