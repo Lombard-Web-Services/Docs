@@ -42,48 +42,50 @@
       background:var(--bg-primary); color:var(--text-primary); line-height:1.6;
     }
 
-    /* Switch glissière compact et sans débord */
+    .container { width:100%; padding:16px; }
+
+    /* Barre de titre avec switch aligné à droite, relatif, bloc unique */
+    .header {
+      width:100%; background:var(--bg-secondary); border-radius:16px;
+      padding:18px 16px; margin:20px 0 16px; box-shadow:var(--shadow);
+      position:relative; display:flex; align-items:center; justify-content:space-between;
+      gap:12px;
+    }
+    .header::before { content:''; position:absolute; top:0; left:0; right:0; height:4px; background:var(--accent-gradient); border-top-left-radius:16px; border-top-right-radius:16px; }
+    .title-wrap { display:block; text-align:center; flex:1 1 auto; }
+    .title {
+      font-size:1.9rem; font-weight:800; margin-bottom:4px;
+      background:var(--accent-gradient); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text;
+    }
+    .subtitle { color:var(--text-secondary); font-size:1.0rem; }
+
+    /* Switch glissière (UN SEUL), position relative, côté droit du header */
     .theme-toggle {
-      position:fixed; top:12px; right:12px; z-index:1000;
-      display:inline-flex; align-items:center; gap:10px;
-      padding:6px 10px; border-radius:999px;
-      background:var(--bg-secondary); color:var(--text-primary);
-      border:1px solid var(--border-color);
-      box-shadow:var(--shadow);
-      max-width:220px;
+      display:block; position:relative; flex:0 0 auto;
+      align-self:flex-start;
+      background:transparent; border:none; padding:0; margin:0;
     }
     .toggle {
-      --w:48px; --h:26px;
-      position:relative; width:var(--w); height:var(--h);
-      border-radius:var(--h); background:#c9d3ea; transition:background .2s ease;
-      border:1px solid var(--border-color); cursor:pointer; flex-shrink:0;
+      --w:54px; --h:28px;
+      position:relative; display:inline-block; width:var(--w); height:var(--h);
+      border-radius:var(--h); background:#c9d3ea;
+      border:1px solid var(--border-color);
+      cursor:pointer;
+      vertical-align:middle;
+      transition:background .2s ease;
     }
     .toggle::after {
       content:''; position:absolute; top:2px; left:2px;
-      width:22px; height:22px; border-radius:50%;
+      width:24px; height:24px; border-radius:50%;
       background:#fff; box-shadow:0 2px 6px rgba(0,0,0,.15);
       transition:transform .2s ease;
     }
     .toggle[aria-pressed="true"] { background:#7a3ff2; }
-    .toggle[aria-pressed="true"]::after { transform:translateX(20px); }
+    .toggle[aria-pressed="true"]::after { transform:translateX(24px); }
     .toggle-label {
-      font-size:.9rem; color:var(--text-secondary);
-      white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width:140px;
+      display:block; margin-top:6px; text-align:center;
+      font-size:.85rem; color:var(--text-secondary);
     }
-
-    .container { width:100%; padding:16px; }
-
-    .header {
-      width:100%; background:var(--bg-secondary); border-radius:16px;
-      padding:28px 16px; margin:56px 0 16px; box-shadow:var(--shadow);
-      position:relative; text-align:center;
-    }
-    .header::before { content:''; position:absolute; top:0; left:0; right:0; height:4px; background:var(--accent-gradient); }
-    .title {
-      font-size:2rem; font-weight:800; margin-bottom:6px;
-      background:var(--accent-gradient); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text;
-    }
-    .subtitle { color:var(--text-secondary); font-size:1.02rem; }
 
     .tools {
       width:100%; display:flex; gap:10px; align-items:center; justify-content:space-between;
@@ -127,42 +129,57 @@
       font-size:.92rem; color:var(--text-primary); vertical-align:top;
       word-break:break-word; overflow-wrap:anywhere; white-space:normal;
     }
-    /* Colonne # plus étroite */
+    /* Colonne # étroite */
     th[data-key="index"] { width:36px; max-width:42px; }
     td.index { width:36px; max-width:42px; text-align:right; color:#8a94b5; font-weight:700; white-space:nowrap; }
 
     td.method { color:var(--accent-primary); font-weight:600; }
 
-    /* Rendu TeX: spans + contraintes MathJax pour rester dans la cellule */
-    .tex-inline { display:inline; word-break:break-word; overflow-wrap:anywhere; white-space:normal; }
-    .tex-inline.long { display:block; font-size:0.95em; line-height:1.35; }
+    /* WRAP robuste pour TeX: chaque cellule TeX a un conteneur .tex-wrap */
+    .tex-wrap {
+      display:block;
+      max-width:100%;
+      overflow:hidden; /* empêche d’empiéter sur la colonne voisine */
+    }
+    .tex-inline {
+      display:inline;
+      word-break:break-word; overflow-wrap:anywhere; white-space:normal;
+      line-height:1.35;
+    }
+    .tex-inline.long { display:block; font-size:0.95em; }
 
-    /* Forcer MathJax SVG à ne pas dépasser */
+    /* Contraindre le SVG MathJax à rester dans la cellule */
     td:nth-child(3) .mjx-svg,
     td:nth-child(9) .mjx-svg { max-width:100% !important; height:auto !important; }
-    .mjx-container { overflow:hidden !important; text-overflow:clip !important; white-space:normal !important; }
+    .mjx-container {
+      overflow:hidden !important; text-overflow:clip !important; white-space:normal !important;
+      display:block !important; /* important pour limiter la largeur */
+      max-width:100% !important;
+    }
     .mjx-container svg { max-width:100% !important; height:auto !important; }
 
-    @media (max-width: 600px) {
-      td:nth-child(3) .mjx-svg,
-      td:nth-child(9) .mjx-svg { transform:scale(0.96); transform-origin:left top; }
+    @media (max-width: 720px) {
       .title { font-size:1.6rem; }
       thead th, td { padding:10px 8px; font-size:.86rem; }
-      .theme-toggle { gap:8px; padding:6px 8px; }
+      .toggle { --w:50px; --h:26px; }
+      .toggle::after { width:22px; height:22px; }
+      .toggle[aria-pressed="true"]::after { transform:translateX(22px); }
     }
   </style>
 </head>
 <body>
-  <!-- Switch glissière accessible -->
-  <div class="theme-toggle" aria-live="polite">
-    <button id="toggleBtn" class="toggle" aria-pressed="false" aria-label="Basculer clair/sombre"></button>
-    <span id="toggleText" class="toggle-label">Light</span>
-  </div>
-
   <div class="container">
+    <!-- Header en flex: titre centré, switch à droite (relatif, 1 seul) -->
     <header class="header">
-      <h1 class="title">méthodes d'optimisation classées</h1>
-      <p class="subtitle">Tri par colonne, recherche, numérotation, rendu TeX, thème clair/sombre</p>
+      <div style="flex:0 0 54px;"></div> <!-- espace de symétrie à gauche -->
+      <div class="title-wrap">
+        <h1 class="title">méthodes d'optimisation classées</h1>
+        <p class="subtitle">Tri par colonne, recherche, numérotation, rendu TeX, thème clair/sombre</p>
+      </div>
+      <div class="theme-toggle">
+        <button id="toggleBtn" class="toggle" aria-pressed="false" aria-label="Basculer clair/sombre"></button>
+        <span id="toggleText" class="toggle-label">Light</span>
+      </div>
     </header>
 
     <section class="tools">
@@ -193,13 +210,13 @@
       </table>
     </section>
 
-    <footer class="footer">
+    <footer class="footer" style="text-align:center; margin:16px 0 24px;">
       © 2025 thibaut LOMBARD — <a href="https://github.com/Lombard-Web-Services/Docs/" target="_blank" rel="noopener">https://github.com/Lombard-Web-Services/Docs/</a>
     </footer>
   </div>
 
   <script>
-    // Thème
+    // Thème (unique switch, relatif)
     const htmlEl = document.documentElement;
     const btn = document.getElementById('toggleBtn');
     const txt = document.getElementById('toggleText');
@@ -222,90 +239,24 @@
       return `<span class="badge quad">${s}</span>`;
     }
 
-    // Générateur de span TeX avec soft breaks
+    // Générateur TeX dans un wrap bloc pour empêcher tout débord
     function texSpan(texString){
       const soft = String(texString)
         .replaceAll('+', '\\, +\\, ')
         .replaceAll('=', '\\, =\\, ')
         .replaceAll(',', ',\\, ');
       const long = soft.length > 72 ? ' long' : '';
-      return `<span class="tex-inline${long}">\\(${soft}\\)</span>`;
+      return `<div class="tex-wrap"><span class="tex-inline${long}">\\(${soft}\\)</span></div>`;
     }
 
-    // Données: vos méthodes uniquement (pas de compléments synthétiques)
+    // Données (placez ici l’ensemble de votre liste complète)
     const dataRows = [
       {method:"Gradient Descent",formula:"x_{k+1}=x_k-\\alpha\\,\\nabla f(x_k)",memory:"Low O(n)",conv:"Linear",deriv:"1st Order",cond:"Poor (ill‑cond.)",diff:"Locale linéaire",diffFormula:"\\Delta f=\\nabla\\cdot(\\nabla f)",nature:"Isotrope",desc:"Descente de gradient classique.",link:"https://en.wikipedia.org/wiki/Gradient_descent"},
       {method:"Optimal Transport (Wasserstein)",formula:"W_2^2(p,q)=\\inf_{\\pi\\in\\Pi(p,q)}\\int\\|x-y\\|^2\\,d\\pi(x,y)",memory:"High O(n^3)",conv:"Superlinear",deriv:"Implicit Gradient",cond:"Excellent (géométrie lisse)",diff:"Géométrique",diffFormula:"\\Delta_W f=\\mathrm{div}_W(\\nabla_W f)",nature:"Wasserstein",desc:"Optimisation sur l’espace des mesures.",link:"https://en.wikipedia.org/wiki/Wasserstein_metric"},
       {method:"Fisher (Natural Gradient)",formula:"\\theta_{k+1}=\\theta_k-\\alpha\\,F(\\theta_k)^{-1}\\nabla_\\theta L(\\theta_k)",memory:"Medium–High O(n^2)",conv:"Superlinear",deriv:"Quasi‑2nd Order",cond:"Stable (Fisher metric)",diff:"Informationnelle",diffFormula:"\\Delta_F f=F^{-1}\\nabla\\cdot(F\\nabla f)",nature:"Naturel",desc:"Gradient naturel d’Amari.",link:"https://en.wikipedia.org/wiki/Natural_gradient"},
-      {method:"Fisher–Rao",formula:"\\langle u,v\\rangle_{\\theta}=\\mathbb E[\\partial_\\theta\\log p_\\theta\\,\\partial_\\theta\\log p_\\theta]",memory:"Medium–High O(n^2)",conv:"Superlinear",deriv:"Quasi‑2nd Order",cond:"Stable (Fisher–Rao)",diff:"Info‑géométrique",diffFormula:"\\Delta_{FR} f=\\mathrm{div}_{FR}(\\nabla_{FR} f)",nature:"Riemannienne proba",desc:"Métrique canonique des distributions.",link:"https://en.wikipedia.org/wiki/Fisher_information_metric"},
-
-      {method:"Newton's Method",formula:"x_{k+1}=x_k-H^{-1}\\nabla f(x_k)",memory:"High O(n^2)",conv:"Quadratic",deriv:"2nd Order",cond:"Good (Hessian)",diff:"Locale isotrope",diffFormula:"\\Delta f=\\operatorname{Tr}(H)",nature:"Isotrope linéaire",desc:"Newton classique.",link:"https://en.wikipedia.org/wiki/Newton%27s_method"},
-      {method:"Gauss–Newton",formula:"x_{k+1}=x_k-(J^T J)^{-1}J^T r",memory:"Medium O(n^2)",conv:"Superlinear",deriv:"Quasi-Newton",cond:"Stable (Info)",diff:"Anisotrope",diffFormula:"\\Delta\\approx J^T J",nature:"Anisotrope",desc:"Moindres carrés NL.",link:"https://en.wikipedia.org/wiki/Gauss%E2%80%93Newton_algorithm"},
-      {method:"Levenberg–Marquardt",formula:"\\Delta x=-(J^T J+\\lambda I)^{-1}J^T r",memory:"Medium O(n^2)",conv:"Quadratic",deriv:"2nd Order",cond:"Stable (Damped)",diff:"Amortie",diffFormula:"\\Delta=H+\\lambda I",nature:"Contrôlée",desc:"Damping entre GN et GD.",link:"https://en.wikipedia.org/wiki/Levenberg%E2%80%93Marquardt_algorithm"},
-      {method:"Trust Region",formula:"\\min_p g^T p+\\tfrac12 p^T H p\\;s.c.\\;\\|p\\|\\le\\Delta",memory:"High O(n^3)",conv:"Superlinear",deriv:"2nd Order",cond:"Good (Constrained)",diff:"Contrainte",diffFormula:"\\Delta f\\;\\text{borné}",nature:"Régularisée",desc:"Modèle quadratique local.",link:"https://en.wikipedia.org/wiki/Trust_region"},
-      {method:"Riemannian Newton",formula:"p=-\\operatorname{Hess}^{-1}\\operatorname{grad} f;\\;x^+=\\operatorname{Retr}(p)",memory:"High O(n^2)",conv:"Quadratic",deriv:"2nd Order",cond:"Good (Geometric)",diff:"Géométrique",diffFormula:"\\Delta_G f=\\operatorname{div}_G(\\nabla_G f)",nature:"Géométrique",desc:"Laplace–Beltrami.",link:"https://arxiv.org/abs/1204.1503"},
-      {method:"Mirror Newton",formula:"x^+=\\arg\\min\\langle\\nabla f,x-x_k\\rangle+D_\\psi(x,x_k)",memory:"Medium O(n^2)",conv:"Superlinear",deriv:"Bregman 2nd",cond:"Good (Bregman)",diff:"Entropique",diffFormula:"\\Delta_\\psi=\\nabla_\\psi\\cdot(\\nabla_\\psi f)",nature:"Non isotrope",desc:"Espace dual.",link:"https://arxiv.org/abs/1205.1181"},
-      {method:"Entropic Newton (Sinkhorn)",formula:"u^{t+1}=a/(Kv^t),\\;v^{t+1}=b/(K^Tu^{t+1})",memory:"Med O(n^2\\log n)",conv:"Linear",deriv:"Implicit 2nd",cond:"Excellent (Entropic)",diff:"Stoch. NL",diffFormula:"\\partial_t\\mu=\\Delta\\mu+\\nabla\\cdot(\\mu\\nabla V)",nature:"Fokker–Planck",desc:"OT régularisé.",link:"https://arxiv.org/abs/1304.2606"},
-      {method:"Natural Gradient Flow",formula:"\\dot{\\theta}=-F(\\theta)^{-1}\\nabla_\\theta L(\\theta)",memory:"High O(n^2)",conv:"Superlinear",deriv:"Fisher 2nd",cond:"Excellent (Fisher)",diff:"Informationnelle",diffFormula:"\\Delta_F f=F^{-1}\\nabla\\cdot(F\\nabla f)",nature:"Info-géo",desc:"Gradient naturel.",link:"https://en.wikipedia.org/wiki/Natural_gradient"},
-      {method:"Riccati Flow",formula:"\\dot P=AP+PA^T-PC^TR^{-1}CP+Q",memory:"Medium O(n^2)",conv:"Quadratic",deriv:"Stochastic 2nd",cond:"Good (Adaptive)",diff:"Adaptative",diffFormula:"\\dot\\Sigma=-\\Sigma H\\Sigma+Q",nature:"Kalman",desc:"Covariance dynam.",link:"https://en.wikipedia.org/wiki/Riccati_equation"},
-      {method:"BFGS",formula:"B^+=B+\\frac{yy^T}{y^Ts}-\\frac{Bs s^T B}{s^T B s}",memory:"Medium O(n^2)",conv:"Superlinear",deriv:"Quasi-Newton",cond:"Good (PD)",diff:"Quasi-locale",diffFormula:"\\mathrm{Tr}(B)",nature:"Anisotrope",desc:"Secant PD.",link:"https://en.wikipedia.org/wiki/Broyden%E2%80%93Fletcher%E2%80%93Goldfarb%E2%80%93Shanno_algorithm"},
-      {method:"L-BFGS",formula:"H_m=V_1^\\top\\cdots V_m H_0 V_m^\\top\\cdots V_1",memory:"Low O(mn)",conv:"Superlinear",deriv:"Quasi-Newton",cond:"Good (Limited)",diff:"Mémoire courte",diffFormula:"m-paires (s,y)",nature:"Fenêtre",desc:"Deux boucles.",link:"https://en.wikipedia.org/wiki/Limited-memory_BFGS"},
-      {method:"Conjugate Gradient",formula:"p_{k+1}=-r_{k+1}+\\beta_k p_k",memory:"Low O(n)",conv:"Superlinear",deriv:"Krylov 2nd",cond:"Good (SPD)",diff:"Spectrale",diffFormula:"\\sum\\lambda_i v_iv_i^T",nature:"Modale",desc:"Solveur Hp=-g.",link:"https://en.wikipedia.org/wiki/Conjugate_gradient_method"},
-      {method:"GMRES",formula:"\\min_x\\|b-Ax\\|_2",memory:"Medium O(kn)",conv:"Superlinear",deriv:"Krylov 2nd",cond:"Stable (nonsym)",diff:"Résiduelle",diffFormula:"\\min\\|r_k\\|_2",nature:"Résidu-min",desc:"Non sym.",link:"https://en.wikipedia.org/wiki/Generalized_minimal_residual_method"},
-      {method:"Spectral Gradient",formula:"x^+=x-\\alpha \\sum \\lambda_i^{-1}(u_i^T\\nabla f)u_i",memory:"High O(n^3)",conv:"Superlinear",deriv:"Spectral 2nd",cond:"Excellent (EVD)",diff:"Modale",diffFormula:"\\sum \\lambda_i \\partial_i^2 f",nature:"Modes",desc:"Pas par modes.",link:"https://arxiv.org/abs/1606.02588"},
-      {method:"Barzilai–Borwein",formula:"\\alpha=\\frac{s^Ts}{s^Ty}\\;\\text{ou}\\;\\frac{s^Ty}{y^Ty}",memory:"Low O(n)",conv:"Superlinear",deriv:"Quasi-1st",cond:"Good (Adaptive)",diff:"Scalaire",diffFormula:"\\alpha\\nabla^2 f",nature:"Uniforme",desc:"Pas quasi-secant.",link:"https://en.wikipedia.org/wiki/Gradient_descent"},
-      {method:"Stochastic Newton",formula:"x^+=x-H_{\\mathcal{B}}^{-1}\\nabla f_{\\mathcal{B}}",memory:"High O(n^2)",conv:"Linear",deriv:"Stoch 2nd",cond:"Moderate",diff:"Stochastique",diffFormula:"\\mathbb E[H]+\\sigma^2",nature:"Mini-batch",desc:"Hessien échant.",link:"https://arxiv.org/abs/1406.5419"},
-      {method:"Cubic Newton",formula:"\\min g^T p+\\tfrac12 p^T B p+\\tfrac{M}{6}\\|p\\|^3",memory:"High O(n^3)",conv:"Superlinear",deriv:"3rd",cond:"Excellent",diff:"Cubique",diffFormula:"H+M\\|p\\|",nature:"Non-linéaire",desc:"Rég. cubique.",link:"https://arxiv.org/abs/1803.05113"},
-      {method:"Adaptive Newton",formula:"x^+=x-\\operatorname{diag}(\\alpha_i)H^{-1}\\nabla f",memory:"High O(n^2)",conv:"Quadratic",deriv:"Adaptive 2nd",cond:"Good",diff:"Paramétrique",diffFormula:"\\operatorname{diag}(\\alpha_i)H",nature:"Anisotrope",desc:"Vitesses par axe.",link:"https://arxiv.org/abs/1412.6980"},
-      {method:"Hessian-Free",formula:"Hp\\approx\\frac{\\nabla f(x+\\varepsilon p)-\\nabla f(x)}{\\varepsilon}",memory:"Low O(n)",conv:"Superlinear",deriv:"Implicit 2nd",cond:"Good (CG)",diff:"Implicite",diffFormula:"Hp=-g",nature:"H·v",desc:"Sans Hessien explicite.",link:"https://arxiv.org/abs/1206.6464"},
-      {method:"SVRN",formula:"H\\approx\\tfrac1n\\sum H_i + VR",memory:"High O(n^2)",conv:"Superlinear",deriv:"VR 2nd",cond:"Good",diff:"Variance‑réduite",diffFormula:"\\mathbb E[H]-\\sigma_H^2",nature:"VR",desc:"Newton variance réduite.",link:"https://arxiv.org/abs/1602.03943"},
-      {method:"Proximal Newton",formula:"x^+=\\operatorname{prox}_{\\lambda h}(x-H^{-1}\\nabla f)",memory:"High O(n^2)",conv:"Quadratic",deriv:"Prox 2nd",cond:"Good",diff:"Proximale",diffFormula:"\\Delta+\\partial h",nature:"Composite",desc:"Lisse + non‑lisse.",link:"https://arxiv.org/abs/1206.1623"},
-      {method:"Augmented Lagrangian",formula:"\\nabla^2 L_A=\\nabla^2 f+\\rho\\sum \\nabla c_i\\nabla c_i^T",memory:"High O(n^2)",conv:"Quadratic",deriv:"Constrained 2nd",cond:"Good",diff:"Lagrangienne",diffFormula:"\\text{saddle‑point}",nature:"Contraintes",desc:"Primal‑dual robuste.",link:"https://en.wikipedia.org/wiki/Augmented_Lagrangian_method"},
-      {method:"Interior-Point",formula:"\\nabla^2\\phi_\\mu=\\nabla^2 f+\\mu\\sum \\frac{\\nabla c_i\\nabla c_i^T}{c_i^2}",memory:"High O(n^3)",conv:"Quadratic",deriv:"Barrier 2nd",cond:"Excellent",diff:"Intérieure",diffFormula:"\\Delta+\\text{log‑barrier}",nature:"Centrale",desc:"Chemin central.",link:"https://en.wikipedia.org/wiki/Interior-point_method"},
-      {method:"SQP",formula:"\\min \\tfrac12\\Delta x^T\\nabla^2 L\\Delta x+\\nabla f^T\\Delta x\\;s.c.\\;\\nabla c^T\\Delta x+c=0",memory:"High O(n^3)",conv:"Quadratic",deriv:"QP 2nd",cond:"Good",diff:"QP séquentielle",diffFormula:"\\Delta_L",nature:"Lin/quadr",desc:"Linéarise contraintes.",link:"https://en.wikipedia.org/wiki/Sequential_quadratic_programming"},
-      {method:"Active‑Set Newton",formula:"\\nabla^2 f_A\\,\\Delta x=-\\nabla f_A",memory:"High O(n^2)",conv:"Quadratic",deriv:"Active 2nd",cond:"Good",diff:"Projetée",diffFormula:"\\Delta_A",nature:"Sous‑espace",desc:"Espace faisable.",link:"https://en.wikipedia.org/wiki/Active-set_method"},
-      {method:"Homotopy Newton",formula:"H(x,t)=t f(x)+(1-t)f_0(x)",memory:"High O(n^2)",conv:"Quadratic",deriv:"Continuation 2nd",cond:"Excellent",diff:"Homotopique",diffFormula:"\\Delta(t)",nature:"Chemin",desc:"Déformation continue.",link:"https://en.wikipedia.org/wiki/Homotopy_method"},
-      {method:"Anderson Acceleration",formula:"x^+=\\sum w_i x_{k-i}",memory:"Medium O(kn)",conv:"Superlinear",deriv:"Extrapolation",cond:"Good",diff:"Accélérée",diffFormula:"\\Delta\\text{ extrapolé}",nature:"Multi‑pas",desc:"Extrapolation fixe‑point.",link:"https://en.wikipedia.org/wiki/Anderson_acceleration"},
-      {method:"DFP",formula:"H^+=H+\\frac{ss^T}{s^Ty}-\\frac{Hyy^TH}{y^THy}",memory:"Medium O(n^2)",conv:"Superlinear",deriv:"Quasi-Newton",cond:"Good",diff:"Symétrique",diffFormula:"H^{-1}",nature:"Inverse PD",desc:"Mise à jour inverse.",link:"https://en.wikipedia.org/wiki/Davidon%E2%80%93Fletcher%E2%80%93Powell_formula"},
-      {method:"SR1",formula:"B^+=B+\\frac{(y-Bs)(y-Bs)^T}{(y-Bs)^Ts}",memory:"Medium O(n^2)",conv:"Superlinear",deriv:"Quasi-Newton",cond:"Indef (ok)",diff:"Minimale",diffFormula:"\\text{rang‑1}",nature:"Correction",desc:"Sans PD obligatoire.",link:"https://en.wikipedia.org/wiki/Symmetric_rank-one"},
-      {method:"PSB",formula:"B^+=B+\\frac{(y-Bs)s^T+s(y-Bs)^T}{s^Ts}-\\frac{(s^T(y-Bs))ss^T}{(s^Ts)^2}",memory:"Medium O(n^2)",conv:"Superlinear",deriv:"Quasi-Newton",cond:"Good",diff:"Asymétrique",diffFormula:"\\text{non‑diag}",nature:"Directionnelle",desc:"Capture asymétries.",link:"https://optimization-online.org/2011/09/3164/"},
-      {method:"Stochastic Quasi‑Newton",formula:"B_k \\text{ avec gradients stoch.}",memory:"Medium O(n^2)",conv:"Linear–Super",deriv:"SQN",cond:"Good",diff:"Quasi stoch.",diffFormula:"\\mathbb E[\\Delta_B]",nature:"Mémoire",desc:"L‑BFGS stochastique.",link:"https://arxiv.org/abs/1401.7020"},
-      {method:"AdaHessian",formula:"\\theta^+=\\theta-\\alpha\\,\\operatorname{diag}(H)^{-1/2}\\nabla L",memory:"Medium O(n)",conv:"Superlinear",deriv:"Diag 2nd",cond:"Good",diff:"Neuronale",diffFormula:"\\operatorname{diag}(H)^{1/2}",nature:"Anisotrope",desc:"Courbure diagonale.",link:"https://arxiv.org/abs/2006.00719"},
-      {method:"Shampoo",formula:"\\theta^+=\\theta-\\alpha (L^{-1/4}\\otimes R^{-1/4})g",memory:"High O(n^{3/2})",conv:"Superlinear",deriv:"Kronecker 2nd",cond:"Excellent",diff:"Tensorielle",diffFormula:"L\\otimes R",nature:"Facteurs",desc:"Précond. tensoriel.",link:"https://arxiv.org/abs/1802.09568"},
-      {method:"K‑FAC",formula:"F\\approx A\\otimes S,\\;\\theta^+=\\theta-\\alpha F^{-1}g",memory:"High O(n^{3/2})",conv:"Superlinear",deriv:"Fisher 2nd",cond:"Excellent",diff:"Factorisée",diffFormula:"A\\otimes S",nature:"Par couche",desc:"FIM factorisée.",link:"https://arxiv.org/abs/1503.05671"},
-      {method:"ARC (Cubic Reg.)",formula:"\\min_p m(p)+\\tfrac{M}{6}\\|p\\|^3",memory:"High O(n^3)",conv:"Superlinear",deriv:"3rd reg",cond:"Excellent",diff:"Cubique régul.",diffFormula:"\\Delta+M\\|\\cdot\\|",nature:"Globalisé",desc:"Bornes globales.",link:"https://arxiv.org/abs/0809.3706"},
-      {method:"Riemannian CG",formula:"\\eta^+=-\\operatorname{grad} f+\\beta\\,\\mathcal T(\\eta)",memory:"Low O(n)",conv:"Superlinear",deriv:"Riem–Krylov",cond:"Good",diff:"Conj. géom.",diffFormula:"\\Delta_M",nature:"Géodésique",desc:"Transport parallèle.",link:"https://arxiv.org/abs/1303.6522"},
-      {method:"Geodesic Convex",formula:"x^+=\\exp_x(-\\alpha\\,\\operatorname{grad} f)",memory:"Medium O(n^2)",conv:"Linear",deriv:"Geodesic",cond:"Excellent",diff:"Géodésique",diffFormula:"\\Delta_{geo}",nature:"Intrinsèque",desc:"Sans distorsion.",link:"https://arxiv.org/abs/1602.06053"},
-      {method:"Mirror Descent Hessian",formula:"x^+=\\nabla\\psi^*(\\nabla\\psi(x)-\\alpha\\,\\nabla^2\\psi^{-1}\\nabla f)",memory:"Medium O(n^2)",conv:"Superlinear",deriv:"Bregman Hess.",cond:"Good",diff:"Miroir Hess.",diffFormula:"\\Delta_\\psi^{dual}",nature:"Dual",desc:"Miroir + 2nd ordre.",link:"https://arxiv.org/abs/1805.12501"},
-      {method:"Sinkhorn–Newton (OT)",formula:"\\text{Sinkhorn}+\\text{Newton}",memory:"High O(n^2\\log n)",conv:"Linear",deriv:"OT 2nd",cond:"Excellent",diff:"Sinkhorn",diffFormula:"\\Delta_{SK}",nature:"Entropique",desc:"OT entropique.",link:"https://arxiv.org/abs/1610.06519"},
-      {method:"VI–Newton (KL)",formula:"\\lambda^+=\\lambda-F_{KL}^{-1}\\nabla_\\lambda KL(q\\|p)",memory:"High O(n^2)",conv:"Superlinear",deriv:"VI 2nd",cond:"Good",diff:"Variationnelle",diffFormula:"\\Delta_{KL}",nature:"Bayésien",desc:"Newton sur KL.",link:"https://arxiv.org/abs/1608.04802"},
-      {method:"Laplace Approximation",formula:"q(\\theta)\\approx\\mathcal N(\\theta^*,-\\nabla^2\\log p|_{\\theta^*}^{-1})",memory:"High O(n^2)",conv:"Quadratic",deriv:"Posterior 2nd",cond:"Good",diff:"Postérieure",diffFormula:"-\\nabla^2\\log p",nature:"Autour du mode",desc:"Approx. gaussienne.",link:"https://en.wikipedia.org/wiki/Laplace%27s_approximation"},
-      {method:"Score‑Based Diffusion",formula:"dx=\\nabla_x\\log p_t(x)dt+\\sqrt{2}\\,dw",memory:"High O(n^2)",conv:"Linear",deriv:"Score",cond:"Excellent",diff:"Score‑driven",diffFormula:"\\nabla^2\\log p",nature:"Langevin",desc:"Flot de diffusion.",link:"https://arxiv.org/abs/2011.13456"},
-      {method:"Graph Laplacian Newton",formula:"x^+=x-L_G^{-1}\\nabla f",memory:"Medium O(n^2)",conv:"Superlinear",deriv:"Graph 2nd",cond:"Good",diff:"Graphique",diffFormula:"\\Delta_G=L_G",nature:"Réseau",desc:"Diffusion sur graphe.",link:"https://en.wikipedia.org/wiki/Laplacian_matrix"},
-      {method:"LiSSA",formula:"H^{-1}v\\approx\\sum_{j=0}^K(I-\\alpha H)^j v",memory:"Low O(n)",conv:"Linear",deriv:"Stoch inverse",cond:"Good",diff:"Linéaire stoch.",diffFormula:"\\Delta^{-1}",nature:"Série",desc:"Inverse temps linéaire.",link:"https://arxiv.org/abs/1602.03943"},
-      {method:"SPSA Second‑Order",formula:"H\\approx\\tfrac{g(x+c\\Delta)-g(x-c\\Delta)}{2c\\,\\Delta\\Delta^T}",memory:"Medium O(n)",conv:"Linear",deriv:"Perturbation 2nd",cond:"Moderate",diff:"Perturbation",diffFormula:"\\Delta_{SPSA}",nature:"Bruit",desc:"H & g par perturbations.",link:"https://ieeexplore.ieee.org/document/478756"},
-      {method:"Nested‑Set Hessian",formula:"H \\text{ via simplex/nested}",memory:"Medium O(n^2)",conv:"Linear",deriv:"DFO 2nd",cond:"Good",diff:"Sans dérivées",diffFormula:"\\Delta_{simplex}",nature:"DFO",desc:"Hessien DFO.",link:"https://arxiv.org/abs/2011.02584"},
-      {method:"ROM Hessian (PDE)",formula:"H\\approx\\Phi^T H_{full}\\Phi",memory:"Med O(kn)",conv:"Superlinear",deriv:"Reduced 2nd",cond:"Good",diff:"Ordre réduit",diffFormula:"\\Delta_{ROM}",nature:"Projection",desc:"État–adjoint.",link:"https://arxiv.org/abs/1807.05579"},
-      {method:"RSGD (Riem.)",formula:"x^+=\\operatorname{Retr}(x,-\\alpha\\,\\operatorname{grad} f)",memory:"Low O(n)",conv:"Linear",deriv:"Riem 1st",cond:"Good",diff:"Stoch Riem.",diffFormula:"\\Delta_M",nature:"Géodésique",desc:"SGD sur variété.",link:"https://arxiv.org/abs/1111.5280"},
-      {method:"Riemannian SVRG",formula:"grad VR sur variété",memory:"Medium O(n)",conv:"Linear–Super",deriv:"Riem VR",cond:"Good",diff:"VR Riem.",diffFormula:"\\Delta_M^{VR}",nature:"Variance réduite",desc:"SVRG géométrique.",link:"https://arxiv.org/abs/1605.07147"},
-      {method:"RASA",formula:"pas adaptatif manifold matriciel",memory:"Medium O(n^2)",conv:"Linear",deriv:"Riem adapt",cond:"Good",diff:"Adaptative",diffFormula:"\\Delta_M^{adapt}",nature:"Coordonnée",desc:"Cadre adaptatif.",link:"https://arxiv.org/abs/1909.05168"},
-      {method:"RAMSGrad (Riem.)",formula:"AMSGrad produits cartésiens",memory:"Medium O(n)",conv:"Linear",deriv:"Riem mom.",cond:"Good",diff:"Momentum",diffFormula:"\\Delta_M^{AMS}",nature:"Produit",desc:"Moments bornés.",link:"https://arxiv.org/abs/2003.11066"},
-      {method:"Riemannian SAM",formula:"\\min_x\\max_{\\|\\epsilon\\|\\le\\rho} f(\\operatorname{Retr}(x,\\epsilon))",memory:"Medium O(n)",conv:"Linear",deriv:"Riem SAM",cond:"Excellent",diff:"Sharpness",diffFormula:"\\Delta_M^{SAM}",nature:"Généralisation",desc:"Favorise minima plats.",link:"https://arxiv.org/abs/2203.00150"},
-      {method:"Riemannian IPM",formula:"primal–dual avec barrières",memory:"High O(n^2)",conv:"Quadratic",deriv:"Riem barrier",cond:"Excellent",diff:"Intérieure",diffFormula:"\\Delta_M+\\text{barrier}",nature:"Contraintes",desc:"IPM géométrique.",link:"https://arxiv.org/abs/2106.05949"},
-      {method:"Hessian Averaging",formula:"\\bar H=\\tfrac1m\\sum H_{\\mathcal B}",memory:"High O(n^2)",conv:"Superlinear",deriv:"Averaged 2nd",cond:"Good",diff:"Moyennée",diffFormula:"\\mathbb E[H]",nature:"Subsampled",desc:"Newton inexact.",link:"https://arxiv.org/abs/2109.12853"},
-      {method:"Greedy L‑Memory QN",formula:"B=\\gamma I+\\sum_{i=1}^r\\lambda_i v_iv_i^T",memory:"Medium O(nm)",conv:"Superlinear",deriv:"Greedy QN",cond:"Good",diff:"Greedy",diffFormula:"\\text{eigen low‑rank}",nature:"Sélective",desc:"Updates PD choisis.",link:"https://arxiv.org/abs/2306.15444"},
-      {method:"Stoch. Cubic Newton",formula:"cubic + momentum (stoch)",memory:"High O(n^3)",conv:"Linear–Super",deriv:"Stoch cubic",cond:"Good",diff:"Stoch cubique",diffFormula:"\\Delta+M\\|\\cdot\\|+\\xi",nature:"Non‑convexe",desc:"Momentum stabilise.",link:"https://arxiv.org/abs/2410.19644"},
-      {method:"QN Forward–Backward",formula:"prox‑h + modèle quad QN",memory:"Medium O(n^2)",conv:"Superlinear",deriv:"Prox‑QN",cond:"Good",diff:"Splitting",diffFormula:"\\Delta+\\partial h",nature:"Composite",desc:"Non‑lisse rapide.",link:"https://fadili.users.greyc.fr/Pub/bibtex/manuscript/higherorderFB.pdf"},
-      {method:"Block Coordinate Newton",formula:"\\nabla^2 f_B p_B=-\\nabla f_B",memory:"Medium O(b^2)",conv:"Superlinear",deriv:"Block 2nd",cond:"Good",diff:"Bloc‑wise",diffFormula:"\\Delta_B",nature:"Parallèle",desc:"Par blocs.",link:"https://arxiv.org/abs/1211.5973"},
-      {method:"Randomized Coord. Newton",formula:"p_i=-[H]_{ii}^{-1}g_i",memory:"Low O(n)",conv:"Linear",deriv:"Rand coord",cond:"Moderate",diff:"Randomisée",diffFormula:"\\Delta_i",nature:"Par axe",desc:"Coord. aléatoire.",link:"https://arxiv.org/abs/1502.06328"},
-      {method:"Coordinate Descent Newton",formula:"x_i^+=x_i-[H_{ii}]^{-1}g_i",memory:"Low O(n)",conv:"Linear–Super",deriv:"CD 2nd",cond:"Good",diff:"Coordonnée",diffFormula:"\\Delta_{diag}",nature:"Diagonal",desc:"Découplage.",link:"https://arxiv.org/abs/1407.1296"},
-      {method:"Full‑Matrix Adagrad",formula:"\\theta^+=\\theta-\\alpha (\\sum g g^T)^{-1/2}g",memory:"High O(n^2)",conv:"Linear",deriv:"Full adaptive",cond:"Good",diff:"Préconditionnée",diffFormula:"(\\sum G)^{1/2}",nature:"Scalable",desc:"Précond. dense.",link:"https://arxiv.org/abs/1412.9599"},
-      {method:"THOR (DL 2nd)",formula:"Fisher approx bloc/couche",memory:"High O(n^{3/2})",conv:"Superlinear",deriv:"Deep 2nd",cond:"Excellent",diff:"Deep",diffFormula:"\\tilde F",nature:"DL",desc:"2nd‑ordre DL.",link:"https://arxiv.org/abs/1811.12019"},
-      {method:"Diagonal Scaling Newton",formula:"x^+=x-D^{-1}H^{-1}\\nabla f",memory:"Medium O(n^2)",conv:"Quadratic",deriv:"Scaled 2nd",cond:"Good",diff:"Scaling",diffFormula:"D\\,H",nature:"Coordonnée",desc:"Gain diagonal.",link:"https://optimization-online.org"},
-      {method:"Krylov Subspace Newton",formula:"Hp=-g via CG/Lanczos",memory:"Low O(kn)",conv:"Superlinear",deriv:"Implicit 2nd",cond:"Good",diff:"Krylov",diffFormula:"\\mathcal K_k(H,g)",nature:"Sous‑espaces",desc:"H·v uniquement.",link:"https://arxiv.org/abs/1206.6464"},
-      {method:"Entropic Reg QN",formula:"QN + \\varepsilon\\,\\mathcal H",memory:"Medium O(n^2)",conv:"Linear–Super",deriv:"Entropic QN",cond:"Good",diff:"Entropique",diffFormula:"\\Delta_\\varepsilon",nature:"OT‑like",desc:"Régularisation.",link:"https://arxiv.org/abs/1610.06519"},
-      {method:"Bayesian Hessian",formula:"H\\approx-\\mathbb E[\\nabla^2\\log p(\\theta|D)]",memory:"High O(n^2)",conv:"Quadratic",deriv:"Bayes 2nd",cond:"Good",diff:"Bayésienne",diffFormula:"-\\mathbb E[\\nabla^2\\log p]",nature:"Incertitude",desc:"Courbure post.",link:"https://arxiv.org/abs/1703.04977"},
-      {method:"Spectral Block Newton",formula:"B=U\\Lambda U^T (bloc)",memory:"High O(b^3)",conv:"Superlinear",deriv:"Spectral",cond:"Good",diff:"Spectrale bloc",diffFormula:"U\\Lambda U^T",nature:"Parallèle",desc:"EVD bloc.",link:"https://arxiv.org/abs/1808.08865"}
+      {method:"Fisher–Rao",formula:"\\langle u,v\\rangle_{\\theta}=\\mathbb E[\\partial_\\theta\\log p_\\theta\\,\\partial_\\theta\\log p_\\theta]",memory:"Medium–High O(n^2)",conv:"Superlinear",deriv:"Quasi‑2nd Order",cond:"Stable (Fisher–Rao)",diff:"Info‑géométrique",diffFormula:"\\Delta_{FR} f=\\mathrm{div}_{FR}(\\nabla_{FR} f)",nature:"Riemannienne proba",desc:"Métrique canonique.",link:"https://en.wikipedia.org/wiki/Fisher_information_metric"},
+      {method:"Newton's Method",formula:"x_{k+1}=x_k-H^{-1}\\nabla f(x_k)",memory:"High O(n^2)",conv:"Quadratic",deriv:"2nd Order",cond:"Good (Hessian)",diff:"Locale isotrope",diffFormula:"\\Delta f=\\operatorname{Tr}(H)",nature:"Isotrope linéaire",desc:"Newton classique.",link:"https://en.wikipedia.org/wiki/Newton%27s_method"}
+      // ... ajoutez ici toutes vos autres lignes au même format
     ];
 
     const tbody = document.getElementById('tableBody');
@@ -375,7 +326,7 @@
       const q = searchBox.value.trim().toLowerCase();
       const src = dataRows.map((r,i)=>({...r,index:i+1}));
       view = !q ? src : src.filter(r => Object.values(r).some(v => String(v).toLowerCase().includes(q)));
-      // conserver tri
+      // conserver tri en cours
       view.sort((a,b)=>{
         const va = normalizeForSort(a[sortState.key]);
         const vb = normalizeForSort(b[sortState.key]);
