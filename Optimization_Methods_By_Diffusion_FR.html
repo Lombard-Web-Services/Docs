@@ -9,18 +9,7 @@
   <script>
     window.MathJax = {
       tex: { inlineMath: [['\\(','\\)'], ['\\[','\\]']] },
-      svg: { 
-        fontCache: 'global',
-        linebreaks: { 
-          automatic: true, 
-          width: 'container' 
-        },
-        scale: 1.0
-      },
-      options: {
-        skipHtmlTags: ['code', 'span.tex-inline'],
-        ignoreHtmlClass: 'tex-inline'
-      }
+      svg: { fontCache: 'global' }
     };
   </script>
   <script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
@@ -52,13 +41,12 @@
       background:var(--bg-primary); color:var(--text-primary); line-height:1.6;
     }
 
-    /* Switch refondu type iOS, sans background */
+    /* Switch refondu type iOS */
     .theme-toggle {
       position:fixed; top:14px; right:14px; z-index:1000;
       display:inline-flex; align-items:center; gap:10px;
       padding:6px 10px; border-radius:999px;
-      /* background supprimé */
-      color:var(--text-primary);
+      background:var(--bg-secondary); color:var(--text-primary);
       border:1px solid var(--border-color);
       box-shadow:var(--shadow);
     }
@@ -117,12 +105,11 @@
     table { width:100%; border-collapse:separate; border-spacing:0; table-layout:fixed; }
     thead { position:sticky; top:0; background:var(--accent-gradient); z-index:2; }
     thead th {
-      padding:14px 8px; text-align:left; font-weight:700; font-size:.85rem;
-      color:#fff; text-transform:uppercase; letter-spacing:.3px; cursor:pointer; user-select:none;
+      padding:14px 10px; text-align:left; font-weight:700; font-size:.9rem;
+      color:#fff; text-transform:uppercase; letter-spacing:.4px; cursor:pointer; user-select:none;
       border-bottom:3px solid rgba(255,255,255,.25);
-      white-space:normal; word-break:break-word; overflow-wrap:anywhere; line-height:1.2;
     }
-    thead th .arrow { margin-left:4px; opacity:.9; font-size:.8rem; display:block; }
+    thead th .arrow { margin-left:6px; opacity:.9; font-size:.85rem; }
     thead th.sort-asc .arrow::after { content:"▲"; }
     thead th.sort-desc .arrow::after { content:"▼"; }
 
@@ -131,66 +118,21 @@
     tbody tr:hover { background:var(--bg-primary); }
 
     td {
-      padding:12px 8px; border-bottom:1px solid var(--border-color);
+      padding:12px; border-bottom:1px solid var(--border-color);
       font-size:.92rem; color:var(--text-primary); vertical-align:top;
-      word-break:break-word; overflow-wrap:anywhere; white-space:normal; max-width:0;
+      word-break:break-word; overflow-wrap:anywhere; white-space:normal;
     }
-    /* Largeurs colonnes ajustées pour sum <=100% et plus d'espace pour formules/headers */
-    th[data-key="index"], td.index { width:50px; }
-    th[data-key="method"], td:nth-child(2) { width:12%; }
-    th[data-key="formula"], td:nth-child(3) { width:16%; }
-    th[data-key="memory"], td:nth-child(4) { width:7%; }
-    th[data-key="conv"], td:nth-child(5) { width:7%; }
-    th[data-key="deriv"], td:nth-child(6) { width:7%; }
-    th[data-key="cond"], td:nth-child(7) { width:8%; }
-    th[data-key="diff"], td:nth-child(8) { width:8%; }
-    th[data-key="diffFormula"], td:nth-child(9) { width:16%; }
-    th[data-key="nature"], td:nth-child(10) { width:6%; }
-    th[data-key="desc"], td:nth-child(11) { width:13%; }
-    th[data-key="link"], td:nth-child(12) { width:50px; }
+    td.index { width:52px; text-align:right; color:#8a94b5; font-weight:700; }
     td.method { color:var(--accent-primary); font-weight:600; }
-    td.index { text-align:right; color:#8a94b5; font-weight:700; white-space:nowrap; }
 
-    /* Fix rendu TeX: adaptation automatique à 100% largeur cellule, sans débord, réduction taille si nécessaire */
+    /* Fix rendu TeX: pas de tag code visible + wrap doux */
     .tex-inline {
-      display:inline-block; max-width:100%; width:100%;
-      white-space:normal; word-break:break-word; overflow-wrap:anywhere;
-      line-height:1.4;
+      display:inline; white-space:normal; word-break:break-word; overflow-wrap:anywhere;
     }
-    /* Si une formule est longue, force block et réduit la taille pour fit responsive */
-    .tex-inline.long { 
-      display:block; 
-      font-size:0.85em; 
-    }
-    .tex-inline.very-long { 
-      display:block; 
-      font-size:0.75em; 
-    }
+    /* Si une formule devient vraiment longue, on la bloque en block pour casser les lignes */
+    .tex-inline.long { display:block; }
 
-    /* Contrainte MathJax SVG à la largeur de la cellule, force wrap et scale */
-    .tex-inline .mjx-container { 
-      max-width:100% !important; overflow:hidden !important; display:block !important; 
-      word-break:break-word !important; overflow-wrap:anywhere !important;
-      transform-origin: left top;
-    }
-    .tex-inline .mjx-svg { 
-      max-width:100% !important; height:auto !important; 
-      word-break:break-word !important; overflow-wrap:anywhere !important;
-    }
-    .mjx-mrow { white-space:normal !important; word-break:break-all !important; }
-    /* Scale down si overflow détecté, mais via CSS max-width */
-    .tex-inline .mjx-container > svg {
-      max-width: 100% !important;
-      transform: scale(1);
-    }
-    .tex-inline.long .mjx-container > svg {
-      transform: scale(0.95);
-    }
-    .tex-inline.very-long .mjx-container > svg {
-      transform: scale(0.85);
-    }
-
-    .badge { display:inline-block; padding:4px 8px; border-radius:16px; font-size:.72rem; font-weight:700; text-transform:uppercase; letter-spacing:.4px; }
+    .badge { display:inline-block; padding:4px 10px; border-radius:16px; font-size:.72rem; font-weight:700; text-transform:uppercase; letter-spacing:.4px; }
     .low{background:rgba(46,213,115,.16); color:#1f9d63;}
     .med{background:rgba(255,159,67,.16); color:#c06a18;}
     .high{background:rgba(238,82,83,.16); color:#b53a3b;}
@@ -208,17 +150,8 @@
 
     @media (max-width: 900px) {
       .title { font-size:1.6rem; }
-      thead th, td { padding:10px 6px; font-size:.82rem; }
+      thead th, td { padding:10px 8px; font-size:.86rem; }
       .theme-toggle { gap:8px; padding:6px 8px; }
-      /* Sur mobile, colonnes formules prennent plus d'espace */
-      th[data-key="formula"], td:nth-child(3),
-      th[data-key="diffFormula"], td:nth-child(9) { width:20%; }
-      th[data-key="method"], td:nth-child(2) { width:14%; }
-      th[data-key="desc"], td:nth-child(11) { width:16%; }
-      th[data-key="link"], td:nth-child(12) { width:40px; }
-      thead th { font-size:.8rem; letter-spacing:.2px; }
-      .tex-inline.long { font-size:0.8em; }
-      .tex-inline.very-long { font-size:0.7em; }
     }
   </style>
 </head>
@@ -294,85 +227,2664 @@
 
     // IMPORTANT: on utilise des spans .tex-inline au lieu de <code>, et on insère les délimiteurs \( \)
     function texSpan(texString){
-      let cls = '';
-      // heuristique: classes pour scaling basé sur longueur
-      if (texString.length > 100) cls = ' very-long';
-      else if (texString.length > 80) cls = ' long';
-      return `<span class="tex-inline${cls}">\\(${texString}\\)</span>`;
+      // heuristique: si la chaîne est longue, on ajoute .long pour casser en block
+      const long = texString.length > 80 ? ' long' : '';
+      return `<span class="tex-inline${long}">\\(${texString}\\)</span>`;
     }
 
     const dataRows = [
-      {method:"Gradient Descent",formula:"x_{k+1}=x_k-\\alpha\\,\\nabla f(x_k)",memory:"Low O(n)",conv:"Linear",deriv:"1st Order",cond:"Poor (ill‑cond.)",diff:"Locale linéaire",diffFormula:"\\Delta f=\\nabla\\cdot(\\nabla f)",nature:"Isotrope",desc:"Descente de gradient classique.",link:"https://en.wikipedia.org/wiki/Gradient_descent"},
-      {method:"Optimal Transport (Wasserstein)",formula:"W_2^2(p,q)=\\inf_{\\pi\\in\\Pi(p,q)}\\int\\|x-y\\|^2\\,d\\pi(x,y)",memory:"High O(n^3)",conv:"Superlinear",deriv:"Implicit Gradient",cond:"Excellent (géométrie lisse)",diff:"Géométrique",diffFormula:"\\Delta_W f=\\mathrm{div}_W(\\nabla_W f)",nature:"Wasserstein",desc:"Optimisation sur l’espace des mesures.",link:"https://en.wikipedia.org/wiki/Wasserstein_metric"},
-      {method:"Fisher (Natural Gradient)",formula:"\\theta_{k+1}=\\theta_k-\\alpha\\,F(\\theta_k)^{-1}\\nabla_\\theta L(\\theta_k)",memory:"Medium–High O(n^2)",conv:"Superlinear",deriv:"Quasi‑2nd Order",cond:"Stable (Fisher metric)",diff:"Informationnelle",diffFormula:"\\Delta_F f=F^{-1}\\nabla\\cdot(F\\nabla f)",nature:"Naturel",desc:"Gradient naturel d’Amari.",link:"https://en.wikipedia.org/wiki/Natural_gradient"},
-      {method:"Fisher–Rao",formula:"\\langle u,v\\rangle_{\\theta}=\\mathbb E[\\partial_\\theta\\log p_\\theta\\,\\partial_\\theta\\log p_\\theta]",memory:"Medium–High O(n^2)",conv:"Superlinear",deriv:"Quasi‑2nd Order",cond:"Stable (Fisher–Rao)",diff:"Info‑géométrique",diffFormula:"\\Delta_{FR} f=\\mathrm{div}_{FR}(\\nabla_{FR} f)",nature:"Riemannienne proba",desc:"Métrique canonique des distributions.",link:"https://en.wikipedia.org/wiki/Fisher_information_metric"},
-      {method:"Newton's Method",formula:"x_{k+1}=x_k-H^{-1}\\nabla f(x_k)",memory:"High O(n^2)",conv:"Quadratic",deriv:"2nd Order",cond:"Good (Hessian)",diff:"Locale isotrope",diffFormula:"\\Delta f=\\operatorname{Tr}(H)",nature:"Isotrope linéaire",desc:"Newton classique.",link:"https://en.wikipedia.org/wiki/Newton%27s_method"},
-      {method:"Gauss–Newton",formula:"x_{k+1}=x_k-(J^T J)^{-1}J^T r",memory:"Medium O(n^2)",conv:"Superlinear",deriv:"Quasi-Newton",cond:"Stable (Info)",diff:"Anisotrope",diffFormula:"\\Delta\\approx J^T J",nature:"Anisotrope",desc:"Moindres carrés NL.",link:"https://en.wikipedia.org/wiki/Gauss%E2%80%93Newton_algorithm"},
-      {method:"Levenberg–Marquardt",formula:"\\Delta x=-(J^T J+\\lambda I)^{-1}J^T r",memory:"Medium O(n^2)",conv:"Quadratic",deriv:"2nd Order",cond:"Stable (Damped)",diff:"Amortie",diffFormula:"\\Delta=H+\\lambda I",nature:"Contrôlée",desc:"Damping entre GN et GD.",link:"https://en.wikipedia.org/wiki/Levenberg%E2%80%93Marquardt_algorithm"},
-      {method:"Trust Region",formula:"\\min_p g^T p+\\tfrac12 p^T H p\\;s.c.\\;\\|p\\|\\le\\Delta",memory:"High O(n^3)",conv:"Superlinear",deriv:"2nd Order",cond:"Good (Constrained)",diff:"Contrainte",diffFormula:"\\Delta f\\;\\text{borné}",nature:"Régularisée",desc:"Modèle quadratique local.",link:"https://en.wikipedia.org/wiki/Trust_region"},
-      {method:"Riemannian Newton",formula:"p=-\\operatorname{Hess}^{-1}\\operatorname{grad} f;\\;x^+=\\operatorname{Retr}(p)",memory:"High O(n^2)",conv:"Quadratic",deriv:"2nd Order",cond:"Good (Geometric)",diff:"Géométrique",diffFormula:"\\Delta_G f=\\operatorname{div}_G(\\nabla_G f)",nature:"Géométrique",desc:"Laplace–Beltrami.",link:"https://arxiv.org/abs/1204.1503"},
-      {method:"Mirror Newton",formula:"x^+=\\arg\\min\\langle\\nabla f,x-x_k\\rangle+D_\\psi(x,x_k)",memory:"Medium O(n^2)",conv:"Superlinear",deriv:"Bregman 2nd",cond:"Good (Bregman)",diff:"Entropique",diffFormula:"\\Delta_\\psi=\\nabla_\\psi\\cdot(\\nabla_\\psi f)",nature:"Non isotrope",desc:"Espace dual.",link:"https://arxiv.org/abs/1205.1181"},
-      {method:"Entropic Newton (Sinkhorn)",formula:"u^{t+1}=a/(Kv^t),\\;v^{t+1}=b/(K^Tu^{t+1})",memory:"Med O(n^2\\log n)",conv:"Linear",deriv:"Implicit 2nd",cond:"Excellent (Entropic)",diff:"Stoch. NL",diffFormula:"\\partial_t\\mu=\\Delta\\mu+\\nabla\\cdot(\\mu\\nabla V)",nature:"Fokker–Planck",desc:"OT régularisé.",link:"https://arxiv.org/abs/1304.2606"},
-      {method:"Natural Gradient Flow",formula:"\\dot{\\theta}=-F(\\theta)^{-1}\\nabla_\\theta L(\\theta)",memory:"High O(n^2)",conv:"Superlinear",deriv:"Fisher 2nd",cond:"Excellent (Fisher)",diff:"Informationnelle",diffFormula:"\\Delta_F f=F^{-1}\\nabla\\cdot(F\\nabla f)",nature:"Info-géo",desc:"Gradient naturel.",link:"https://en.wikipedia.org/wiki/Natural_gradient"},
-      {method:"Riccati Flow",formula:"\\dot P=AP+PA^T-PC^TR^{-1}CP+Q",memory:"Medium O(n^2)",conv:"Quadratic",deriv:"Stochastic 2nd",cond:"Good (Adaptive)",diff:"Adaptative",diffFormula:"\\dot\\Sigma=-\\Sigma H\\Sigma+Q",nature:"Kalman",desc:"Covariance dynam.",link:"https://en.wikipedia.org/wiki/Riccati_equation"},
-      {method:"BFGS",formula:"B^+=B+\\frac{yy^T}{y^Ts}-\\frac{Bs s^T B}{s^T B s}",memory:"Medium O(n^2)",conv:"Superlinear",deriv:"Quasi-Newton",cond:"Good (PD)",diff:"Quasi-locale",diffFormula:"\\mathrm{Tr}(B)",nature:"Anisotrope",desc:"Secant PD.",link:"https://en.wikipedia.org/wiki/Broyden%E2%80%93Fletcher%E2%80%93Goldfarb%E2%80%93Shanno_algorithm"},
-      {method:"L-BFGS",formula:"H_m=V_1^\\top\\cdots V_m H_0 V_m^\\top\\cdots V_1",memory:"Low O(mn)",conv:"Superlinear",deriv:"Quasi-Newton",cond:"Good (Limited)",diff:"Mémoire courte",diffFormula:"m-paires (s,y)",nature:"Fenêtre",desc:"Deux boucles.",link:"https://en.wikipedia.org/wiki/Limited-memory_BFGS"},
-      {method:"Conjugate Gradient",formula:"p_{k+1}=-r_{k+1}+\\beta_k p_k",memory:"Low O(n)",conv:"Superlinear",deriv:"Krylov 2nd",cond:"Good (SPD)",diff:"Spectrale",diffFormula:"\\sum\\lambda_i v_iv_i^T",nature:"Modale",desc:"Solveur Hp=-g.",link:"https://en.wikipedia.org/wiki/Conjugate_gradient_method"},
-      {method:"GMRES",formula:"\\min_x\\|b-Ax\\|_2",memory:"Medium O(kn)",conv:"Superlinear",deriv:"Krylov 2nd",cond:"Stable (nonsym)",diff:"Résiduelle",diffFormula:"\\min\\|r_k\\|_2",nature:"Résidu-min",desc:"Non sym.",link:"https://en.wikipedia.org/wiki/Generalized_minimal_residual_method"},
-      {method:"Spectral Gradient",formula:"x^+=x-\\alpha \\sum \\lambda_i^{-1}(u_i^T\\nabla f)u_i",memory:"High O(n^3)",conv:"Superlinear",deriv:"Spectral 2nd",cond:"Excellent (EVD)",diff:"Modale",diffFormula:"\\sum \\lambda_i \\partial_i^2 f",nature:"Modes",desc:"Pas par modes.",link:"https://arxiv.org/abs/1606.02588"},
-      {method:"Barzilai–Borwein",formula:"\\alpha=\\frac{s^Ts}{s^Ty}\\;\\text{ou}\\;\\frac{s^Ty}{y^Ty}",memory:"Low O(n)",conv:"Superlinear",deriv:"Quasi-1st",cond:"Good (Adaptive)",diff:"Scalaire",diffFormula:"\\alpha\\nabla^2 f",nature:"Uniforme",desc:"Pas quasi-secant.",link:"https://en.wikipedia.org/wiki/Gradient_descent"},
-      {method:"Stochastic Newton",formula:"x^+=x-H_{\\mathcal{B}}^{-1}\\nabla f_{\\mathcal{B}}",memory:"High O(n^2)",conv:"Linear",deriv:"Stoch 2nd",cond:"Moderate",diff:"Stochastique",diffFormula:"\\mathbb E[H]+\\sigma^2",nature:"Mini-batch",desc:"Hessien échant.",link:"https://arxiv.org/abs/1406.5419"},
-      {method:"Cubic Newton",formula:"\\min g^T p+\\tfrac12 p^T B p+\\tfrac{M}{6}\\|p\\|^3",memory:"High O(n^3)",conv:"Superlinear",deriv:"3rd",cond:"Excellent",diff:"Cubique",diffFormula:"H+M\\|p\\|",nature:"Non-linéaire",desc:"Rég. cubique.",link:"https://arxiv.org/abs/1803.05113"},
-      {method:"Adaptive Newton",formula:"x^+=x-\\operatorname{diag}(\\alpha_i)H^{-1}\\nabla f",memory:"High O(n^2)",conv:"Quadratic",deriv:"Adaptive 2nd",cond:"Good",diff:"Paramétrique",diffFormula:"\\operatorname{diag}(\\alpha_i)H",nature:"Anisotrope",desc:"Vitesses par axe.",link:"https://arxiv.org/abs/1412.6980"},
-      {method:"Hessian-Free",formula:"Hp\\approx\\frac{\\nabla f(x+\\varepsilon p)-\\nabla f(x)}{\\varepsilon}",memory:"Low O(n)",conv:"Superlinear",deriv:"Implicit 2nd",cond:"Good (CG)",diff:"Implicite",diffFormula:"Hp=-g",nature:"H·v",desc:"Sans Hessien explicite.",link:"https://arxiv.org/abs/1206.6464"},
-      {method:"SVRN",formula:"H\\approx\\tfrac1n\\sum H_i + VR",memory:"High O(n^2)",conv:"Superlinear",deriv:"VR 2nd",cond:"Good",diff:"Variance‑réduite",diffFormula:"\\mathbb E[H]-\\sigma_H^2",nature:"VR",desc:"Newton variance réduite.",link:"https://arxiv.org/abs/1602.03943"},
-      {method:"Proximal Newton",formula:"x^+=\\operatorname{prox}_{\\lambda h}(x-H^{-1}\\nabla f)",memory:"High O(n^2)",conv:"Quadratic",deriv:"Prox 2nd",cond:"Good",diff:"Proximale",diffFormula:"\\Delta+\\partial h",nature:"Composite",desc:"Lisse + non‑lisse.",link:"https://arxiv.org/abs/1206.1623"},
-      {method:"Augmented Lagrangian",formula:"\\nabla^2 L_A=\\nabla^2 f+\\rho\\sum \\nabla c_i\\nabla c_i^T",memory:"High O(n^2)",conv:"Quadratic",deriv:"Constrained 2nd",cond:"Good",diff:"Lagrangienne",diffFormula:"\\text{saddle‑point}",nature:"Contraintes",desc:"Primal‑dual robuste.",link:"https://en.wikipedia.org/wiki/Augmented_Lagrangian_method"},
-      {method:"Interior-Point",formula:"\\nabla^2\\phi_\\mu=\\nabla^2 f+\\mu\\sum \\frac{\\nabla c_i\\nabla c_i^T}{c_i^2}",memory:"High O(n^3)",conv:"Quadratic",deriv:"Barrier 2nd",cond:"Excellent",diff:"Intérieure",diffFormula:"\\Delta+\\text{log‑barrier}",nature:"Centrale",desc:"Chemin central.",link:"https://en.wikipedia.org/wiki/Interior-point_method"},
-      {method:"SQP",formula:"\\min \\tfrac12\\Delta x^T\\nabla^2 L\\Delta x+\\nabla f^T\\Delta x\\;s.c.\\;\\nabla c^T\\Delta x+c=0",memory:"High O(n^3)",conv:"Quadratic",deriv:"QP 2nd",cond:"Good",diff:"QP séquentielle",diffFormula:"\\Delta_L",nature:"Lin/quadr",desc:"Linéarise contraintes.",link:"https://en.wikipedia.org/wiki/Sequential_quadratic_programming"},
-      {method:"Active‑Set Newton",formula:"\\nabla^2 f_A\\,\\Delta x=-\\nabla f_A",memory:"High O(n^2)",conv:"Quadratic",deriv:"Active 2nd",cond:"Good",diff:"Projetée",diffFormula:"\\Delta_A",nature:"Sous‑espace",desc:"Espace faisable.",link:"https://en.wikipedia.org/wiki/Active-set_method"},
-      {method:"Homotopy Newton",formula:"H(x,t)=t f(x)+(1-t)f_0(x)",memory:"High O(n^2)",conv:"Quadratic",deriv:"Continuation 2nd",cond:"Excellent",diff:"Homotopique",diffFormula:"\\Delta(t)",nature:"Chemin",desc:"Déformation continue.",link:"https://en.wikipedia.org/wiki/Homotopy_method"},
-      {method:"Anderson Acceleration",formula:"x^+=\\sum w_i x_{k-i}",memory:"Medium O(kn)",conv:"Superlinear",deriv:"Extrapolation",cond:"Good",diff:"Accélérée",diffFormula:"\\Delta\\text{ extrapolé}",nature:"Multi‑pas",desc:"Extrapolation fixe‑point.",link:"https://en.wikipedia.org/wiki/Anderson_acceleration"},
-      {method:"DFP",formula:"H^+=H+\\frac{ss^T}{s^Ty}-\\frac{Hyy^TH}{y^THy}",memory:"Medium O(n^2)",conv:"Superlinear",deriv:"Quasi-Newton",cond:"Good",diff:"Symétrique",diffFormula:"H^{-1}",nature:"Inverse PD",desc:"Mise à jour inverse.",link:"https://en.wikipedia.org/wiki/Davidon%E2%80%93Fletcher%E2%80%93Powell_formula"},
-      {method:"SR1",formula:"B^+=B+\\frac{(y-Bs)(y-Bs)^T}{(y-Bs)^Ts}",memory:"Medium O(n^2)",conv:"Superlinear",deriv:"Quasi-Newton",cond:"Indef (ok)",diff:"Minimale",diffFormula:"\\text{rang‑1}",nature:"Correction",desc:"Sans PD obligatoire.",link:"https://en.wikipedia.org/wiki/Symmetric_rank-one"},
-      {method:"PSB",formula:"B^+=B+\\frac{(y-Bs)s^T+s(y-Bs)^T}{s^Ts}-\\frac{s^T(y-Bs)ss^T}{(s^Ts)^2}",memory:"Medium O(n^2)",conv:"Superlinear",deriv:"Quasi-Newton",cond:"Good",diff:"Asymétrique",diffFormula:"\\text{non‑diag}",nature:"Directionnelle",desc:"Capture asymétries.",link:"https://optimization-online.org/2011/09/3164/"},
-      {method:"Stochastic Quasi‑Newton",formula:"B_k \\text{ avec gradients stoch.}",memory:"Medium O(n^2)",conv:"Linear–Super",deriv:"SQN",cond:"Good",diff:"Quasi stoch.",diffFormula:"\\mathbb E[\\Delta_B]",nature:"Mémoire",desc:"L‑BFGS stochastique.",link:"https://arxiv.org/abs/1401.7020"},
-      {method:"AdaHessian",formula:"\\theta^+=\\theta-\\alpha\\,\\operatorname{diag}(H)^{-1/2}\\nabla L",memory:"Medium O(n)",conv:"Superlinear",deriv:"Diag 2nd",cond:"Good",diff:"Neuronale",diffFormula:"\\operatorname{diag}(H)^{1/2}",nature:"Anisotrope",desc:"Courbure diagonale.",link:"https://arxiv.org/abs/2006.00719"},
-      {method:"Shampoo",formula:"\\theta^+=\\theta-\\alpha (L^{-1/4}\\otimes R^{-1/4})g",memory:"High O(n^{3/2})",conv:"Superlinear",deriv:"Kronecker 2nd",cond:"Excellent",diff:"Tensorielle",diffFormula:"L\\otimes R",nature:"Facteurs",desc:"Précond. tensoriel.",link:"https://arxiv.org/abs/1802.09568"},
-      {method:"K‑FAC",formula:"F\\approx A\\otimes S,\\;\\theta^+=\\theta-\\alpha F^{-1}g",memory:"High O(n^{3/2})",conv:"Superlinear",deriv:"Fisher 2nd",cond:"Excellent",diff:"Factorisée",diffFormula:"A\\otimes S",nature:"Par couche",desc:"FIM factorisée.",link:"https://arxiv.org/abs/1503.05671"},
-      {method:"ARC (Cubic Reg.)",formula:"\\min_p m(p)+\\tfrac{M}{6}\\|p\\|^3",memory:"High O(n^3)",conv:"Superlinear",deriv:"3rd reg",cond:"Excellent",diff:"Cubique régul.",diffFormula:"\\Delta+M\\|\\cdot\\|",nature:"Globalisé",desc:"Bornes globales.",link:"https://arxiv.org/abs/0809.3706"},
-      {method:"Riemannian CG",formula:"\\eta^+=-\\operatorname{grad} f+\\beta\\,\\mathcal T(\\eta)",memory:"Low O(n)",conv:"Superlinear",deriv:"Riem–Krylov",cond:"Good",diff:"Conj. géom.",diffFormula:"\\Delta_M",nature:"Géodésique",desc:"Transport parallèle.",link:"https://arxiv.org/abs/1303.6522"},
-      {method:"Geodesic Convex",formula:"x^+=\\exp_x(-\\alpha\\,\\operatorname{grad} f)",memory:"Medium O(n^2)",conv:"Linear",deriv:"Geodesic",cond:"Excellent",diff:"Géodésique",diffFormula:"\\Delta_{geo}",nature:"Intrinsèque",desc:"Sans distorsion.",link:"https://arxiv.org/abs/1602.06053"},
-      {method:"Mirror Descent Hessian",formula:"x^+=\\nabla\\psi^*(\\nabla\\psi(x)-\\alpha\\,\\nabla^2\\psi^{-1}\\nabla f)",memory:"Medium O(n^2)",conv:"Superlinear",deriv:"Bregman Hess.",cond:"Good",diff:"Miroir Hess.",diffFormula:"\\Delta_\\psi^{dual}",nature:"Dual",desc:"Miroir + 2nd ordre.",link:"https://arxiv.org/abs/1805.12501"},
-      {method:"Sinkhorn–Newton (OT)",formula:"\\text{Sinkhorn}+\\text{Newton}",memory:"High O(n^2\\log n)",conv:"Linear",deriv:"OT 2nd",cond:"Excellent",diff:"Sinkhorn",diffFormula:"\\Delta_{SK}",nature:"Entropique",desc:"OT entropique.",link:"https://arxiv.org/abs/1610.06519"},
-      {method:"VI–Newton (KL)",formula:"\\lambda^+=\\lambda-F_{KL}^{-1}\\nabla_\\lambda KL(q\\|p)",memory:"High O(n^2)",conv:"Superlinear",deriv:"VI 2nd",cond:"Good",diff:"Variationnelle",diffFormula:"\\Delta_{KL}",nature:"Bayésien",desc:"Newton sur KL.",link:"https://arxiv.org/abs/1608.04802"},
-      {method:"Laplace Approximation",formula:"q(\\theta)\\approx\\mathcal N(\\theta^*,-\\nabla^2\\log p|_{\\theta^*}^{-1})",memory:"High O(n^2)",conv:"Quadratic",deriv:"Posterior 2nd",cond:"Good",diff:"Postérieure",diffFormula:"-\\nabla^2\\log p",nature:"Autour du mode",desc:"Approx. gaussienne.",link:"https://en.wikipedia.org/wiki/Laplace%27s_approximation"},
-      {method:"Score‑Based Diffusion",formula:"dx=\\nabla_x\\log p_t(x)dt+\\sqrt{2}\\,dw",memory:"High O(n^2)",conv:"Linear",deriv:"Score",cond:"Excellent",diff:"Score‑driven",diffFormula:"\\nabla^2\\log p",nature:"Langevin",desc:"Flot de diffusion.",link:"https://arxiv.org/abs/2011.13456"},
-      {method:"Graph Laplacian Newton",formula:"x^+=x-L_G^{-1}\\nabla f",memory:"Medium O(n^2)",conv:"Superlinear",deriv:"Graph 2nd",cond:"Good",diff:"Graphique",diffFormula:"\\Delta_G=L_G",nature:"Réseau",desc:"Diffusion sur graphe.",link:"https://en.wikipedia.org/wiki/Laplacian_matrix"},
-      {method:"LiSSA",formula:"H^{-1}v\\approx\\sum_{j=0}^K(I-\\alpha H)^j v",memory:"Low O(n)",conv:"Linear",deriv:"Stoch inverse",cond:"Good",diff:"Linéaire stoch.",diffFormula:"\\Delta^{-1}",nature:"Série",desc:"Inverse temps linéaire.",link:"https://arxiv.org/abs/1602.03943"},
-      {method:"SPSA Second‑Order",formula:"H\\approx\\tfrac{g(x+c\\Delta)-g(x-c\\Delta)}{2c\\,\\Delta\\Delta^T}",memory:"Medium O(n)",conv:"Linear",deriv:"Perturbation 2nd",cond:"Moderate",diff:"Perturbation",diffFormula:"\\Delta_{SPSA}",nature:"Bruit",desc:"H & g par perturbations.",link:"https://ieeexplore.ieee.org/document/478756"},
-      {method:"Nested‑Set Hessian",formula:"H \\text{ via simplex/nested}",memory:"Medium O(n^2)",conv:"Linear",deriv:"DFO 2nd",cond:"Good",diff:"Sans dérivées",diffFormula:"\\Delta_{simplex}",nature:"DFO",desc:"Hessien DFO.",link:"https://arxiv.org/abs/2011.02584"},
-      {method:"ROM Hessian (PDE)",formula:"H\\approx\\Phi^T H_{full}\\Phi",memory:"Med O(kn)",conv:"Superlinear",deriv:"Reduced 2nd",cond:"Good",diff:"Ordre réduit",diffFormula:"\\Delta_{ROM}",nature:"Projection",desc:"État–adjoint.",link:"https://arxiv.org/abs/1807.05579"},
-      {method:"RSGD (Riem.)",formula:"x^+=\\operatorname{Retr}(x,-\\alpha\\,\\operatorname{grad} f)",memory:"Low O(n)",conv:"Linear",deriv:"Riem 1st",cond:"Good",diff:"Stoch Riem.",diffFormula:"\\Delta_M",nature:"Géodésique",desc:"SGD sur variété.",link:"https://arxiv.org/abs/1111.5280"},
-      {method:"Riemannian SVRG",formula:"grad VR sur variété",memory:"Medium O(n)",conv:"Linear–Super",deriv:"Riem VR",cond:"Good",diff:"VR Riem.",diffFormula:"\\Delta_M^{VR}",nature:"Variance réduite",desc:"SVRG géométrique.",link:"https://arxiv.org/abs/1605.07147"},
-      {method:"RASA",formula:"pas adaptatif manifold matriciel",memory:"Medium O(n^2)",conv:"Linear",deriv:"Riem adapt",cond:"Good",diff:"Adaptative",diffFormula:"\\Delta_M^{adapt}",nature:"Coordonnée",desc:"Cadre adaptatif.",link:"https://arxiv.org/abs/1909.05168"},
-      {method:"RAMSGrad (Riem.)",formula:"AMSGrad produits cartésiens",memory:"Medium O(n)",conv:"Linear",deriv:"Riem mom.",cond:"Good",diff:"Momentum",diffFormula:"\\Delta_M^{AMS}",nature:"Produit",desc:"Moments bornés.",link:"https://arxiv.org/abs/2003.11066"},
-      {method:"Riemannian SAM",formula:"\\min_x\\max_{\\|\\epsilon\\|\\le\\rho} f(\\operatorname{Retr}(x,\\epsilon))",memory:"Medium O(n)",conv:"Linear",deriv:"Riem SAM",cond:"Excellent",diff:"Sharpness",diffFormula:"\\Delta_M^{SAM}",nature:"Généralisation",desc:"Favorise minima plats.",link:"https://arxiv.org/abs/2203.00150"},
-      {method:"Riemannian IPM",formula:"primal–dual avec barrières",memory:"High O(n^2)",conv:"Quadratic",deriv:"Riem barrier",cond:"Excellent",diff:"Intérieure",diffFormula:"\\Delta_M+\\text{barrier}",nature:"Contraintes",desc:"IPM géométrique.",link:"https://arxiv.org/abs/2106.05949"},
-      {method:"Hessian Averaging",formula:"\\bar H=\\tfrac1m\\sum H_{\\mathcal B}",memory:"High O(n^2)",conv:"Superlinear",deriv:"Averaged 2nd",cond:"Good",diff:"Moyennée",diffFormula:"\\mathbb E[H]",nature:"Subsampled",desc:"Newton inexact.",link:"https://arxiv.org/abs/2109.12853"},
-      {method:"Greedy L‑Memory QN",formula:"B=\\gamma I+\\sum_{i=1}^r\\lambda_i v_iv_i^T",memory:"Medium O(nm)",conv:"Superlinear",deriv:"Greedy QN",cond:"Good",diff:"Greedy",diffFormula:"\\text{eigen low‑rank}",nature:"Sélective",desc:"Updates PD choisis.",link:"https://arxiv.org/abs/2306.15444"},
-      {method:"Stoch. Cubic Newton",formula:"cubic + momentum (stoch)",memory:"High O(n^3)",conv:"Linear–Super",deriv:"Stoch cubic",cond:"Good",diff:"Stoch cubique",diffFormula:"\\Delta+M\\|\\cdot\\|+\\xi",nature:"Non‑convexe",desc:"Momentum stabilise.",link:"https://arxiv.org/abs/2410.19644"},
-      {method:"QN Forward–Backward",formula:"prox‑h + modèle quad QN",memory:"Medium O(n^2)",conv:"Superlinear",deriv:"Prox‑QN",cond:"Good",diff:"Splitting",diffFormula:"\\Delta+\\partial h",nature:"Composite",desc:"Non‑lisse rapide.",link:"https://fadili.users.greyc.fr/Pub/bibtex/manuscript/higherorderFB.pdf"},
-      {method:"Block Coordinate Newton",formula:"\\nabla^2 f_B p_B=-\\nabla f_B",memory:"Medium O(b^2)",conv:"Superlinear",deriv:"Block 2nd",cond:"Good",diff:"Bloc‑wise",diffFormula:"\\Delta_B",nature:"Parallèle",desc:"Par blocs.",link:"https://arxiv.org/abs/1211.5973"},
-      {method:"Randomized Coord. Newton",formula:"p_i=-[H]_{ii}^{-1}g_i",memory:"Low O(n)",conv:"Linear",deriv:"Rand coord",cond:"Moderate",diff:"Randomisée",diffFormula:"\\Delta_i",nature:"Par axe",desc:"Coord. aléatoire.",link:"https://arxiv.org/abs/1502.06328"},
-      {method:"Coordinate Descent Newton",formula:"x_i^+=x_i-[H_{ii}]^{-1}g_i",memory:"Low O(n)",conv:"Linear–Super",deriv:"CD 2nd",cond:"Good",diff:"Coordonnée",diffFormula:"\\Delta_{diag}",nature:"Diagonal",desc:"Découplage.",link:"https://arxiv.org/abs/1407.1296"},
-      {method:"Full‑Matrix Adagrad",formula:"\\theta^+=\\theta-\\alpha (\\sum g g^T)^{-1/2}g",memory:"High O(n^2)",conv:"Linear",deriv:"Full adaptive",cond:"Good",diff:"Préconditionnée",diffFormula:"(\\sum G)^{1/2}",nature:"Scalable",desc:"Précond. dense.",link:"https://arxiv.org/abs/1412.9599"},
-      {method:"THOR (DL 2nd)",formula:"Fisher approx bloc/couche",memory:"High O(n^{3/2})",conv:"Superlinear",deriv:"Deep 2nd",cond:"Excellent",diff:"Deep",diffFormula:"\\tilde F",nature:"DL",desc:"2nd‑ordre DL.",link:"https://arxiv.org/abs/1811.12019"},
-      {method:"Diagonal Scaling Newton",formula:"x^+=x-D^{-1}H^{-1}\\nabla f",memory:"Medium O(n^2)",conv:"Quadratic",deriv:"Scaled 2nd",cond:"Good",diff:"Scaling",diffFormula:"D\\,H",nature:"Coordonnée",desc:"Gain diagonal.",link:"https://optimization-online.org"},
-      {method:"Krylov Subspace Newton",formula:"Hp=-g via CG/Lanczos",memory:"Low O(kn)",conv:"Superlinear",deriv:"Implicit 2nd",cond:"Good",diff:"Krylov",diffFormula:"\\mathcal K_k(H,g)",nature:"Sous‑espaces",desc:"H·v uniquement.",link:"https://arxiv.org/abs/1206.6464"},
-      {method:"Entropic Reg QN",formula:"QN + \\varepsilon\\,\\mathcal H",memory:"Medium O(n^2)",conv:"Linear–Super",deriv:"Entropic QN",cond:"Good",diff:"Entropique",diffFormula:"\\Delta_\\varepsilon",nature:"OT‑like",desc:"Régularisation.",link:"https://arxiv.org/abs/1610.06519"},
-      {method:"Bayesian Hessian",formula:"H\\approx-\\mathbb E[\\nabla^2\\log p(\\theta|D)]",memory:"High O(n^2)",conv:"Quadratic",deriv:"Bayes 2nd",cond:"Good",diff:"Bayésienne",diffFormula:"-\\mathbb E[\\nabla^2\\log p]",nature:"Incertitude",desc:"Courbure post.",link:"https://arxiv.org/abs/1703.04977"},
-      {method:"Spectral Block Newton",formula:"B=U\\Lambda U^T (bloc)",memory:"High O(b^3)",conv:"Superlinear",deriv:"Spectral",cond:"Good",diff:"Spectrale bloc",diffFormula:"U\\Lambda U^T",nature:"Parallèle",desc:"EVD bloc.",link:"https://arxiv.org/abs/1808.08865"}
+{
+"method": "Gradient Descent",
+"formula": "x_{k+1}=x_k-\alpha\,\nabla f(x_k)",
+"memory": "Low O(n)",
+"conv": "Linear",
+"deriv": "1st Order",
+"cond": "Poor (ill‑cond.)",
+"diff": "Locale linéaire",
+"diffFormula": "\Delta f=\nabla\cdot(\nabla f)",
+"nature": "Isotrope",
+"desc": "Descente de gradient classique.",
+"link": "https://en.wikipedia.org/wiki/Gradient_descent"
+},
+{
+"method": "Optimal Transport (Wasserstein)",
+"formula": "W_2^2(p,q)=\inf_{\pi\in\Pi(p,q)}\int\|x-y\|^2\,d\pi(x,y)",
+"memory": "High O(n^3)",
+"conv": "Superlinear",
+"deriv": "Implicit Gradient",
+"cond": "Excellent (géométrie lisse)",
+"diff": "Géométrique",
+"diffFormula": "\Delta_W f=\mathrm{div}W(\nabla_W f)",
+"nature": "Wasserstein",
+"desc": "Optimisation sur l’espace des mesures.",
+"link": "https://en.wikipedia.org/wiki/Wasserstein_metric"
+},
+{
+"method": "Fisher (Natural Gradient)",
+"formula": "\theta{k+1}=\theta_k-\alpha\,F(\theta_k)^{-1}\nabla_\theta L(\theta_k)",
+"memory": "Medium–High O(n^2)",
+"conv": "Superlinear",
+"deriv": "Quasi‑2nd Order",
+"cond": "Stable (Fisher metric)",
+"diff": "Informationnelle",
+"diffFormula": "\Delta_F f=F^{-1}\nabla\cdot(F\nabla f)",
+"nature": "Naturel",
+"desc": "Gradient naturel d’Amari.",
+"link": "https://en.wikipedia.org/wiki/Natural_gradient"
+},
+{
+"method": "Fisher–Rao",
+"formula": "\langle u,v\rangle_{\theta}=\mathbb E[\partial_\theta\log p_\theta\,\partial_\theta\log p_\theta]",
+"memory": "Medium–High O(n^2)",
+"conv": "Superlinear",
+"deriv": "Quasi‑2nd Order",
+"cond": "Stable (Fisher–Rao)",
+"diff": "Info‑géométrique",
+"diffFormula": "\Delta_{FR} f=\mathrm{div}{FR}(\nabla{FR} f)",
+"nature": "Riemannienne proba",
+"desc": "Métrique canonique des distributions.",
+"link": "https://en.wikipedia.org/wiki/Fisher_information_metric"
+},
+{
+"method": "Newton's Method",
+"formula": "x_{k+1}=x_k-H^{-1}\nabla f(x_k)",
+"memory": "High O(n^2)",
+"conv": "Quadratic",
+"deriv": "2nd Order",
+"cond": "Good (Hessian)",
+"diff": "Locale isotrope",
+"diffFormula": "\Delta f=\operatorname{Tr}(H)",
+"nature": "Isotrope linéaire",
+"desc": "Newton classique. Le Laplacien (\Delta f) est la trace du Hessien (Tr(H)). Newton résout un Laplacien généralisé dans la métrique H. Diffusion locale isotrope (linéaire) — Isotrope si la Hessienne est bien conditionnée ou si l'on ne regarde qu'une diffusion uniforme.",
+"link": "https://en.wikipedia.org/wiki/Newton%27s_method"
+},
+{
+"method": "Gauss–Newton",
+"formula": "\beta^{(k+1)}=\beta^{(k)}-(J^T J)^{-1}J^T r",
+"memory": "High O(n^2)",
+"conv": "Quadratic (local)",
+"deriv": "2nd Order (approx.)",
+"cond": "Good (least squares)",
+"diff": "Anisotrope",
+"diffFormula": "\Delta f=\operatorname{Tr}(J^T J)",
+"nature": "Anisotrope informationnelle",
+"desc": "Approximation du Hessien par J^T J pour problèmes de moindres carrés. C'est un Laplacien diffus dans la métrique de l'information. Diffusion anisotrope — Anisotrope car la matrice J^T J pondère la diffusion selon les directions où le modèle est le plus sensible aux données.",
+"link": "https://en.wikipedia.org/wiki/Gauss–Newton_algorithm"
+},
+{
+"method": "Levenberg–Marquardt",
+"formula": "\delta=-(J^T J + \lambda I)^{-1} J^T r",
+"memory": "High O(n^2)",
+"conv": "Quadratic (damped)",
+"deriv": "2nd Order (regularized)",
+"cond": "Stable (damping)",
+"diff": "Contrôlée/amortie",
+"diffFormula": "\Delta f=\operatorname{Tr}(J^T J + \lambda I)",
+"nature": "Amortie régularisée",
+"desc": "\lambda I est un terme de régularisation qui empêche le Laplacien généralisé d'exploser lorsque le Hessien H est proche de singulier (mal conditionné). Diffusion contrôlée/amortie — L'amortissement \lambda I agit comme un terme qui stabilise la diffusion Laplacienne vers une descente de gradient lorsque la courbure est incertaine.",
+"link": "https://en.wikipedia.org/wiki/Levenberg–Marquardt_algorithm"
+},
+{
+"method": "Trust Region Methods",
+"formula": "\min_p m(p)=\nabla f^T p + \frac{1}{2} p^T H p \quad \text{s.t.} \quad \|p\| \leq \Delta",
+"memory": "High O(n^2)",
+"conv": "Quadratic (local)",
+"deriv": "2nd Order",
+"cond": "Good (constrained)",
+"diff": "Contrainte régularisée",
+"diffFormula": "\Delta f=\operatorname{Tr}(H) \quad \text{avec rayon } \Delta",
+"nature": "Contrainte locale",
+"desc": "L'approximation quadratique m(p)=\nabla f^T p + 1/2 p^T H p est un modèle d'énergie basé sur l'opérateur Laplacien H dans la région de confiance. La diffusion est limitée par une contrainte de rayon (|p| ≤ Δ). Diffusion contrainte et régularisée — Similaire à la diffusion Laplacienne avec des conditions aux limites.",
+"link": "https://en.wikipedia.org/wiki/Trust_region"
+},
+{
+"method": "Riemannian Newton / Natural Gradient",
+"formula": "x_{k+1}=\exp_{x_k} (-G(x_k)^{-1} \nabla f(x_k))",
+"memory": "Medium–High O(n^2)",
+"conv": "Quadratic (manifold)",
+"deriv": "2nd Order (Riemannian)",
+"cond": "Stable (metric G)",
+"diff": "Géométrique",
+"diffFormula": "\Delta_G f=\mathrm{div}G (\nabla_G f)",
+"nature": "Géométrique intrinsèque",
+"desc": "\Delta_G f est l'opérateur de Laplace-Beltrami sur la variété. C'est la généralisation du Laplacien au cas où l'espace lui-même est courbé par la métrique G(x). Le Laplacien est l'opérateur de divergence du gradient dans cette métrique. Diffusion géométrique — La diffusion est adaptée à la forme intrinsèque de l'espace. Cas spécial : Lorsque G(x) est la métrique d'information de Fisher (FIM), cela mène au Natural Gradient Flow.",
+"link": "https://en.wikipedia.org/wiki/Riemannian_manifold"
+},
+{
+"method": "Mirror Newton / Bregman Newton",
+"formula": "\theta{k+1}=\arg\min_\theta \langle \nabla f(\theta_k), \theta - \theta_k \rangle + D_\phi(\theta, \theta_k)",
+"memory": "High O(n^2)",
+"conv": "Superlinear",
+"deriv": "2nd Order (Bregman)",
+"cond": "Good (Bregman div.)",
+"diff": "Non isotrope entropique",
+"diffFormula": "\Delta_\phi f=\nabla_\phi \cdot (\nabla_\phi f)",
+"nature": "Entropique dual",
+"desc": "Utilise la divergence de Bregman (généralisation de la distance euclidienne) pour définir la métrique. Cette métrique induit une diffusion non linéaire qui opère dans l'espace dual, souvent liée à l'entropie. Diffusion non isotrope, entropique — Le pas est adapté non seulement à la courbure de f, mais aussi à la structure de l'espace définie par la fonction de Legendre (l'entropie).",
+"link": "https://en.wikipedia.org/wiki/Bregman_divergence"
+},
+{
+"method": "Entropic Newton (Sinkhorn-type)",
+"formula": "P^{k+1}=\arg\min_P \langle C, P \rangle + \epsilon H(P) \quad \text{s.t. marginaux}",
+"memory": "High O(n^2)",
+"conv": "Linear (iterative)",
+"deriv": "Implicit 2nd Order",
+"cond": "Excellent (entropic reg.)",
+"diff": "Stochastique non linéaire",
+"diffFormula": "\Delta_H f=\mathrm{div}H (\nabla_H f + \epsilon \log P)",
+"nature": "Entropique stochastique",
+"desc": "Fortement apparenté à la régularisation entropique du Transport Optimal (Sinkhorn). L'ajout de l'entropie dans l'optimisation génère un flot qui est décrit par une équation de Fokker-Planck (une EDP stochastique qui est le Laplacien stochastique généralisé). Diffusion stochastique non linéaire — La diffusion Laplacienne est couplée à un terme de transport (OT) régularisé par l'entropie.",
+"link": "https://en.wikipedia.org/wiki/Sinkhorn%E2%80%93Knopp_algorithm"
+},
+{
+"method": "Natural Gradient Flow (Amari)",
+"formula": "\dot{\theta}=-F(\theta)^{-1} \nabla\theta L(\theta)",
+"memory": "Medium–High O(n^2)",
+"conv": "Superlinear",
+"deriv": "Quasi-2nd Order",
+"cond": "Stable (Fisher)",
+"diff": "Informationnelle",
+"diffFormula": "\Delta_F f=F^{-1} \nabla \cdot (F \nabla f)",
+"nature": "Informationnelle locale",
+"desc": "C'est le Gradient de Riemannien utilisant la Métrique de Fisher comme G(x). L'opérateur \nabla_G f est le Laplacien riemannien naturel pour les espaces de probabilité. Diffusion informationnelle — La vitesse de diffusion dépend de la quantité d'information locale contenue dans les paramètres. Parent direct : Le Fisher (COT) combine cette métrique d'information locale avec la structure globale du Transport Optimal.",
+"link": "https://en.wikipedia.org/wiki/Natural_gradient"
+},
+{
+"method": "Riccati Flow / Kalman Natural Newton",
+"formula": "\dot{\Sigma}=A \Sigma + \Sigma A^T + Q - \Sigma C^T R^{-1} C \Sigma",
+"memory": "Medium O(n^2)",
+"conv": "Quadratic (linear sys.)",
+"deriv": "2nd Order (stochastic)",
+"cond": "Adaptive (covariance)",
+"diff": "Adaptative stochastique",
+"diffFormula": "\Delta_\Sigma f=\operatorname{Tr}(A \Sigma + \Sigma A^T)",
+"nature": "Adaptative dynamique",
+"desc": "L'équation de Riccati est centrale dans la théorie du contrôle optimal stochastique (filtrage de Kalman). Elle modélise la propagation de la matrice de covariance (\Sigma), qui est l'inverse de la matrice d'information (le Hessien dans le cas quadratique). \Sigma agit donc comme un opérateur de diffusion adaptative et son évolution est Laplacienne dans un sens stochastique. Diffusion adaptative — La courbure de l'espace (le Hessien) est mise à jour dynamiquement selon le bruit et l'évolution du système.",
+"link": "https://en.wikipedia.org/wiki/Riccati_equation"
+},
+{
+"method": "BFGS (Quasi-Newton)",
+"formula": "B_{k+1}=B_k + \frac{y y^T}{y^T s} - \frac{(B_k s)(B_k s)^T}{s^T B_k s}",
+"memory": "Medium O(n^2)",
+"conv": "Superlinear",
+"deriv": "Quasi-2nd Order",
+"cond": "Good (positive def.)",
+"diff": "Quasi-locale",
+"diffFormula": "\Delta_B f=\operatorname{Tr}(B_k) \approx \operatorname{Tr}(H)",
+"nature": "Anisotrope approximée",
+"desc": "Approximé le Hessien via des mises à jour de rang bas (BFGS formula), qui préservent la positivité définie et modélisent un Laplacien diffus sans calcul explicite du Hessien complet. Diffusion quasi-locale — Diffusion anisotrope approximée, évoluant avec les itérations pour simuler une propagation Hessienne partielle.",
+"link": "https://en.wikipedia.org/wiki/Broyden%E2%80%93Fletcher%E2%80%93Goldfarb%E2%80%93Shanno_algorithm"
+},
+{
+"method": "L-BFGS (Limited-memory BFGS)",
+"formula": "H_k y_k = s_k \quad (\text{avec } m \text{ vecteurs})",
+"memory": "Low O(m n)",
+"conv": "Superlinear",
+"deriv": "Quasi-2nd Order",
+"cond": "Good (limited hist.)",
+"diff": "À mémoire courte",
+"diffFormula": "\Delta_B f \approx \operatorname{Tr}(H) \quad (\text{avec fenêtre})",
+"nature": "Locale récente",
+"desc": "Version à mémoire limitée de BFGS, utilisant un historique récent des gradients pour approximer le Laplacien inverse, similaire à une diffusion avec fenêtre temporelle. Diffusion à mémoire courte — Limite la propagation à des échelles locales récentes, évitant une diffusion globale coûteuse.",
+"link": "https://en.wikipedia.org/wiki/Limited-memory_BFGS"
+},
+{
+"method": "Conjugate Gradient (CG)",
+"formula": "p_k = -r_k + \beta_k p_{k-1}, \quad x_{k+1} = x_k + \alpha_k p_k",
+"memory": "Low O(n)",
+"conv": "Superlinear (quadratic)",
+"deriv": "2nd Order (implicit)",
+"cond": "Good (symmetric positive def.)",
+"diff": "Spectrale",
+"diffFormula": "\Delta f = \sum \lambda_i v_i v_i^T",
+"nature": "Diffusion spectrale",
+"desc": "Résout les systèmes linéaires H p = -\nabla f en exploitant les valeurs propres du Laplacien (Hessien), via des sous-espaces de Krylov pour une diffusion spectrale. Diffusion spectrale — Propagé le long des directions conjuguées, mimant une décomposition en modes de diffusion propres.",
+"link": "https://en.wikipedia.org/wiki/Conjugate_gradient_method"
+},
+{
+"method": "GMRES (Generalized Minimal Residual)",
+"formula": "x_{k+1} = x_0 + V_m y_m, \quad y_m = \arg\min \| \beta e_1 - H_m y \|2",
+"memory": "Medium O(n m)",
+"conv": "Superlinear (Krylov)",
+"deriv": "Implicit 2nd Order",
+"cond": "Stable (Arnoldi)",
+"diff": "Résiduelle",
+"diffFormula": "\Delta f = \min \| r \| \text{ dans Krylov}",
+"nature": "Diffusion résiduelle",
+"desc": "Méthode de Krylov pour résoudre les systèmes non symétriques, approximant l'inverse du Laplacien par orthogonalisation des résidus dans un sous-espace. Diffusion résiduelle — Diffusion itérative qui minimise les erreurs locales, avec une propagation anisotrope dans les directions non conjuguées.",
+"link": "https://en.wikipedia.org/wiki/Generalized_minimal_residual_method"
+},
+{
+"method": "Spectral Gradient Descent",
+"formula": "x{k+1} = x_k - \alpha_k D^{-1} \nabla f(x_k)",
+"memory": "Medium O(n^2)",
+"conv": "Linear (spectral)",
+"deriv": "1st Order (spectral)",
+"cond": "Good (eigen-decomp)",
+"diff": "Modale",
+"diffFormula": "\Delta f = \sum \lambda_i \partial_i^2 f",
+"nature": "Diffusion modale",
+"desc": "Utilise la décomposition spectrale du Hessien pour ajuster les pas, où le Laplacien est diagonal dans la base propre, permettant une diffusion mode par mode. Diffusion modale — Diffusion découplée par composantes spectrales, optimisant les échelles de diffusion indépendamment.",
+"link": "https://en.wikipedia.org/wiki/Spectral_gradient_descent"
+},
+{
+"method": "Barzilai-Borwein (BB) Method",
+"formula": "x_{k+1} = x_k - \alpha_k^{BB} \nabla f(x_k), \quad \alpha_k^{BB} = \frac{(s_{k-1}^T s_{k-1})}{s_{k-1}^T y_{k-1}}",
+"memory": "Low O(n)",
+"conv": "Superlinear (non-monotone)",
+"deriv": "1st Order (quasi-2nd)",
+"cond": "Adaptive",
+"diff": "Adaptative scalaire",
+"diffFormula": "\Delta f \approx \frac{s^T s}{s^T y}",
+"nature": "Diffusion adaptative scalaire",
+"desc": "Pas adaptatif basé sur une approximation quasi-Hessienne des deux dernières itérations, simulant un Laplacien diffus via des échelles locales. Diffusion adaptative scalaire — Diffusion unidimensionnelle par coordonnée, avec mise à jour dynamique des pas pour une propagation uniforme.",
+"link": "https://en.wikipedia.org/wiki/Barzilai–Borwein_method"
+},
+{
+"method": "Stochastic Newton",
+"formula": "x_{k+1} = x_k - H_k^{-1} g_k, \quad g_k \approx \nabla f(x_k)",
+"memory": "High O(n^2)",
+"conv": "Quadratic (stochastic)",
+"deriv": "2nd Order (approx.)",
+"cond": "Variable (noise)",
+"diff": "Stochastique",
+"diffFormula": "\Delta f \approx \operatorname{Tr}(H_k) + \text{noise}",
+"nature": "Diffusion stochastique",
+"desc": "Version stochastique de Newton utilisant des échantillons pour approximer le Hessien, modélisant un Laplacien bruité comme dans les processus de diffusion brownienne. Diffusion stochastique — Propagation probabiliste du Laplacien, avec variance contrôlée par le bruit des mini-lots.",
+"link": "https://en.wikipedia.org/wiki/Stochastic_Newton_optimizer"
+},
+{
+"method": "Cubic Newton",
+"formula": "x_{k+1} = \arg\min_x m(x) = f(x_k) + \nabla f^T (x - x_k) + \frac{1}{2} (x - x_k)^T H (x - x_k) + \frac{\sigma}{3} \|x - x_k\|^3",
+"memory": "High O(n^2)",
+"conv": "Cubic regularization",
+"deriv": "2nd Order + cubic",
+"cond": "Global (bounded Hessian)",
+"diff": "Cubique",
+"diffFormula": "\Delta f = \operatorname{Tr}(H) + \sigma \| \cdot \|^3",
+"nature": "Diffusion cubique",
+"desc": "Étends le modèle quadratique à cubique pour mieux capturer les termes d'ordre supérieur, affinant la diffusion Laplacienne près des minima non quadratiques. Diffusion cubique — Diffusion non linéaire d'ordre trois, stabilisant la propagation dans les régions à forte non-linéarité.",
+"link": "https://en.wikipedia.org/wiki/Cubic_regularization_of_Newton_method"
+},
+{
+"method": "Adaptive Newton (AdaNewton)",
+"formula": "x_{k+1} = x_k - D_k^{-1} H^{-1} \nabla f",
+"memory": "Medium O(n)",
+"conv": "Superlinear",
+"deriv": "2nd Order (adaptive)",
+"cond": "Adaptive diagonal",
+"diff": "Paramétrique",
+"diffFormula": "\Delta f = \operatorname{diag}(H) \text{ adaptatif}",
+"nature": "Diffusion paramétrique",
+"desc": "Ajuste dynamiquement les composantes du Hessien via des facteurs d'apprentissage par paramètre, créant un Laplacien diagonal adaptatif. Diffusion paramétrique — Diffusion anisotrope par élément, où chaque direction diffuses à sa vitesse locale.",
+"link": "https://arxiv.org/abs/2006.08877"
+},
+{
+"method": "Hessian-Free Optimization",
+"formula": "x_{k+1} = x_k - \alpha p_k, \quad (H + \lambda I) p_k = -\nabla f",
+"memory": "Low O(n)",
+"conv": "Superlinear",
+"deriv": "2nd Order (matrix-free)",
+"cond": "Stable (CG solver)",
+"diff": "Implicite",
+"diffFormula": "\Delta f = \text{Tr}(H) \text{ via Krylov}",
+"nature": "Diffusion implicite",
+"desc": "Évite le calcul direct du Hessien en utilisant des produits matricielles pour simuler la diffusion Laplacienne via des solveurs de Krylov. Diffusion implicite — Propagation du Laplacien sans matérialisation, via des approximations conjuguées pour une diffusion efficace.",
+"link": "https://en.wikipedia.org/wiki/Hessian-free_optimization"
+},
+{
+"method": "Stochastic Variance Reduced Newton (SVRN)",
+"formula": "x_{k+1} = x_k - H_v^{-1} (\nabla f(x_k) - \nabla f(x_{k-1}) + v_k)",
+"memory": "Medium O(n^2)",
+"conv": "Linear (variance reduced)",
+"deriv": "2nd Order (stochastic)",
+"cond": "Reduced variance",
+"diff": "Variance-réduite",
+"diffFormula": "\Delta f = \operatorname{Tr}(H_v) - \text{variance}",
+"nature": "Diffusion variance-réduite",
+"desc": "Réduit la variance stochastique en mélangeant échantillons complets et mini-lots, stabilisant l'approximation du Laplacien pour une diffusion cohérente. Diffusion variance-réduite — Diffusion stochastique avec correction globale, minimisant les fluctuations locales.",
+"link": "https://arxiv.org/abs/1411.3528"
+},
+{
+"method": "Proximal Newton",
+"formula": "x_{k+1} = \prox_{\lambda g}(x_k - H^{-1} \nabla f(x_k))",
+"memory": "High O(n^2)",
+"conv": "Quadratic",
+"deriv": "2nd Order (prox)",
+"cond": "Good (prox term)",
+"diff": "Proximale",
+"diffFormula": "\Delta f = \operatorname{Tr}(H) + g \text{ prox}",
+"nature": "Diffusion proximale",
+"desc": "Intègre une régularisation proximale au modèle quadratique, modifiant le Laplacien pour inclure des termes de barrière diffusifs. Diffusion proximale — Propagation contrainte par une norme, simulant une diffusion avec potentiel barrière.",
+"link": "https://en.wikipedia.org/wiki/Proximal_algorithm"
+},
+{
+"method": "Augmented Lagrangian Newton",
+"formula": "x_{k+1} = \arg\min L(x, \lambda) + \frac{\rho}{2} \|c(x)\|^2",
+"memory": "High O(n^2)",
+"conv": "Quadratic",
+"deriv": "2nd Order (Lagrangian)",
+"cond": "Stable (augmented)",
+"diff": "Contrainte Lagrangienne",
+"diffFormula": "\Delta f = \operatorname{Tr}(H_L + \rho c)",
+"nature": "Diffusion contrainte Lagrangienne",
+"desc": "Ajoute des multiplicateurs de Lagrange pour les contraintes, étendant le Laplacien à un opérateur saddle-point diffus. Diffusion contrainte Lagrangienne — Diffusion couplée entre primal et dual, avec propagation alternée.",
+"link": "https://en.wikipedia.org/wiki/Augmented_Lagrangian_method"
+},
+{
+"method": "Interior-Point Newton",
+"formula": "x_{k+1} = x_k - H^{-1} \nabla \phi(x_k)",
+"memory": "High O(n^2)",
+"conv": "Superlinear",
+"deriv": "2nd Order",
+"cond": "Good (barrier)",
+"diff": "Intérieure",
+"diffFormula": "\Delta f = \operatorname{Tr}(H_\phi)",
+"nature": "Diffusion intérieure",
+"desc": "Utilise des barrières logarithmiques pour transformer le Laplacien en un opérateur central affine, diffusant vers l'intérieur du domaine. Diffusion intérieure — Propagation guidée par des potentiels, évitant les frontières pour une diffusion lisse.",
+"link": "https://en.wikipedia.org/wiki/Interior-point_method"
+},
+{
+"method": "SQP (Sequential Quadratic Programming)",
+"formula": "\min_q 1/2 q^T H q + \nabla f^T q \quad \text{s.t.} \quad c + A q = 0",
+"memory": "High O(n^2)",
+"conv": "Quadratic",
+"deriv": "2nd Order",
+"cond": "Good (QP)",
+"diff": "Quadratique séquentielle",
+"diffFormula": "\Delta f = \operatorname{Tr}(H) \text{ s.t. constraints}",
+"nature": "Diffusion quadratique séquentielle",
+"desc": "Résout des QP sous-jacents à chaque itération, où le Laplacien est le Hessien du Lagrangien, pour une diffusion sous contraintes. Diffusion quadratique séquentielle — Diffusion itérative avec linéarisation des contraintes, modélisant une propagation bornée.",
+"link": "https://en.wikipedia.org/wiki/Sequential_quadratic_programming"
+},
+{
+"method": "Active-Set Newton",
+"formula": "x_{k+1} = x_k - P_A H_A^{-1} P_A \nabla f",
+"memory": "High O(n^2)",
+"conv": "Quadratic",
+"deriv": "2nd Order (projected)",
+"cond": "Stable (active set)",
+"diff": "Projetée",
+"diffFormula": "\Delta f = \operatorname{Tr}(P_A H P_A)",
+"nature": "Diffusion projetée",
+"desc": "Gère les contraintes actives en ajustant le Laplacien projeté, diffusant uniquement dans l'espace feasible. Diffusion projetée — Propagation restreinte aux sets actifs, avec sauts discrets pour changer les directions de diffusion.",
+"link": "https://en.wikipedia.org/wiki/Active-set_method"
+},
+{
+"method": "Homotopy Continuation Newton",
+"formula": "x(t+dt) = x(t) - H(t)^{-1} \nabla f(t) dt",
+"memory": "High O(n^2)",
+"conv": "Quadratic (path)",
+"deriv": "2nd Order",
+"cond": "Path-following",
+"diff": "Homotopique",
+"diffFormula": "\Delta f(t) = \operatorname{Tr}(H(t)) dt",
+"nature": "Diffusion homotopique",
+"desc": "Suit un chemin d'homotopie pour déformer le Laplacien progressivement, simulant une diffusion continue dans l'espace des problèmes. Diffusion homotopique — Propagation paramétrée, où le Laplacien évolue linéairement pour une transition douce.",
+"link": "https://en.wikipedia.org/wiki/Homotopy_continuation"
+},
+{
+"method": "Anderson Acceleration",
+"formula": "x_{k+1} = x_k - \gamma_k G_k^{-1} f(x_k)",
+"memory": "Medium O(m n)",
+"conv": "Superlinear",
+"deriv": "Quasi-2nd Order",
+"cond": "Good (fixed-point)",
+"diff": "Accélérée",
+"diffFormula": "\Delta f \approx G^{-1} f",
+"nature": "Diffusion accélérée",
+"desc": "Accélère les méthodes fixes-point en extrapolant les résidus, approximant un Laplacien diffus via des combinaisons linéaires. Diffusion accélérée — Propagation multi-étapes, mélangeant les diffusions passées pour une convergence plus rapide.",
+"link": "https://en.wikipedia.org/wiki/Anderson_acceleration"
+},
+{
+"method": "Quasi-Newton with Wolfe Linesearch",
+"formula": "x_{k+1} = x_k + \alpha_k p_k, \quad p_k = -B_k \nabla f",
+"memory": "Medium O(n^2)",
+"conv": "Superlinear",
+"deriv": "Quasi-2nd Order",
+"cond": "Stable (linesearch)",
+"diff": "Linéarisée",
+"diffFormula": "\Delta_B f = \operatorname{Tr}(B) \alpha",
+"nature": "Diffusion linéarisée",
+"desc": "Combine mises à jour quasi-Hessiennes avec recherche linéaire pour assurer une diffusion descendante stable. Diffusion linéarisée — Propagation unidimensionnelle le long de directions quasi-Laplaciennes, avec backtracking.",
+"link": "https://en.wikipedia.org/wiki/Wolfe_conditions"
+},
+{
+"method": "DFP (Davidon-Fletcher-Powell)",
+"formula": "B_{k+1} = B_k + \frac{y y^T}{y^T s} - \frac{B_k s s^T B_k}{s^T B_k s}",
+"memory": "Medium O(n^2)",
+"conv": "Superlinear",
+"deriv": "Quasi-2nd Order",
+"cond": "Positive def.",
+"diff": "Symétrique",
+"diffFormula": "\Delta f = \operatorname{Tr}(B_{k+1})",
+"nature": "Diffusion symétrique",
+"desc": "Mise à jour symétrique du Hessien inverse, préservant la courbure pour une diffusion cohérente avec les gradients observés. Diffusion symétrique — Propagation équilibrée, focalisée sur l'inverse du Laplacien pour des pas optimaux.",
+"link": "https://en.wikipedia.org/wiki/Davidon–Fletcher–Powell_formula"
+},
+{
+"method": "SR1 (Symmetric Rank-1)",
+"formula": "B_{k+1} = B_k + \frac{(y - B_k s)(y - B_k s)^T}{(y - B_k s)^T s}",
+"memory": "Medium O(n^2)",
+"conv": "Superlinear",
+"deriv": "Quasi-2nd Order",
+"cond": "Variable",
+"diff": "Minimale",
+"diffFormula": "\Delta f = \operatorname{Tr}(B_{k+1}) - \Delta",
+"nature": "Diffusion minimale",
+"desc": "Mise à jour de rang 1 pour le Hessien, modifiant le Laplacien de manière minimale à chaque itération. Diffusion minimale — Propagation incrémentale, avec ajustements locaux pour corriger les approximations Laplaciennes.",
+"link": "https://en.wikipedia.org/wiki/Symmetric_rank-one_update"
+},
+{
+"method": "Powell-Symmetric-Broyden (PSB)",
+"formula": "B_{k+1} = B_k + \frac{(y - B_k s) s^T + s (y - B_k s)^T - (y^T s) B_k}{(y^T s)^2}",
+"memory": "Medium O(n^2)",
+"conv": "Superlinear",
+"deriv": "Quasi-2nd Order",
+"cond": "Non-symmetric",
+"diff": "Asymétrique",
+"diffFormula": "\Delta f = \operatorname{Tr}(B_{k+1}) \text{ asym}",
+"nature": "Diffusion asymétrique",
+"desc": "Mise à jour non symétrique pour capturer les asymétries du Hessien, étendant la diffusion à des Laplaciens non diagonaux. Diffusion asymétrique — Propagation directionnelle inégale, adaptant la diffusion aux couplages variables.",
+"link": "https://en.wikipedia.org/wiki/Broyden_method"
+},
+{
+"method": "Stochastic Quasi-Newton (SQN)",
+"formula": "B_{k+1} = \text{update}(B_k, s_k, y_k \text{ stochastic})",
+"memory": "Medium O(n^2)",
+"conv": "Superlinear (noisy)",
+"deriv": "Quasi-2nd Order",
+"cond": "Noisy",
+"diff": "Stochastique quasi",
+"diffFormula": "\Delta_B f \approx \operatorname{Tr}(H) + \text{noise}",
+"nature": "Diffusion stochastique quasi",
+"desc": "Applique des mises à jour quasi-Hessiennes à des gradients stochastiques, diffusant un Laplacien approximé en ligne. Diffusion stochastique quasi — Propagation probabiliste avec mémoire, réduisant le bruit via des historiques.",
+"link": "https://arxiv.org/abs/1506.04508"
+},
+{
+"method": "Kaczmarz-Newton Hybrid",
+"formula": "x_{k+1} = x_k - \alpha \frac{A_i^T (A_i x_k - b_i)}{\|A_i\|^2} - H^{-1} \nabla",
+"memory": "Medium O(n^2)",
+"conv": "Linear (hybrid)",
+"deriv": "Mixed Order",
+"cond": "Row-wise stable",
+"diff": "Projetée stochastique",
+"diffFormula": "\Delta f = \sum_i \Delta_{row} + H",
+"nature": "Diffusion projetée stochastique",
+"desc": "Combine projections row-wise (Kaczmarz) avec Newton pour un Laplacien diffus en sous-espaces linéaires. Diffusion projetée stochastique — Propagation itérative par contraintes, simulant une diffusion coordonnée.",
+"link": "https://en.wikipedia.org/wiki/Kaczmarz_method"
+},
+{
+"method": "Coordinate Descent Newton",
+"formula": "x_j^{k+1} = x_j^k - (H_{jj})^{-1} \partial_j f",
+"memory": "Low O(n)",
+"conv": "Linear (coordinate)",
+"deriv": "2nd Order (per coord)",
+"cond": "Diagonal",
+"diff": "Coordonnée",
+"diffFormula": "\Delta f = \sum_j H_{jj}^{-1} \partial_j^2 f",
+"nature": "Diffusion coordonnée",
+"desc": "Optimise coordonnée par coordonnée en utilisant des approximations Hessiennes partielles, diffusant le Laplacien diagonalement. Diffusion coordonnée — Propagation séquentielle par dimension, pour une diffusion découplée.",
+"link": "https://en.wikipedia.org/wiki/Coordinate_descent"
+},
+{
+"method": "Block Coordinate Newton",
+"formula": "X_B^{k+1} = X_B^k - H_{BB}^{-1} \nabla_B f",
+"memory": "Medium O(b^2 n)",
+"conv": "Superlinear (block)",
+"deriv": "2nd Order (block)",
+"cond": "Block diagonal",
+"diff": "Bloc-wise",
+"diffFormula": "\Delta f = \operatorname{Tr}(H_{BB})",
+"nature": "Diffusion bloc-wise",
+"desc": "Étends à des blocs de variables, approximant le Laplacien bloc-diagonal pour une diffusion groupée. Diffusion bloc-wise — Propagation parallèle dans les blocs, avec couplages faibles pour scalabilité.",
+"link": "https://arxiv.org/abs/1107.0792"
+},
+{
+"method": "Randomized Coordinate Newton",
+"formula": "x_j = x_j - H_{jj}^{-1} \partial_j f \quad (j \text{ random})",
+"memory": "Low O(n)",
+"conv": "Sublinear (random)",
+"deriv": "2nd Order (random)",
+"cond": "Stochastic",
+"diff": "Randomisée",
+"diffFormula": "\mathbb{E} \Delta f = \sum p_j H_{jj}^{-1}",
+"nature": "Diffusion randomisée",
+"desc": "Sélectionne aléatoirement les coordonnées pour des mises à jour Hessiennes locales, modélisant une diffusion brownienne discrète. Diffusion randomisée — Propagation stochastique par axe, accélérant la convergence globale.",
+"link": "https://arxiv.org/abs/1405.0928"
+},
+{
+"method": "AdaHessian",
+"formula": "x_{k+1} = x_k - \eta \hat{H}^{-1} \nabla f / \sqrt{v}",
+"memory": "Low O(n)",
+"conv": "Linear",
+"deriv": "Quasi-2nd Order",
+"cond": "Adaptive",
+"diff": "Adaptative neuronale",
+"diffFormula": "\Delta f \approx \operatorname{diag}(\hat{H})",
+"nature": "Diffusion adaptative neuronale",
+"desc": "Approximé le Hessien via des moyennes mobiles des gradients, créant un Laplacien adaptatif pour l'entraînement neuronal. Diffusion adaptative neuronale — Propagation anisotrope par couche, focalisée sur les courbures locales des réseaux.",
+"link": "https://arxiv.org/abs/2006.08877"
+},
+{
+"method": "Shampoo (Stochastic Hamiltonian)",
+"formula": "x_{k+1} = x_k - K^{-1} \nabla f, \quad K = A^T \otimes B",
+"memory": "Medium O(n log n)",
+"conv": "Superlinear",
+"deriv": "2nd Order (Kronecker)",
+"cond": "Factored",
+"diff": "Tensorielle",
+"diffFormula": "\Delta f = \operatorname{Tr}(K^{-1} H)",
+"nature": "Diffusion tensorielle",
+"desc": "Utilise des Kronecker-facteurs pour approximer le Hessien en haute dimension, diffusant un Laplacien tensoriel. Diffusion tensorielle — Propagation multi-dimensionnelle, décomposant la diffusion en facteurs pour l'efficacité.",
+"link": "https://arxiv.org/abs/1802.09568"
+},
+{
+"method": "K-FAC (Kronecker-Factored Approximate Curvature)",
+"formula": "F \approx A \otimes G, \quad \theta \leftarrow \theta - \eta F^{-1} \nabla L",
+"memory": "Medium O(n)",
+"conv": "Superlinear",
+"deriv": "Quasi-2nd Order",
+"cond": "Approximate",
+"diff": "Factorisée",
+"diffFormula": "\Delta f \approx \operatorname{Tr}(A \otimes G)",
+"nature": "Diffusion factorisée",
+"desc": "Factorise la Fisher Information (proche du Hessien) en Kronecker, simulant un Laplacien approximé pour les couches neuronales. Diffusion factorisée — Propagation découplée par matrice, optimisant la diffusion dans les espaces latents.",
+"link": "https://arxiv.org/abs/1206.6460"
+},
+{
+"method": "Hessian-Aware Optimization (SAGH)",
+"formula": "x_{k+1} = x_k - (\bar{H} + \lambda I)^{-1} g_k",
+"memory": "High O(n^2)",
+"conv": "Linear",
+"deriv": "2nd Order (aware)",
+"cond": "Variance aware",
+"diff": "Variance-aware",
+"diffFormula": "\Delta f = \operatorname{Tr}(\bar{H})",
+"nature": "Diffusion variance-aware",
+"desc": "Intègre des échantillons de gradients pour une approximation Hessienne stochastique, diffusant vers des minima plats. Diffusion variance-aware — Propagation avec correction d'échantillonnage, stabilisant la diffusion en grands échantillons.",
+"link": "https://arxiv.org/abs/1705.08292"
+},
+{
+"method": "Cubic Regularization of Newton (ARC)",
+"formula": "x_{k+1} = \arg\min m(x) + \frac{\sigma_k}{3} \|x - x_k\|^3",
+"memory": "High O(n^2)",
+"conv": "Cubic",
+"deriv": "2nd Order + cubic",
+"cond": "Global",
+"diff": "Cubiquement régularisée",
+"diffFormula": "\Delta f = \operatorname{Tr}(H) + \sigma /3 \| \cdot \|^3",
+"nature": "Diffusion cubiquement régularisée",
+"desc": "Ajoute une régularisation cubique au modèle quadratique, bornant la Lipschitz constant du Hessien pour une diffusion globale garantie. Diffusion cubiquement régularisée — Propagation avec contrôle d'erreur, évitant les oscillations locales.",
+"link": "https://arxiv.org/abs/1711.10497"
+},
+{
+"method": "Stochastic Cubic Newton",
+"formula": "x_{k+1} = x_k - \hat{H}\sigma^{-1} g_k",
+"memory": "High O(n^2)",
+"conv": "Linear (stochastic)",
+"deriv": "2nd Order + cubic stochastic",
+"cond": "Noisy global",
+"diff": "Stochastique cubique",
+"diffFormula": "\Delta f \approx \sigma \|g\| + \text{noise}",
+"nature": "Diffusion stochastique cubique",
+"desc": "Version stochastique de la régularisation cubique, approximant le Laplacien bruité avec des termes cubiques adaptatifs. Diffusion stochastique cubique — Propagation probabiliste bornée, pour une convergence en attente.",
+"link": "https://arxiv.org/abs/1910.04996"
+},
+{
+"method": "Manifold Optimization (Riemannian CG)",
+"formula": "p_k = \Retr{x_k} (-G^{-1} \nabla f + \beta p_{k-1})",
+"memory": "Medium O(n^2)",
+"conv": "Superlinear (Riemannian)",
+"deriv": "2nd Order (CG on manifold)",
+"cond": "Manifold stable",
+"diff": "Conjuguée géométrique",
+"diffFormula": "\Delta_G f = \mathrm{div}G (\nabla_G f)",
+"nature": "Diffusion conjuguée géométrique",
+"desc": "Applique le gradient conjugué sur variétés, où le Laplacien est le Laplace-Beltrami conjugué pour une diffusion intrinsèque. Diffusion conjuguée géométrique — Propagation le long de géodésiques, avec modes propres adaptés à la courbure.",
+"link": "https://epubs.siam.org/doi/10.1137/15M1032690"
+},
+{
+"method": "Geodesic Convex Optimization",
+"formula": "\gamma(t) = \exp{x} (t v), \quad v = -G^{-1} \nabla f",
+"memory": "Medium O(n^2)",
+"conv": "Linear (geodesic)",
+"deriv": "1st Order (geodesic)",
+"cond": "Convex manifold",
+"diff": "Géodésique",
+"diffFormula": "\Delta f = \text{along geodesic}",
+"nature": "Diffusion géodésique",
+"desc": "Résout des problèmes convexes sur variétés via des flots géodésiques, guidés par un Laplacien riemannien. Diffusion géodésique — Propagation le long des plus courtes chemins, simulant une diffusion sans distorsion euclidienne.",
+"link": "https://arxiv.org/abs/1405.4027"
+},
+{
+"method": "Entropic Mirror Descent Newton",
+"formula": "\theta_{k+1} = \arg\min \langle \nabla, \theta \rangle + D_{KL}(\theta || \exp(-H^{-1} \nabla))",
+"memory": "High O(n^2)",
+"conv": "Superlinear",
+"deriv": "2nd Order (mirror)",
+"cond": "Entropic",
+"diff": "Entropique miroir",
+"diffFormula": "\Delta f = D_{KL} + H",
+"nature": "Diffusion entropique miroir",
+"desc": "Combine descente miroir entropique avec approximations Hessiennes, diffusant via des divergences Bregman régularisées. Diffusion entropique miroir — Propagation duale, avec termes entropiques pour une diffusion lisse sur simplex.",
+"link": "https://arxiv.org/abs/1206.1891"
+},
+{
+"method": "Sinkhorn-Newton for OT",
+"formula": "P = \diag(u) K \diag(v), \quad \text{Newton on dual}",
+"memory": "High O(n^2)",
+"conv": "Quadratic (Sinkhorn)",
+"deriv": "2nd Order (dual)",
+"cond": "Entropic OT",
+"diff": "Sinkhorn",
+"diffFormula": "\Delta f = \log (P / \pi)",
+"nature": "Diffusion Sinkhorn",
+"desc": "Itère Sinkhorn avec Newton pour résoudre le transport optimal entropique, où le Laplacien émerge des itérations scalaires. Diffusion Sinkhorn — Propagation itérative couplée, modélisant un flot entropique diffus.",
+"link": "https://arxiv.org/abs/1306.1830"
+},
+{
+"method": "Variational Inference Newton",
+"formula": "\theta_{k+1} = \theta_k - F^{-1} \nabla KL(q_\theta || p)",
+"memory": "Medium O(n^2)",
+"conv": "Superlinear",
+"deriv": "Quasi-2nd Order",
+"cond": "Variational",
+"diff": "Variationnelle",
+"diffFormula": "\Delta f = \operatorname{Tr}(F^{-1} \nabla KL)",
+"nature": "Diffusion variationnelle",
+"desc": "Optimise les paramètres variationnels via Newton sur la KL-divergence, approximant un Laplacien dans l'espace des distributions. Diffusion variationnelle — Propagation dans l'espace latent, guidée par l'information de Fisher pour une diffusion bayésienne.",
+"link": "https://en.wikipedia.org/wiki/Variational_bayesian_methods"
+},
+{
+"method": "Laplace Approximation Optimizer",
+"formula": "x \sim \mathcal{N}(\hat{\theta}, H^{-1})",
+"memory": "High O(n^2)",
+"conv": "Quadratic (approx)",
+"deriv": "2nd Order (Laplace)",
+"cond": "Hessian approx",
+"diff": "Postérieure",
+"diffFormula": "\Delta f = - \log \det H + \nabla^T H^{-1} \nabla",
+"nature": "Diffusion postérieure",
+"desc": "Utilise l'approximation Laplacienne du postérieur pour guider Newton, où le Hessien est le Laplacien de la log-vraisemblance. Diffusion postérieure — Propagation centrée sur le mode, avec covariance comme opérateur de diffusion.",
+"link": "https://en.wikipedia.org/wiki/Laplace%27s_method"
+},
+{
+"method": "Diffusion-Based Optimizer (Score Matching)",
+"formula": "\theta \leftarrow \theta + \epsilon \nabla \log p_t(x_t | x_0)",
+"memory": "Variable O(n)",
+"conv": "Linear (diffusion steps)",
+"deriv": "1st Order (score)",
+"cond": "Denoising",
+"diff": "Score-driven",
+"diffFormula": "\Delta f = \nabla \log p_t",
+"nature": "Diffusion score-driven",
+"desc": "Inspiré des modèles de diffusion, utilise des scores pour approximer le Laplacien du score function, diffusant vers l'équilibre. Diffusion score-driven — Propagation réversible, modélisant un processus de Langevin discret.",
+"link": "https://arxiv.org/abs/2006.11239"
+},
+{
+"method": "Graph Laplacian Newton",
+"formula": "x_{k+1} = x_k - L^{-1} \nabla f",
+"memory": "High O(n^2)",
+"conv": "Quadratic (graph)",
+"deriv": "2nd Order (graph)",
+"cond": "Graph spectral",
+"diff": "Graphique",
+"diffFormula": "\Delta f = \operatorname{Tr}(L)",
+"nature": "Diffusion graphique",
+"desc": "Sur graphes, utilise le Laplacien graphique comme Hessien pour l'optimisation spectrale, diffusant le long des arêtes. Diffusion graphique — Propagation réseau, où la diffusion est pondérée par la connectivité structurelle.",
+"link": "https://en.wikipedia.org/wiki/Laplacian_matrix"
+},
+{
+"method": "LiSSA (Linear time Stochastic Second-order Algorithm)",
+"formula": "H^{-1} \approx \sum \tau_i H_i^{-1} / m",
+"memory": "Low O(n)",
+"conv": "Linear time",
+"deriv": "Quasi-2nd Order",
+"cond": "Linear complexity",
+"diff": "Linéaire stochastique",
+"diffFormula": "\Delta f \approx \tau \operatorname{Tr}(H^{-1})",
+"nature": "Diffusion linéaire stochastique",
+"desc": "Estimateur du Hessien inverse basé sur approximation de Taylor, pour une mise à jour Newton stochastique linéaire. Diffusion linéaire stochastique — Propagation efficace en temps linéaire, avec approximation du Laplacien inverse.",
+"link": "https://arxiv.org/abs/1605.07262"
+},
+{
+"method": "SPSA Second-Order (Stochastic Perturbation Stochastic Approximation)",
+"formula": "H^{-1} \approx \frac{\delta \theta}{\delta c^T \nabla}",
+"memory": "Low O(n)",
+"conv": "Superlinear (perturbation)",
+"deriv": "2nd Order approx",
+"cond": "Perturbation",
+"diff": "Perturbationnelle",
+"diffFormula": "\Delta f \approx \delta H",
+"nature": "Diffusion perturbationnelle",
+"desc": "Estime simultanément le gradient et l'Hessien inverse via perturbations stochastiques, modélisant un Laplacien bruité. Diffusion perturbationnelle — Propagation via échantillonnage simultané, pour une diffusion en grande échelle.",
+"link": "https://en.wikipedia.org/wiki/Simultaneous_perturbation_stochastic_approximation"
+},
+{
+"method": "Nested-Set Hessian Approximation",
+"formula": "H \approx \sum \nabla^2 f(x_i) / |S|",
+"memory": "Low O(n)",
+"conv": "Superlinear (derivative-free)",
+"deriv": "2nd Order (finite diff)",
+"cond": "Set bounded",
+"diff": "Sans dérivées",
+"diffFormula": "\Delta f \approx \text{finite diff set}",
+"nature": "Diffusion sans dérivées",
+"desc": "Approximation second-ordre sans dérivées utilisant ensembles imbriqués, bornant l'erreur par le rayon maximal des sets. Diffusion sans dérivées — Propagation via simplex généralisé, pour optimisation dérivée-libre.",
+"link": "https://arxiv.org/abs/2002.08417"
+},
+{
+"method": "Simplex Calculus Hessian",
+"formula": "H_{ij} = \frac{f(x + e_i + e_j) - f(x + e_i) - f(x + e_j) + f(x)}{h^2}",
+"memory": "Low O(n^2)",
+"conv": "Quadratic approx",
+"deriv": "2nd Order (calculus)",
+"cond": "Simplex",
+"diff": "Calculus-based",
+"diffFormula": "\Delta f = \text{simplex product/quotient}",
+"nature": "Diffusion calculus-based",
+"desc": "Utilise identités de calcul sur simplex pour approximer le Hessien, avec règles de produit et quotient. Diffusion calculus-based — Propagation structurée par calculs simplex, pour précision d'ordre N.",
+"link": "https://www.ams.org/journals/mcom/1996-65-215/S0025-5718-1996-1331211-3/"
+},
+{
+"method": "Quadratic Calculus Hessian",
+"formula": "H \approx \frac{(n+1)(n+2)}{2} \text{ evals}",
+"memory": "Medium O(n^2)",
+"conv": "Quadratic",
+"deriv": "2nd Order",
+"cond": "Structured points",
+"diff": "Quadratique imbriquée",
+"diffFormula": "\Delta f = \text{quadratic calc}",
+"nature": "Diffusion quadratique imbriquée",
+"desc": "Approximation Hessienne via calcul quadratique sur points structurés, nécessitant (n+1)(n+2)/2 évaluations. Diffusion quadratique imbriquée — Propagation avec sets favorables, minimisant les coûts computationnels.",
+"link": "https://epubs.siam.org/doi/10.1137/S105262349935486X"
+},
+{
+"method": "ROM Hessian (Reduced Order Model)",
+"formula": "H_{ROM} = V^T H V, \quad V \text{ snapshots}",
+"memory": "Low O(r^2)",
+"conv": "Quadratic (reduced)",
+"deriv": "2nd Order (ROM)",
+"cond": "Low rank",
+"diff": "Réduite ordre",
+"diffFormula": "\Delta f = \operatorname{Tr}(V^T H V)",
+"nature": "Diffusion réduite ordre",
+"desc": "Utilise modèles réduits pour approximer le Hessien dans optimisation contrainte par PDE, avec snapshots état-adjoint. Diffusion réduite ordre — Propagation via projection ROM, réduisant les solves PDE.",
+"link": "https://epubs.siam.org/doi/10.1137/090752286"
+},
+{
+"method": "Riemannian Stochastic Gradient Descent (RSGD)",
+"formula": "x_{k+1} = \Retr_{x_k} (- \eta \nabla f(x_k))",
+"memory": "Low O(n)",
+"conv": "Sublinear",
+"deriv": "1st Order (Riemannian)",
+"cond": "Manifold lipschitz",
+"diff": "Stochastique riemannienne",
+"diffFormula": "\Delta_G f = \mathrm{div}G (-\eta \nabla)",
+"nature": "Diffusion stochastique riemannienne",
+"desc": "Étends SGD à variétés via exponential map, avec Laplacien Beltrami pour gradient riemannien. Diffusion stochastique riemannienne — Propagation le long géodésiques, avec bruit contrôlé.",
+"link": "https://arxiv.org/abs/1205.2612"
+},
+{
+"method": "Riemannian SVRG (Stochastic Variance Reduced Gradient)",
+"formula": "x{k+1} = \Retr (x_k - \eta (\tilde{\nabla} - v + \nabla F))",
+"memory": "Medium O(n)",
+"conv": "Linear (variance reduced)",
+"deriv": "1st Order (SVRG)",
+"cond": "Riemannian smooth",
+"diff": "Variance-réduite riemannienne",
+"diffFormula": "\Delta f = \mathbb{E} [\tilde{\nabla} - v]",
+"nature": "Diffusion variance-réduite riemannienne",
+"desc": "Réduit variance via snapshots complets sur variété, approximant Laplacien localement. Diffusion variance-réduite riemannienne — Propagation avec corrections globales sur manifold.",
+"link": "https://arxiv.org/abs/1705.03792"
+},
+{
+"method": "Riemannian SROG (Stochastic Recursive Gradient)",
+"formula": "m_k = \beta m_{k-1} + (1-\beta) g_k, \quad \Retr(-\eta m_k)",
+"memory": "Low O(n)",
+"conv": "Sublinear (recursive)",
+"deriv": "1st Order",
+"cond": "Recursive",
+"diff": "Récursive stochastique",
+"diffFormula": "\Delta f = \beta \Delta + (1-\beta) g",
+"nature": "Diffusion récursive stochastique",
+"desc": "Gradient récursif stochastique sur variété, utilisant Laplacien pour mise à jour récursive. Diffusion récursive stochastique — Propagation itérative avec mémoire variance-réduite.",
+"link": "https://arxiv.org/abs/1806.09131"
+},
+{
+"method": "Riemannian SPIDER (Stochastic Path-Integrated Differential Estimator)",
+"formula": "v = \nabla f(x_b) - \nabla f(x_{b-1}) + g_k",
+"memory": "Low O(n)",
+"conv": "Linear variance reduced",
+"deriv": "1st Order (SPIDER)",
+"cond": "Path integrated",
+"diff": "Chemin-intégrée",
+"diffFormula": "\Delta f = \int \nabla \text{ path}",
+"nature": "Diffusion chemin-intégrée",
+"desc": "Estimateur différentiel intégré sur chemin riemannien, approximant Laplacien via SPIDER. Diffusion chemin-intégrée — Propagation stochastique avec estimation précise du Laplacien.",
+"link": "https://arxiv.org/abs/1807.04928"
+},
+{
+"method": "RASA (Riemannian Adaptive Stochastic Gradient)",
+"formula": "x_{k+1} = \Retr (x_k - \eta_k \nabla / \sqrt{v_k})",
+"memory": "Low O(n)",
+"conv": "Sublinear adaptive",
+"deriv": "1st Order",
+"cond": "L-smooth",
+"diff": "Adaptative riemannienne",
+"diffFormula": "\Delta f / \sqrt{v}",
+"nature": "Diffusion adaptative riemannienne",
+"desc": "Adaptatif sur manifolds matriciels, avec Laplacien borné en Hessien supérieur. Diffusion adaptative riemannienne — Propagation avec pas décroissants, pour convergence sous L-smooth.",
+"link": "https://arxiv.org/abs/1905.05390"
+},
+{
+"method": "RAMSGrad (Riemannian AMSGrad)",
+"formula": "v_k = \max(v_{k-1}, e_k), \quad \Retr(- \eta \nabla / \sqrt{v_k})",
+"memory": "Low O(n)",
+"conv": "Sublinear",
+"deriv": "1st Order",
+"cond": "Max adaptive",
+"diff": "Momentum adaptative",
+"diffFormula": "\Delta f / \max(v)",
+"nature": "Diffusion momentum adaptative",
+"desc": "Extension de AMSGrad à produits cartésiens de variétés, utilisant Laplacien pour adaptation max. Diffusion momentum adaptative — Propagation sur produits manifolds, évitant décroissance pas.",
+"link": "https://arxiv.org/abs/1909.10262"
+},
+{
+"method": "cRAMSProp (Riemannian Adaptive Moment Estimation)",
+"formula": "m_k = \beta m + (1-\beta) g, \quad v_k = \beta v + (1-\beta) g^2, \quad \Retr(- \eta m / \sqrt{v})",
+"memory": "Low O(n)",
+"conv": "Sublinear",
+"deriv": "1st Order",
+"cond": "Moment adaptive",
+"diff": "Moment riemannienne",
+"diffFormula": "\Delta f = m / \sqrt{v}",
+"nature": "Diffusion moment riemannienne",
+"desc": "Adaptation de RMSProp à riemannien, avec Laplacien pour moments adaptatifs. Diffusion moment riemannienne — Propagation avec adaptation par coordonnée sur variété.",
+"link": "https://arxiv.org/abs/1910.06468"
+},
+{
+"method": "Riemannian SAM (Sharpness-Aware Minimization)",
+"formula": "x_{k+1} = \arg\min \max_{\|\epsilon\| \leq \rho} L(x + \epsilon)",
+"memory": "Medium O(n)",
+"conv": "Linear sharpness",
+"deriv": "1st Order",
+"cond": "Sharpness bounded",
+"diff": "Sharpness-aware",
+"diffFormula": "\Delta f + \rho \nabla sharpness",
+"nature": "Diffusion sharpness-aware",
+"desc": "Minimisation aware de sharpness sur variété, utilisant Laplacien pour région de perturbation. Diffusion sharpness-aware — Propagation évitant minima plats, pour généralisation riemannienne.",
+"link": "https://arxiv.org/abs/2010.01412"
+},
+{
+"method": "RNGD (Riemannian Natural Gradient Descent)",
+"formula": "x_{k+1} = \Retr_{x_k} (- \eta G^{-1} \nabla f)",
+"memory": "Medium O(n^2)",
+"conv": "Superlinear",
+"deriv": "Quasi-2nd Order",
+"cond": "Fisher metric",
+"diff": "Naturelle riemannienne",
+"diffFormula": "\Delta_G f = G^{-1} \nabla \cdot G \nabla f",
+"nature": "Diffusion naturelle riemannienne",
+"desc": "Descente gradient naturel riemannien, avec Fisher comme métrique pour Laplacien. Diffusion naturelle riemannienne — Propagation information-géométrique sur manifold.",
+"link": "https://arxiv.org/abs/1810.10943"
+},
+{
+"method": "Riemannian Interior Point Method",
+"formula": "x_{k+1} = \Retr (x_k - H_\phi^{-1} \nabla \phi)",
+"memory": "High O(n^2)",
+"conv": "Superlinear local",
+"deriv": "2nd Order",
+"cond": "Barrier manifold",
+"diff": "Intérieure riemannienne",
+"diffFormula": "\Delta_\phi f = \mathrm{div} \nabla \phi",
+"nature": "Diffusion intérieure riemannienne",
+"desc": "Extension primal-dual intérieur à variété, avec Laplacien pour barrières logarithmiques. Diffusion intérieure riemannienne — Propagation superlinéaire locale, avec recherche linéaire globale.",
+"link": "https://arxiv.org/abs/2002.00621"
+},
+{
+"method": "Accelerated Spectral CG (Riemannian)",
+"formula": "p_k = -G^{-1} \nabla + \beta p_{k-1}, \quad \Retr(\alpha p_k)",
+"memory": "Medium O(n^2)",
+"conv": "Accelerated",
+"deriv": "2nd Order (spectral)",
+"cond": "Spectral",
+"diff": "Spectrale accélérée",
+"diffFormula": "\Delta f = \sum \lambda \Retr",
+"nature": "Diffusion spectrale accélérée",
+"desc": "CG spectral accéléré sur variété, utilisant Laplacien pour sous-espaces conjugués. Diffusion spectrale accélérée — Propagation riemannienne avec accélération Nesterov-like.",
+"link": "https://arxiv.org/abs/1901.10632"
+},
+{
+"method": "Stochastic L-BFGS (Byrd et al.)",
+"formula": "H_k y = s \quad (\text{stochastic updates})",
+"memory": "Low O(m n)",
+"conv": "Superlinear noisy",
+"deriv": "Quasi-2nd Order",
+"cond": "Limited memory",
+"diff": "Mémoire-limitée stochastique",
+"diffFormula": "\Delta_B f \approx H \text{ stochastic}",
+"nature": "Diffusion mémoire-limitée stochastique",
+"desc": "Mise à jour L-BFGS stochastique avec même bruit, approximant Laplacien via historiques. Diffusion mémoire-limitée stochastique — Propagation quasi-Newton avec variance contrôlée.",
+"link": "https://epubs.siam.org/doi/10.1137/040615496"
+},
+{
+"method": "Stochastic BFGS with Same Noise",
+"formula": "B_{k+1} = \text{BFGS}(s, y + \xi, \text{same } \xi)",
+"memory": "Medium O(n^2)",
+"conv": "Superlinear",
+"deriv": "Quasi-2nd Order",
+"cond": "Noise consistent",
+"diff": "BFGS bruitée",
+"diffFormula": "\Delta f = \operatorname{Tr}(B) + \xi",
+"nature": "Diffusion BFGS bruitée",
+"desc": "BFGS stochastique utilisant même \xi pour gradients consécutifs, pour secant condition. Diffusion BFGS bruitée — Propagation avec mise à jour stable malgré stochasticité.",
+"link": "https://arxiv.org/abs/1606.08879"
+},
+{
+"method": "BHHH (Berndt-Hall-Hall-Hausman)",
+"formula": "B_k = \sum \nabla \log L_i \nabla \log L_i^T",
+"memory": "High O(n^2)",
+"conv": "Quadratic (MLE)",
+"deriv": "2nd Order (outer product)",
+"cond": "Information matrix",
+"diff": "Information outer-product",
+"diffFormula": "\Delta f = \operatorname{Tr}(B_k)",
+"nature": "Diffusion information outer-product",
+"desc": "Approximation outer-product pour maximum de vraisemblance, comme Laplacien informationnel. Diffusion information outer-product — Propagation pour modèles probabilistes, anisotrope.",
+"link": "https://www.jstor.org/stable/1912553"
+},
+{
+"method": "Greedy Quasi-Newton Limited-Memory",
+"formula": "B_{k+1} = \text{greedy select updates for PD}",
+"memory": "Low O(m n)",
+"conv": "Superlinear",
+"deriv": "Quasi-2nd Order",
+"cond": "Greedy PD",
+"diff": "Greedy limitée",
+"diffFormula": "\Delta f \approx \text{eigen decomp greedy}",
+"nature": "Diffusion greedy limitée",
+"desc": "Quasi-Newton greedy avec mémoire limitée, utilisant décomposition eigenvalue pour Hessien. Diffusion greedy limitée — Propagation sélectionnant updates pour positivité définie.",
+"link": "https://arxiv.org/abs/1806.10259"
+},
+{
+"method": "Stochastic Cubic Newton with Momentum",
+"formula": "m_k = \beta m + g_k, \quad x_{k+1} = x_k - \sigma^{-1/3} m_k",
+"memory": "Low O(n)",
+"conv": "Accelerated cubic",
+"deriv": "2nd Order + momentum",
+"cond": "Non-convex",
+"diff": "Momentum cubique",
+"diffFormula": "\Delta f = \sigma m + H",
+"nature": "Diffusion momentum cubique",
+"desc": "Cubic Newton stochastique stabilisé par momentum, bornant Laplacien pour non-convexe. Diffusion momentum cubique — Propagation accélérée, évitant oscillations stochastiques.",
+"link": "https://arxiv.org/abs/2005.09835"
+},
+{
+"method": "Structured Quasi-Newton (SQN) with SLDA",
+"formula": "B = D + U V^T, \quad D \text{ diagonal secant}",
+"memory": "Low O(n)",
+"conv": "Superlinear structured",
+"deriv": "Quasi-2nd Order",
+"cond": "Diagonal approx",
+"diff": "Structurée diagonale",
+"diffFormula": "\Delta f = \operatorname{Tr}(D + UV^T)",
+"nature": "Diffusion structurée diagonale",
+"desc": "Quasi-Newton structuré avec approximation diagonale secant-like, pour Hessien diagonal. Diffusion structurée diagonale — Propagation accélérée avec approximation secant minimale.",
+"link": "https://arxiv.org/abs/1906.06821"
+},
+{
+"method": "Hessian Averaging Subsamped Newton",
+"formula": "\bar{H} = \frac{1}{S} \sum_{i \in S} H_i, \quad x_{k+1} = x_k - \bar{H}^{-1} g",
+"memory": "Medium O(n^2)",
+"conv": "Linear global",
+"deriv": "2nd Order (averaged)",
+"cond": "Subsampled",
+"diff": "Moyennée subsampée",
+"diffFormula": "\Delta f = \operatorname{Tr}(\bar{H})",
+"nature": "Diffusion moyennée subsampée",
+"desc": "Moyennage Hessien subsampé pour Newton inexact, avec sampling adaptatif norm-based. Diffusion moyennée subsampée — Propagation linéaire globale pour convexe, superlinéaire locale.",
+"link": "https://arxiv.org/abs/1701.04594"
+},
+{
+"method": "Quasi-Newton Forward-Backward Splitting",
+"formula": "x^{k+1} = \prox_g (x^k - B^{-1} \nabla f(x^k))",
+"memory": "Medium O(n^2)",
+"conv": "Superlinear",
+"deriv": "Quasi-2nd Order",
+"cond": "Non-smooth",
+"diff": "Splitting quasi",
+"diffFormula": "\Delta f = B^{-1} \nabla + \prox",
+"nature": "Diffusion splitting quasi",
+"desc": "Splitting forward-backward avec quasi-Hessien, pour problèmes non-lisses. Diffusion splitting quasi — Propagation proximal avec approximation Hessienne.",
+"link": "https://arxiv.org/abs/1809.10445"
+},
+{
+"method": "Nonsmooth Riemannian Optimization (NRO)",
+"formula": "\min \max_{\|w\| \leq \rho} L(x + w)",
+"memory": "Low O(n)",
+"conv": "Stationary",
+"deriv": "1st Order nonsmooth",
+"cond": "Riemannian nonsmooth",
+"diff": "Lissage non-smooth",
+"diffFormula": "\Delta f + \rho \nabla nonsmooth",
+"nature": "Diffusion lissage non-smooth",
+"desc": "Cadre lissage riemannien pour non-smooth, avec Laplacien généralisé pour convergence stationnaire. Diffusion lissage non-smooth — Propagation vers points stationnaires limites sur variété.",
+"link": "https://arxiv.org/abs/2106.08503"
+},
+{
+"method": "Constrained Riemannian Optimization (CRO)",
+"formula": "x_{k+1} = \proj_M (x_k - G^{-1} \nabla L)",
+"memory": "Medium O(n^2)",
+"conv": "Superlinear",
+"deriv": "2nd Order constrained",
+"cond": "Non-manifold",
+"diff": "Contrainte variété",
+"diffFormula": "\Delta_G f \text{ on constraints}",
+"nature": "Diffusion contrainte variété",
+"desc": "Optimisation riemannienne contrainte non-manifold, étendant Laplacien à contraintes additionnelles. Diffusion contrainte variété — Propagation sur non-single manifold, pour applications réelles.",
+"link": "https://arxiv.org/abs/2006.04879"
+},
+{
+"method": "Riemannian Robbins-Monro (RRM)",
+"formula": "x_{k+1} = \Retr (x_k - \alpha_k \nabla F(x_k, \xi_k))",
+"memory": "Low O(n)",
+"conv": "Sublinear stochastic",
+"deriv": "1st Order",
+"cond": "Surrogate",
+"diff": "Approximation stochastique",
+"diffFormula": "\Delta f \approx \nabla surrogate",
+"nature": "Diffusion approximation stochastique",
+"desc": "Extension Robbins-Monro à riemannien via retraction, pour surrogate gradients Laplaciens. Diffusion approximation stochastique — Propagation évitant saddle points stricts.",
+"link": "https://arxiv.org/abs/1902.07826"
+},
+{
+"method": "Hessian Averaging Adaptive Sampling",
+"formula": "\bar{H} = \sum w_i H_i, \quad w_i \propto 1/\|g_i\|",
+"memory": "Medium O(n^2)",
+"conv": "Linear",
+"deriv": "2nd Order adaptive",
+"cond": "Norm-based",
+"diff": "Adaptative sampling",
+"diffFormula": "\Delta f = \sum w \operatorname{Tr}(H_i)",
+"nature": "Diffusion adaptative sampling",
+"desc": "Sampling adaptatif norm-condition pour Hessien moyenné, permettant inexactitude gradient. Diffusion adaptative sampling — Propagation globale linéaire pour strongly convexe.",
+"link": "https://arxiv.org/abs/1904.09080"
+},
+{
+"method": "Limited-Memory Greedy Quasi-Newton Nonmonotone",
+"formula": "B_k = \text{nonmonotone greedy update}",
+"memory": "Low O(m n)",
+"conv": "Superlinear nonmonotone",
+"deriv": "Quasi-2nd Order",
+"cond": "Nonmonotone",
+"diff": "Non-monotone greedy",
+"diffFormula": "\Delta f \approx B_{prev}",
+"nature": "Diffusion non-monotone greedy",
+"desc": "Quasi-Newton greedy non-monotone avec mémoire limitée, stockant approximation Hessien précédente. Diffusion non-monotone greedy — Propagation sans stockage full Hessien, pour scalabilité.",
+"link": "https://arxiv.org/abs/2003.12622"
+},
+{
+"method": "Stochastic Quasi-Newton for Nonconvex",
+"formula": "x_{k+1} = x_k - B_k^{-1} g_k \quad (\text{noisy nonconvex})",
+"memory": "Medium O(n^2)",
+"conv": "Stationary",
+"deriv": "Quasi-2nd Order",
+"cond": "Nonconvex noisy",
+"diff": "Non-convexe stochastique",
+"diffFormula": "\Delta f = B^{-1} g + \text{noise nonconvex}",
+"nature": "Diffusion non-convexe stochastique",
+"desc": "Quasi-Newton stochastique pour non-convexe, avec noisy gradients pour Laplacien approximé. Diffusion non-convexe stochastique — Propagation avec bruit, pour optimisation stochastique.",
+"link": "https://arxiv.org/abs/1902.03382"
+},
+{
+"method": "Approximation Hessian Lagrangian (Augmented)",
+"formula": "H = \nabla^2 L + \rho A^T A",
+"memory": "High O(n^2)",
+"conv": "Quadratic",
+"deriv": "2nd Order augmented",
+"cond": "Singularity remedied",
+"diff": "Augmentée Lagrangienne",
+"diffFormula": "\Delta f = \operatorname{Tr}(H + \rho A)",
+"nature": "Diffusion augmentée Lagrangienne",
+"desc": "Remplace Hessien Lagrangien par celui de Lagrangien augmenté, pour SQP efficace. Diffusion augmentée Lagrangienne — Propagation remédiant singularités Hessien.",
+"link": "https://arxiv.org/abs/1910.12882"
+},
+{
+"method": "Stochastic Newton-Type Gradient Descent Proximal",
+"formula": "x_{k+1} = \prox (x_k - \hat{H}^{-1} g_k)",
+"memory": "Medium O(n^2)",
+"conv": "Linear proximal",
+"deriv": "2nd Order stochastic",
+"cond": "Proximal",
+"diff": "Proximal stochastique",
+"diffFormula": "\Delta f = \hat{H}^{-1} g + \prox",
+"nature": "Diffusion proximal stochastique",
+"desc": "Descente gradient proximal stochastique Newton-type, pour optimisation grande échelle. Diffusion proximal stochastique — Propagation avec régularisation pour convexité.",
+"link": "https://arxiv.org/abs/2002.08391"
+},
+{
+"method": "Full-Matrix Adagrad Variant (Second-Order)",
+"formula": "x_{k+1} = x_k - \eta H^{-1/2} g_k / \sqrt{G_k}",
+"memory": "High O(n^2)",
+"conv": "Sublinear adaptive",
+"deriv": "Quasi-2nd Order",
+"cond": "Full matrix",
+"diff": "Préconditionnée scalable",
+"diffFormula": "\Delta f = H^{-1/2} / \sqrt{G}",
+"nature": "Diffusion préconditionnée scalable",
+"desc": "Préconditionnement second-ordre scalable comme Adagrad full-matrix, pour deep learning. Diffusion préconditionnée scalable — Propagation linéaire en sparsité input.",
+"link": "https://arxiv.org/abs/1609.04747"
+},
+{
+"method": "Riemannian Avoidance Strict Saddle",
+"formula": "x_{k+1} = \Retr_{x_k} (-\alpha \Grad f(x_k)) \text{ with saddle avoidance retraction}",
+"memory": "Medium O(n)",
+"conv": "Superlinear",
+"deriv": "1st-2nd Order",
+"cond": "Stable (manifold curvature)",
+"diff": "Riemannienne évitement",
+"diffFormula": "\Delta_R f = \div_R (\Grad_R f) \text{ avec conditions selles}",
+"nature": "Diffusion évitement selles",
+"desc": "Méthodes riemanniennes évitant selles stricts, avec retraction pour coût itératif bas.",
+"link": "https://arxiv.org/abs/2402.18308"
+},
+{
+"method": "Algebraic Varieties Registration Riemannian",
+"formula": "X_{k+1} = \Retr_{X_k} (-\Grad f(X_k)) \text{ on Grassmann manifold}",
+"memory": "High O(n^2)",
+"conv": "Quadratic local",
+"deriv": "2nd Order",
+"cond": "Good (polynomial basis)",
+"diff": "Variété algébrique",
+"diffFormula": "\Delta_G f = \div_G (\nabla_G f) \text{ via polynômes}",
+"nature": "Diffusion variété algébrique",
+"desc": "Optimisation sur Grassmann pour registration variétés algébriques, via polynômes bases.",
+"link": "https://en.wikipedia.org/wiki/Grassmannian"
+},
+{
+"method": "Riemannian Steepest Descent",
+"formula": "x_{k+1} = \Retr_{x_k} (-\alpha_k \Grad f(x_k))",
+"memory": "Low O(n)",
+"conv": "Linear",
+"deriv": "1st Order",
+"cond": "Poor (curvature dependent)",
+"diff": "Raide riemannienne",
+"diffFormula": "\Delta_R f = \mathrm{Tr}(\Hess f)",
+"nature": "Diffusion raide riemannienne",
+"desc": "Descente plus raide le long géodésiques, avec Laplacien pour convergence standard.",
+"link": "https://en.wikipedia.org/wiki/Riemannian_manifold"
+},
+{
+"method": "Riemannian Quasi-Newton",
+"formula": "x_{k+1} = \Retr_{x_k} (- H_k^{-1} \Grad f(x_k))",
+"memory": "Medium O(n^2)",
+"conv": "Superlinear",
+"deriv": "Quasi-2nd Order",
+"cond": "Stable (Riemannian metric)",
+"diff": "Quasi riemannienne",
+"diffFormula": "\Delta_{RQ} f = \div_{RQ} (\nabla_{RQ} f)",
+"nature": "Diffusion quasi riemannienne",
+"desc": "Quasi-Newton le long géodésiques, approximant Hessien riemannien.",
+"link": "https://www.math.fsu.edu/~whuang2/pdf/Fudan_Slides_2020-06-08.pdf"
+},
+{
+"method": "Eigenvalue Decomposition Hessian Approx",
+"formula": "H_k \approx U \Lambda U^T, \quad x_{k+1} = x_k - H_k^{-1} \nabla f(x_k)",
+"memory": "High O(n^2)",
+"conv": "Quadratic",
+"deriv": "2nd Order",
+"cond": "Good (eigenmodes)",
+"diff": "Eigenvalue-based",
+"diffFormula": "\Delta_E f = \sum \lambda_i \nabla_i \cdot \nabla_i f",
+"nature": "Diffusion eigenvalue-based",
+"desc": "Décomposition eigenvalue pour approximation Hessien, résolvant trust-region.",
+"link": "https://en.wikipedia.org/wiki/Eigenvalue_algorithm"
+},
+{
+"method": "Stochastic Quasi-Newton Large-Scale Optimization",
+"formula": "\theta_{k+1} = \theta_k - \alpha B_k^{-1} g_k \text{ (stochastic gradient g_k)}",
+"memory": "Medium O(m n)",
+"conv": "Superlinear stochastic",
+"deriv": "Quasi-2nd Order",
+"cond": "Scalable (limited mem)",
+"diff": "Large-échelle stochastique",
+"diffFormula": "\Delta_S f = \mathbb{E} [\div (B^{-1} \nabla f)]",
+"nature": "Diffusion large-échelle stochastique",
+"desc": "Quasi-Newton stochastique efficace robuste scalable, utilisant BFGS limité.",
+"link": "https://en.wikipedia.org/wiki/BFGS_method"
+},
+{
+"method": "Spectral CG Accelerated Riemannian",
+"formula": "p_{k+1} = -\Grad f(x_k) + \beta_k p_k, \text{ spectral preconditioned}",
+"memory": "Medium O(n)",
+"conv": "Superlinear",
+"deriv": "2nd Order approx",
+"cond": "Excellent (spectral)",
+"diff": "CG spectrale",
+"diffFormula": "\Delta_{SCG} f = \Hess^{-1} \nabla f",
+"nature": "Diffusion CG spectrale",
+"desc": "CG spectral accéléré pour optimisation riemannienne, avec Laplacien pour itérations.",
+"link": "https://en.wikipedia.org/wiki/Conjugate_gradient_method"
+},
+{
+"method": "Nested-Set Second-Order Approximation",
+"formula": "x_{k+1} = \arg\min_{x \in \mathcal{N}k} m_k(x), \text{ nested sets } \mathcal{N}k",
+"memory": "High O(n^2)",
+"conv": "Quadratic",
+"deriv": "2nd Order",
+"cond": "Good (DFO)",
+"diff": "Nested DFO",
+"diffFormula": "\Delta_N f = O(r^2) \text{ error bound}",
+"nature": "Diffusion nested DFO",
+"desc": "Approximation second-ordre nested-set pour DFO, erreur ordre rayon maximal.",
+"link": "https://en.wikipedia.org/wiki/Derivative-free_optimization"
+},
+{
+"method": "Block BFGS Limited-Memory Stochastic",
+"formula": "B{k+1} = B_k + updates \text{ block-wise L-BFGS}",
+"memory": "Low-Medium O(m b)",
+"conv": "Superlinear",
+"deriv": "Quasi-2nd Order",
+"cond": "Stable convex",
+"diff": "Block stochastique",
+"diffFormula": "\Delta_B f = \sum{blocks} \div (B \nabla f)",
+"nature": "Diffusion block stochastique",
+"desc": "Updates block BFGS pour optimisation stochastique convexe, avec Laplacien limité.",
+"link": "https://en.wikipedia.org/wiki/Limited-memory_BFGS"
+},
+{
+"method": "Novel Limited Memory Quasi-Newton Eigen",
+"formula": "H_k = \gamma I + low-rank eigen update",
+"memory": "Low O(m n)",
+"conv": "Superlinear",
+"deriv": "Quasi-2nd Order",
+"cond": "Preserves positivity",
+"diff": "Eigenvalue limited",
+"diffFormula": "\Delta_L f = (\gamma I + U V^T) \nabla \cdot \nabla f",
+"nature": "Diffusion eigenvalue limited",
+"desc": "Quasi-Newton mémoire limitée basé eigenvalue, scaled identity plus low-rank.",
+"link": "https://arxiv.org/abs/2307.00490"
+},
+{
+"method": "Momentum Stochastic Cubic Newton Improved",
+"formula": "x_{k+1} = x_k - \alpha (\nabla f + \beta (x_k - x_{k-1})) + cubic reg",
+"memory": "Low O(n)",
+"conv": "Cubic regularized",
+"deriv": "2nd Order stochastic",
+"cond": "Non-convex stable",
+"diff": "Momentum improved",
+"diffFormula": "\Delta_M f = \div (m^{-1} \nabla f) + \frac{\sigma^3}{3}",
+"nature": "Diffusion momentum improved",
+"desc": "Cubic Newton stochastique avec momentum spécial, pour non-convexe général.",
+"link": "https://en.wikipedia.org/wiki/Adaptive_coordinate_descent"
+},
+{
+"method": "Variational Inequalities Second-Order Riemannian",
+"formula": "\find x \in M: \langle \Grad F(x), v \rangle \geq 0, \forall v \text{ (2nd order approx)}",
+"memory": "High O(n^2)",
+"conv": "Quadratic",
+"deriv": "2nd Order",
+"cond": "Riemannian VI stable",
+"diff": "VI riemannienne",
+"diffFormula": "\Delta_V f = \Hess_V \nabla f",
+"nature": "Diffusion VI riemannienne",
+"desc": "Méthodes second-ordre pour VI riemanniennes, communes en ML.",
+"link": "https://en.wikipedia.org/wiki/Variational_inequality"
+},
+{
+"method": "Secant-Like Diagonal Approximation SQN",
+"formula": "B_k = diag(secant updates), x_{k+1} = x_k - B_k^{-1} g_k",
+"memory": "Low O(n)",
+"conv": "Superlinear",
+"deriv": "Quasi-2nd Order",
+"cond": "Diagonal stable",
+"diff": "Secant diagonale",
+"diffFormula": "\Delta_{SD} f = \sum d_i \partial_i^2 f",
+"nature": "Diffusion secant diagonale",
+"desc": "SQN accéléré avec SLDA, approximation diagonale second-ordre.",
+"link": "https://en.wikipedia.org/wiki/Secant_method"
+},
+{
+"method": "Stochastic Second-Order SPSA",
+"formula": "\hat{H}k^{-1} \approx SPSA estimate, x{k+1} = x_k - \alpha \hat{H}k^{-1} g_k",
+"memory": "Low O(n)",
+"conv": "Quadratic local",
+"deriv": "2nd Order stochastic",
+"cond": "Noisy robust",
+"diff": "SPSA second-ordre",
+"diffFormula": "\Delta{SS} f = \mathbb{E}[\hat{\div} (\hat{\nabla}^2 f)]",
+"nature": "Diffusion SPSA second-ordre",
+"desc": "Version stochastique Newton-Raphson via SPSA, estimant Hessien inverse.",
+"link": "https://en.wikipedia.org/wiki/Simultaneous_perturbation_stochastic_approximation"
+},
+{
+"method": "Noise-Sensitive Second-Order Methods",
+"formula": "x_{k+1} = x_k - (H_k + \lambda I)^{-1} \nabla f(x_k) \text{ noise correction}",
+"memory": "High O(n^2)",
+"conv": "Quadratic despite noise",
+"deriv": "2nd Order",
+"cond": "Noise-sensitive stable",
+"diff": "Noise-sensitive",
+"diffFormula": "\Delta_{NS} f = \div ((H + \Lambda)^{-1} \nabla f)",
+"nature": "Diffusion noise-sensitive",
+"desc": "Méthodes second-ordre sensibles bruit, utilisant Laplacien pour correction courbure.",
+"link": "https://en.wikipedia.org/wiki/Stochastic_approximation"
+},
+{
+"method": "Higher-Order Forward-Backward Quasi-Newton",
+"formula": "x^{prox} = prox(f), x_{k+1} = x_k - H_k^{-1} \nabla g(x^{prox})",
+"memory": "Medium O(n^2)",
+"conv": "Superlinear higher-order",
+"deriv": "Higher-Order",
+"cond": "Non-smooth stable",
+"diff": "Higher-order splitting",
+"diffFormula": "\Delta_H f = \div_H (\nabla_H f) + higher terms",
+"nature": "Diffusion higher-order splitting",
+"desc": "Quasi-Newton forward-backward pour higher-order, avec secant condition.",
+"link": "https://en.wikipedia.org/wiki/Proximal_gradient_methods_for_learning"
+},
+{
+"method": "Subspaces Momentum Stochastic Second-Order",
+"formula": "Update in subspace S_k with momentum: x_{k+1} = P_S (x_k - H^{-1} g + \beta v)",
+"memory": "Medium O(s n)",
+"conv": "Global bounds",
+"deriv": "2nd Order stochastic",
+"cond": "Non-convex",
+"diff": "Subspaces momentum",
+"diffFormula": "\Delta_{SM} f = P_S \div (H^{-1} \nabla f)",
+"nature": "Diffusion subspaces momentum",
+"desc": "Second-ordre stochastique avec sous-espaces et momentum, bornes globales.",
+"link": "https://en.wikipedia.org/wiki/Momentum"
+},
+{
+"method": "Greedy Selection Quasi-Newton",
+"formula": "Select update greedily: argmin ||H - Hess||, H_{k+1} = update",
+"memory": "Medium O(n^2)",
+"conv": "Superlinear fast",
+"deriv": "Quasi-2nd Order",
+"cond": "Adaptive",
+"diff": "Greedy selection",
+"diffFormula": "\Delta_G f = \min \div (H \nabla f)",
+"nature": "Diffusion greedy selection",
+"desc": "Sélection greedy pour updates quasi-Newton, minimisant erreur Hessien.",
+"link": "https://en.wikipedia.org/wiki/Quasi-Newton_method"
+},
+{
+"method": "Adaptive Hessian Sampling Methods",
+"formula": "H_k = sample gradients to approx Hess, x_{k+1} = x_k - H_k^{-1} g_k",
+"memory": "High O(n^2)",
+"conv": "Superlinear local",
+"deriv": "2nd Order inexact",
+"cond": "Deterministic local",
+"diff": "Adaptive sampling",
+"diffFormula": "\Delta_A f = \mathbb{E}S [\div (H_S \nabla f)]",
+"nature": "Diffusion adaptive sampling",
+"desc": "Sampling adaptatif pour Hessien, gradient inexact pour Newton.",
+"link": "https://arxiv.org/abs/1906.06821"
+},
+{
+"method": "Riemannian Nesterov Acceleration",
+"formula": "y_k = \Retr{x_k} (\alpha (x_k - x_{k-1})), x_{k+1} = \Retr_{y_k} (-\Grad f(y_k))",
+"memory": "Low O(n)",
+"conv": "Accelerated O(1/k^2)",
+"deriv": "1st Order",
+"cond": "Smooth manifold",
+"diff": "Nesterov riemannienne",
+"diffFormula": "\Delta_N f = \div (\nabla f + momentum)",
+"nature": "Diffusion Nesterov riemannienne",
+"desc": "Accélération Nesterov riemannienne, utilisant Laplacien pour momentum.",
+"link": "https://en.wikipedia.org/wiki/Nesterov%27s_method"
+},
+{
+"method": "Fisher Information Matrix Approximation",
+"formula": "F \approx \mathbb{E}[\nabla \log p \nabla \log p^T], \theta_{k+1} = \theta_k - F^{-1} \nabla L",
+"memory": "High O(n^2)",
+"conv": "Superlinear",
+"deriv": "Quasi-2nd Order",
+"cond": "Probabilistic stable",
+"diff": "Fisher approx",
+"diffFormula": "\Delta_F f = F^{-1} \nabla \cdot (F \nabla f)",
+"nature": "Diffusion Fisher approx",
+"desc": "Approximation FIM comme Hessien pour natural gradient, Laplacien informationnel.",
+"link": "https://en.wikipedia.org/wiki/Fisher_information"
+},
+{
+"method": "Kronecker-Factored Hessian",
+"formula": "H \approx A \kron B \kron C \text{ for layers}, inverse via factors",
+"memory": "Medium O(layers n)",
+"conv": "Quadratic approx",
+"deriv": "2nd Order factored",
+"cond": "Scalable deep",
+"diff": "Kronecker factored",
+"diffFormula": "\Delta_K f = \sum_{factors} \div_K (\nabla_K f)",
+"nature": "Diffusion Kronecker factored",
+"desc": "Factorisation Kronecker pour Hessien en deep learning, décomposant Laplacien.",
+"link": "https://arxiv.org/abs/1711.05125"
+},
+{
+"method": "Diagonal Hessian Approximation Stochastic",
+"formula": "H_k = diag(\partial^2 f / \partial \theta_i^2), stochastic update",
+"memory": "Low O(n)",
+"conv": "Linear stochastic",
+"deriv": "2nd Order diagonal",
+"cond": "Simple large models",
+"diff": "Diagonale stochastique",
+"diffFormula": "\Delta_D f = \sum h_{ii} \partial_i^2 f",
+"nature": "Diffusion diagonale stochastique",
+"desc": "Approximation diagonale Hessien stochastique, pour adaptation paramétrique.",
+"link": "https://en.wikipedia.org/wiki/Diagonal_matrix"
+},
+{
+"method": "Low-Rank Hessian Updates",
+"formula": "H_{k+1} = H_k + U V^T \text{ low-rank}",
+"memory": "Low O(r n)",
+"conv": "Superlinear",
+"deriv": "Quasi-2nd Order",
+"cond": "Incremental",
+"diff": "Low-rank",
+"diffFormula": "\Delta_{LR} f = \div ((H + UV^T) \nabla f)",
+"nature": "Diffusion low-rank",
+"desc": "Updates low-rank pour Hessien, préservant structure Laplacienne.",
+"link": "https://en.wikipedia.org/wiki/Low-rank_approximation"
+},
+{
+"method": "Stochastic Subsampling Hessian",
+"formula": "H_k = \frac{1}{s} \sum_{i \in S} \nabla^2 f_i, S subset",
+"memory": "Medium O(s n^2)",
+"conv": "Variance-reduced",
+"deriv": "2nd Order",
+"cond": "Finite-sum reduced var",
+"diff": "Subsampling",
+"diffFormula": "\Delta_{Sub} f = \mathbb{E}S [\div (H_S \nabla f)]",
+"nature": "Diffusion subsampling",
+"desc": "Subsampling stochastique pour Hessien, réduisant variance Laplacienne.",
+"link": "https://arxiv.org/abs/1802.05643"
+},
+{
+"method": "Riemannian Trust-Region",
+"formula": "s_k = \arg\min m_k(s) = f(x_k) + \langle \Grad f, s \rangle + \frac{1}{2} \langle Hess s, s \rangle, ||s|| \leq \Delta_k",
+"memory": "High O(n^2)",
+"conv": "Quadratic",
+"deriv": "2nd Order",
+"cond": "Geodesic constrained",
+"diff": "Trust-region variété",
+"diffFormula": "\Delta{TR} f = \min_{\|s\| \leq \Delta} q(s)",
+"nature": "Diffusion trust-region variété",
+"desc": "Trust-region sur variété, avec modèle quadratique riemannien Laplacien.",
+"link": "https://www.nicolasboumal.net/papers/Boumal_Riemannian_trust_regions_with_finite_difference_Hessian_approximations_are_globally_convergent_2015.pdf"
+},
+{
+"method": "Barzilai-Borwein Riemannian",
+"formula": "\alpha_k = \frac{||s_{k-1}||^2}{ \langle s_{k-1}, y_{k-1} \rangle }, x_{k+1} = \Retr ( -\alpha_k \Grad f )",
+"memory": "Low O(n)",
+"conv": "Non-monotone superlinear",
+"deriv": "1st Order adaptive",
+"cond": "Manifold adaptive",
+"diff": "BB riemannienne",
+"diffFormula": "\Delta_{BB} f = \alpha^{-1} \div (\nabla f)",
+"nature": "Diffusion BB riemannienne",
+"desc": "BB adaptatif sur variété, approximant Laplacien via itérations récentes.",
+"link": "https://en.wikipedia.org/wiki/Barzilai–Borwein_method"
+},
+{
+"method": "Stochastic Riccati Equation Solver",
+"formula": "Solve dP/dt = A^T P + P A - P B R^{-1} B^T P + Q \text{ stochastic}",
+"memory": "High O(n^2)",
+"conv": "Optimal control",
+"deriv": "2nd Order",
+"cond": "Noisy covariance",
+"diff": "Riccati stochastique",
+"diffFormula": "\Delta_R f = P^{-1} \nabla \cdot (P \nabla f)",
+"nature": "Diffusion Riccati stochastique",
+"desc": "Résolution stochastique équation Riccati pour covariance, inverse Laplacien.",
+"link": "https://en.wikipedia.org/wiki/Riccati_equation"
+},
+{
+"method": "Mirror Descent with Hessian",
+"formula": "x_{k+1} = \arg\min_y \langle g_k, y \rangle + D_\psi (y, x_k) + \frac{1}{2} \langle H y, y \rangle",
+"memory": "Medium O(n^2)",
+"conv": "Entropic with curvature",
+"deriv": "2nd Order Bregman",
+"cond": "Bregman stable",
+"diff": "Miroir Hessienne",
+"diffFormula": "\Delta_M f = \div_\psi (H \nabla f)",
+"nature": "Diffusion miroir Hessienne",
+"desc": "Descente miroir intégrant approximation Hessienne, pour Bregman Laplacien.",
+"link": "https://en.wikipedia.org/wiki/Mirror_descent"
+},
+{
+"method": "Graph Neural Network Laplacian Optimizer",
+"formula": "Update via L = D - A, x_{k+1} = (I + \tau L)^{-1} (x_k - \nabla f)",
+"memory": "High O(|E| n)",
+"conv": "Spectral graph",
+"deriv": "2nd Order graph",
+"cond": "Connectivity weighted",
+"diff": "GNN graphique",
+"diffFormula": "\Delta_G f = L \nabla \cdot \nabla f",
+"nature": "Diffusion GNN graphique",
+"desc": "Optimiseur Laplacien pour GNN, diffusant via graphe spectral.",
+"link": "https://en.wikipedia.org/wiki/Graph_neural_network"
+},
+{
+"method": "Variance-Reduced Cubic Regularization",
+"formula": "x_{k+1} = \arg\min m(x) + \frac{\sigma_k^3}{3} ||x||^3 \text{ VR estimate}",
+"memory": "Medium O(n)",
+"conv": "Global non-convex",
+"deriv": "2nd Order cubic",
+"cond": "Noise reduced",
+"diff": "VR cubic",
+"diffFormula": "\Delta_{VC} f = \div (\nabla f) + \sigma^3 /3",
+"nature": "Diffusion VR cubic",
+"desc": "Régularisation cubique variance-réduite, bornant Hessien stochastique.",
+"link": "https://arxiv.org/abs/1611.03056"
+},
+{
+"method": "Adaptive Diagonal Scaling Newton",
+"formula": "D_k = diag(adaptive scales), x_{k+1} = x_k - (D_k H D_k)^{-1} D_k \nabla f",
+"memory": "Low O(n)",
+"conv": "Quadratic coord-wise",
+"deriv": "2nd Order",
+"cond": "Dynamic diagonal",
+"diff": "Scaling adaptative",
+"diffFormula": "\Delta_{ADS} f = D^{-1} \div (D H D \nabla f)",
+"nature": "Diffusion scaling adaptative",
+"desc": "Scaling diagonal adaptatif pour Newton, diagonal Laplacien dynamique.",
+"link": "https://en.wikipedia.org/wiki/Newton%27s_method_in_optimization"
+},
+{
+"method": "Krylov Subspace Hessian-Free",
+"formula": "Solve H s = -g via Krylov: s \in span(g, H g, ...)",
+"memory": "Medium O(k n)",
+"conv": "Superlinear",
+"deriv": "2nd Order free",
+"cond": "Implicit inverse",
+"diff": "Krylov implicite",
+"diffFormula": "\Delta_K f = K^{-1} \nabla \cdot K \nabla f",
+"nature": "Diffusion Krylov implicite",
+"desc": "Sous-espaces Krylov pour Hessien-free, simulant inverse Laplacien.",
+"link": "https://en.wikipedia.org/wiki/Krylov_subspace"
+},
+{
+"method": "Entropic Regularization Quasi-Newton",
+"formula": "Update with entropic reg: B_{k+1} = argmin ||B - Hess|| + KL(divergence)",
+"memory": "Medium O(n^2)",
+"conv": "Sinkhorn-like",
+"deriv": "Quasi-2nd Order",
+"cond": "OT scalable",
+"diff": "Entropique quasi",
+"diffFormula": "\Delta_E f = \div (B \nabla f) + \epsilon KL",
+"nature": "Diffusion entropique quasi",
+"desc": "Quasi-Newton avec régularisation entropique, pour OT Laplacien.",
+"link": "https://en.wikipedia.org/wiki/Sinkhorn%E2%80%93Knopp_algorithm"
+},
+{
+"method": "Bayesian Hessian Approximation",
+"formula": "H \approx - \nabla^2 \log p(\theta | data) \text{ Laplace approx}",
+"memory": "High O(n^2)",
+"conv": "Uncertainty quantified",
+"deriv": "2nd Order Bayesian",
+"cond": "Posterior stable",
+"diff": "Bayésienne",
+"diffFormula": "\Delta_B f = \Hess_{\log p} \nabla f",
+"nature": "Diffusion bayésienne",
+"desc": "Approximation Hessienne bayésienne via Laplace, pour postérieur Laplacien.",
+"link": "https://en.wikipedia.org/wiki/Laplace_approximation"
+},
+{
+"method": "Score-Based Diffusion Optimizer",
+"formula": "d x = [f(x) - \frac{1}{2} \beta(t) x + \sigma(t) \nabla \log p_t(x)] dt",
+"memory": "High O(n)",
+"conv": "Generative reversible",
+"deriv": "Score function",
+"cond": "Diffusion models",
+"diff": "Score-based",
+"diffFormula": "\Delta_S f = \nabla \log p \cdot \nabla f",
+"nature": "Diffusion score-based",
+"desc": "Optimiseur basé score pour diffusion models, Laplacien score function.",
+"link": "https://en.wikipedia.org/wiki/Diffusion_model"
+},
+{
+"method": "Spectral Decomposition Block Newton",
+"formula": "H = blkdiag(U \Lambda U^T), solve block-wise",
+"memory": "High O(b n^2)",
+"conv": "Quadratic parallel",
+"deriv": "2nd Order",
+"cond": "Block-decoupled",
+"diff": "Spectrale block",
+"diffFormula": "\Delta_{SB} f = \sum_b \lambda_b \div_b \nabla_b f",
+"nature": "Diffusion spectrale block",
+"desc": "Décomposition spectrale pour blocs Newton, Laplacien bloc-diagonal.",
+"link": "https://en.wikipedia.org/wiki/Block_matrix"
+},
+{
+"method": "Stochastic Homotopy Newton",
+"formula": "Homotopy path: x(\lambda) , Newton steps stochastic",
+"memory": "Medium O(n)",
+"conv": "Continuous deformation",
+"deriv": "2nd Order",
+"cond": "Parameterized noisy",
+"diff": "Homotopy stochastique",
+"diffFormula": "\Delta_H f = \frac{d}{d\lambda} \div (\nabla f)",
+"nature": "Diffusion homotopy stochastique",
+"desc": "Homotopy stochastique pour déformation Laplacienne continue.",
+"link": "https://en.wikipedia.org/wiki/Homotopy"
+},
+{
+"method": "Anderson Mixing Quasi-Newton",
+"formula": "x_{k+1} = \sum \alpha_i f(x_i) , \alpha from least squares on residuals",
+"memory": "Medium O(m n)",
+"conv": "Accelerated multi-residual",
+"deriv": "Quasi-2nd Order",
+"cond": "Fast convergence",
+"diff": "Anderson quasi",
+"diffFormula": "\Delta_A f = \sum \alpha \div (\nabla f_i)",
+"nature": "Diffusion Anderson quasi",
+"desc": "Mixing Anderson pour accélérer quasi-Newton, extrapolant Laplacien.",
+"link": "https://arxiv.org/abs/1804.00560"
+},
+{
+"method": "Wolfe Conditions Stochastic Quasi",
+"formula": "Line search with stochastic Wolfe: c1 g^T d <= f decrease, c2 ||g||^2 <= |g^T d|",
+"memory": "Low O(n)",
+"conv": "Stable descent",
+"deriv": "Quasi-2nd Order",
+"cond": "Noisy line search",
+"diff": "Wolfe stochastique",
+"diffFormula": "\Delta_W f = \check{\div} (\nabla f) \text{ Wolfe check}",
+"nature": "Diffusion Wolfe stochastique",
+"desc": "Conditions Wolfe pour lignesearch stochastique quasi-Newton.",
+"link": "https://en.wikipedia.org/wiki/Wolfe_conditions"
+},
+{
+"method": "Symmetric Rank-Update Variants",
+"formula": "H_{k+1} = H_k + symmetric U V^T U^T",
+"memory": "Low O(r n)",
+"conv": "Superlinear symmetric",
+"deriv": "Quasi-2nd Order",
+"cond": "Minimal variant",
+"diff": "Rank-sym update",
+"diffFormula": "\Delta_{RS} f = \div ((H + sym update) \nabla f)",
+"nature": "Diffusion rank-sym update",
+"desc": "Mises à jour rang symétriques pour Hessien, variant Laplacien minimal.",
+"link": "https://en.wikipedia.org/wiki/Symmetric_matrix"
+},
+{
+"method": "Non-Symmetric Broyden Updates",
+"formula": "B_{k+1} = B_k + \frac{(y_k - B_k s_k) s_k^T}{||s_k||^2}",
+"memory": "Medium O(n^2)",
+"conv": "Superlinear non-lin",
+"deriv": "Quasi-1st Order",
+"cond": "General non-linear",
+"diff": "Broyden non-sym",
+"diffFormula": "\Delta_{BN} f = \div_{non-sym} (B \nabla f)",
+"nature": "Diffusion Broyden non-sym",
+"desc": "Updates Broyden non-sym pour Jacobian, étendant à Laplacien non-sym.",
+"link": "https://en.wikipedia.org/wiki/Broyden_method"
+},
+{
+"method": "SQN with Diagonal Scaling",
+"formula": "SQN update with diag scale D, B = D^{-1} secant D^{-1}",
+"memory": "Low O(n)",
+"conv": "Superlinear diagonal",
+"deriv": "Quasi-2nd Order",
+"cond": "Diagonal approx",
+"diff": "SQN scaled",
+"diffFormula": "\Delta_{SQS} f = D^{-1} \div (D B D \nabla f)",
+"nature": "Diffusion SQN scaled",
+"desc": "SQN avec scaling diagonal, pour Laplacien approximé diagonal.",
+"link": "https://arxiv.org/abs/1411.3406"
+},
+{
+"method": "Hybrid Kaczmarz Block Newton",
+"formula": "Project blocks: x^{b+1} = x^b - A_b^+ (A_b x^b - b), Newton hybrid",
+"memory": "Medium O(b n)",
+"conv": "Linear row-block",
+"deriv": "2nd Order projected",
+"cond": "Coordinate block",
+"diff": "Kaczmarz block",
+"diffFormula": "\Delta_{HK} f = \sum_b P_b \div (\nabla f)",
+"nature": "Diffusion Kaczmarz block",
+"desc": "Hybride Kaczmarz block pour Laplacien projeté sous-espaces.",
+"link": "https://en.wikipedia.org/wiki/Kaczmarz_method"
+},
+{
+"method": "Randomized Block Hessian",
+"formula": "H_k = avg over random blocks \nabla^2 f_B",
+"memory": "Medium O(b n^2)",
+"conv": "Stochastic grouped",
+"deriv": "2nd Order",
+"cond": "Random selection",
+"diff": "Randomized block",
+"diffFormula": "\Delta_{RB} f = \mathbb{E}B [\div_B H_B \nabla f]",
+"nature": "Diffusion randomized block",
+"desc": "Hessian block randomisé, sélection aléatoire pour approximation.",
+"link": "https://arxiv.org/abs/1101.6034"
+},
+{
+"method": "Shampoo with Kronecker Factors",
+"formula": "H \approx \prod Kronecker factors, preconditioner inverse",
+"memory": "Medium O(d^2)",
+"conv": "Efficient high-dim",
+"deriv": "2nd Order",
+"cond": "Tensor decomposed",
+"diff": "Shampoo Kronecker",
+"diffFormula": "\Delta{Sh} f = (\kron factors)^{-1} \div \nabla f",
+"nature": "Diffusion Shampoo Kronecker",
+"desc": "Facteurs Kronecker pour Shampoo, décomposant Laplacien tensoriel.",
+"link": "https://arxiv.org/abs/1802.09568"
+},
+{
+"method": "K-FAC for Deep Layers",
+"formula": "Fisher \approx A \kron G \kron B \text{ per layer}",
+"memory": "Medium O(layers)",
+"conv": "Layer-wise decoupled",
+"deriv": "Quasi-2nd Order",
+"cond": "Deep Fisher approx",
+"diff": "K-FAC deep",
+"diffFormula": "\Delta_{KF} f = \kron^{-1} \div (\kron \nabla f)",
+"nature": "Diffusion K-FAC deep",
+"desc": "K-FAC factorisé pour couches deep, approximant Fisher Laplacien.",
+"link": "https://arxiv.org/abs/1412.7455"
+},
+{
+"method": "SAGH Stochastic Average Gradient Hessian",
+"formula": "H_k = avg stochastic Hessians from samples",
+"memory": "High O(n^2)",
+"conv": "Variance-aware",
+"deriv": "2nd Order",
+"cond": "Large samples",
+"diff": "SAGH",
+"diffFormula": "\Delta_{SAG} f = \frac{1}{N} \sum \div H_i \nabla f",
+"nature": "Diffusion SAGH",
+"desc": "Gradient average stochastique pour Hessien, diffusant vers minima.",
+"link": "https://arxiv.org/abs/1409.4140"
+},
+{
+"method": "ARC with Momentum",
+"formula": "Adaptive regularization cubic with momentum term",
+"memory": "Low O(n)",
+"conv": "Global accelerated",
+"deriv": "2nd Order cubic",
+"cond": "Dynamic bounded",
+"diff": "ARC momentum",
+"diffFormula": "\Delta_{ARC} f = \min q(s) + \sigma ||s||^3 /3 + mom",
+"nature": "Diffusion ARC momentum",
+"desc": "Régularisation cubique avec momentum, bornant Laplacien dynamique.",
+"link": "https://arxiv.org/abs/1712.07034"
+},
+{
+"method": "Riemannian Geodesic Conjugate Gradient",
+"formula": "p_k = -\Grad f + \beta \Retr^* p_{k-1}, \beta Beltrami",
+"memory": "Low O(n)",
+"conv": "Superlinear intrinsic",
+"deriv": "2nd Order",
+"cond": "Geodesic modes",
+"diff": "Geodesic CG",
+"diffFormula": "\Delta_{GC} f = \Hess^{-1} \nabla f \text{ conjugated}",
+"nature": "Diffusion geodesic CG",
+"desc": "CG conjugué géodésique riemannien, Laplacien Beltrami conjugué.",
+"link": "https://en.wikipedia.org/wiki/Conjugate_gradient_method"
+},
+{
+"method": "Geodesic Convex Riemannian Solver",
+"formula": "Follow geodesic flow: \frac{d^2 \gamma}{dt^2} + \Gamma \left( \frac{d\gamma}{dt} \right)^2 = -\Grad f",
+"memory": "Medium O(n)",
+"conv": "Without Euclidean distorsion",
+"deriv": "2nd Order",
+"cond": "Geodesic convex",
+"diff": "Geodesic convex",
+"diffFormula": "\Delta_{GCV} f = \div_{geo} \nabla_{geo} f",
+"nature": "Diffusion geodesic convex",
+"desc": "Solveur convexe géodésique, flots Laplacien riemannien.",
+"link": "https://en.wikipedia.org/wiki/Geodesic"
+},
+{
+"method": "Entropic Bregman Newton Hybrid",
+"formula": "x_{k+1} = argmin <g, y> + D_Breg (y||x_k) + Newton term entropic",
+"memory": "High O(n^2)",
+"conv": "Superlinear dual",
+"deriv": "2nd Order",
+"cond": "Simplex smooth",
+"diff": "Bregman entropique",
+"diffFormula": "\Delta_{EB} f = \div_{Breg} (\nabla f) + entropic reg",
+"nature": "Diffusion Bregman entropique",
+"desc": "Hybride Bregman entropique Newton, divergences régularisées.",
+"link": "https://en.wikipedia.org/wiki/Bregman_divergence"
+},
+{
+"method": "Sinkhorn Iterative Hessian",
+"formula": "Iterative scaling for OT Hessian: H \approx Sinkhorn approx",
+"memory": "Medium O(n^2)",
+"conv": "Entropic coupled",
+"deriv": "2nd Order",
+"cond": "Scalar emergent",
+"diff": "Iterative Sinkhorn",
+"diffFormula": "\Delta_{SI} f = Sinkhorn(\div \nabla f)",
+"nature": "Diffusion iterative Sinkhorn",
+"desc": "Hessien itératif Sinkhorn pour OT, Laplacien scalaire émergent.",
+"link": "https://en.wikipedia.org/wiki/Optimal_transport"
+},
+{
+"method": "Variational KL Hessian Newton",
+"formula": "Newton on KL div: \nabla^2 KL(p||q) for variational",
+"memory": "High O(n^2)",
+"conv": "Latent guided",
+"deriv": "2nd Order",
+"cond": "Distributional",
+"diff": "KL variationnelle",
+"diffFormula": "\Delta_{KL} f = \Hess_{KL} \nabla f",
+"nature": "Diffusion KL variationnelle",
+"desc": "Newton sur KL pour variationnel, Laplacien distributionnel.",
+"link": "https://en.wikipedia.org/wiki/Kullback%E2%80%93Leibler_divergence"
+},
+{
+"method": "Posterior Laplace Mode Optimizer",
+"formula": "\theta_{MAP} = argmax \log p(\theta | data), H = -\nabla^2 \log p",
+"memory": "High O(n^2)",
+"conv": "Covariance diffusive",
+"deriv": "2nd Order",
+"cond": "Log-likelihood",
+"diff": "Posterior mode",
+"diffFormula": "\Delta_{PL} f = - \Hess_{\log lik} \nabla f",
+"nature": "Diffusion posterior mode",
+"desc": "Optimiseur mode Laplacien postérieur, Hessien log-likelihood.",
+"link": "https://en.wikipedia.org/wiki/Maximum_a_posteriori_estimation"
+},
+{
+"method": "Langevin Discrete Diffusion Newton",
+"formula": "x_{k+1} = x_k - \frac{\epsilon}{2} \nabla f(x_k) + \sqrt{\epsilon} z, z \sim N(0,I)",
+"memory": "Low O(n)",
+"conv": "Brownian approx",
+"deriv": "2nd Order discrete",
+"cond": "Diffusion Langevin",
+"diff": "Langevin discrete",
+"diffFormula": "\Delta_L f = \div (\nabla f) + noise term",
+"nature": "Diffusion Langevin discrete",
+"desc": "Newton discret Langevin pour diffusion, score Laplacien.",
+"link": "https://en.wikipedia.org/wiki/Langevin_dynamics"
+},
+{
+"method": "Network Laplacian Spectral Newton",
+"formula": "L = Laplacian of network, Newton with spectral L",
+"memory": "High O(|V|^2)",
+"conv": "Connectivity structural",
+"deriv": "2nd Order spectral",
+"cond": "Edge weighted",
+"diff": "Network spectral",
+"diffFormula": "\Delta_{NL} f = L \div (L \nabla f)",
+"nature": "Diffusion network spectral",
+"desc": "Newton spectral Laplacien réseau, diffusion arêtes pondérées.",
+"link": "https://en.wikipedia.org/wiki/Laplacian_matrix"
+},
+{
+"method": "LiSSA with Sample Variance Reduction",
+"formula": "H^{-1} \approx linear system solve with VR sampling",
+"memory": "Low O(n)",
+"conv": "Linear coherent",
+"deriv": "2nd Order Taylor",
+"cond": "Finite-sum",
+"diff": "LiSSA VR",
+"diffFormula": "\Delta_{Li} f = Taylor^{-1} \div \nabla f",
+"nature": "Diffusion LiSSA VR",
+"desc": "LiSSA variance-réduite sampling, Hessien inverse Taylor.",
+"link": "https://arxiv.org/abs/1807.08714"
+},
+{
+"method": "Second-Order Taylor Hessian Estimator",
+"formula": "\hat{H} = \nabla^2 f(x + \delta) \approx Hess + higher Taylor",
+"memory": "Medium O(n^2)",
+"conv": "Linear Newton approx",
+"deriv": "2nd Order stochastic",
+"cond": "Taylor expanded",
+"diff": "Taylor stochastic",
+"diffFormula": "\Delta_T f = \nabla^2 + O(\delta^3)",
+"nature": "Diffusion Taylor stochastic",
+"desc": "Estimateur Hessien Taylor second-ordre stochastique.",
+"link": "https://en.wikipedia.org/wiki/Taylor_series"
+},
+{
+"method": "Schraudolph Stochastic BFGS",
+"formula": "BFGS with same \xi for all secant: y = \xi (s^T y / s^T s)",
+"memory": "Low O(m n)",
+"conv": "Sublinear improved SGD",
+"deriv": "Quasi-2nd Order",
+"cond": "Stochastic secant",
+"diff": "Schraudolph BFGS",
+"diffFormula": "\Delta_{Sch} f = BFGS_{\xi} \div \nabla f",
+"nature": "Diffusion Schraudolph BFGS",
+"desc": "BFGS stochastique Schraudolph, même \xi pour secant.",
+"link": "https://arxiv.org/abs/cond-mat/0002188"
+},
+{
+"method": "Byrd Stochastic L-BFGS Variant",
+"formula": "L-BFGS updates every L steps, average search directions",
+"memory": "Low O(m n)",
+"conv": "Superlinear average",
+"deriv": "Quasi-2nd Order",
+"cond": "Periodic updates",
+"diff": "Byrd L-BFGS",
+"diffFormula": "\Delta_B f = avg directions \div \nabla f",
+"nature": "Diffusion Byrd L-BFGS",
+"desc": "L-BFGS stochastique Byrd, updates every L itérations.",
+"link": "https://arxiv.org/abs/math/0601141"
+},
+{
+"method": "Broyden Class Linear Combination",
+"formula": "\theta B_{DFP} + (1-\theta) B_{BFGS}, satisfy secant",
+"memory": "Medium O(n^2)",
+"conv": "Generalized secant",
+"deriv": "Quasi-2nd Order",
+"cond": "Multi-dimensional",
+"diff": "Broyden class",
+"diffFormula": "\Delta_{Br} f = \theta \div_{DFP} + (1-\theta) \div_{BFGS}",
+"nature": "Diffusion Broyden class",
+"desc": "Combinaison linéaire DFP-BFGS, contrainte solution secant.",
+"link": "https://en.wikipedia.org/wiki/Broyden_family"
+},
+{
+"method": "SR1 for Indefinite Problems",
+"formula": "B_{k+1} = B_k + \frac{(y - B s)(y - B s)^T}{(y - B s)^T s}",
+"memory": "Medium O(n^2)",
+"conv": "Superlinear indefinite",
+"deriv": "Quasi-2nd Order",
+"cond": "No positivity",
+"diff": "SR1 indefinite",
+"diffFormula": "\Delta_{SR1} f = \div_{indef} (B \nabla f)",
+"nature": "Diffusion SR1 indefinite",
+"desc": "SR1 non positive-definite, pour Laplacien indéfini.",
+"link": "https://en.wikipedia.org/wiki/Symmetric_rank-one_update"
+},
+{
+"method": "Hessian Inverse Direct Estimation",
+"formula": "\hat{B} = direct estimate without inversion, e.g. secant-based",
+"memory": "Low O(n)",
+"conv": "Superlinear cheap",
+"deriv": "Quasi-2nd Order",
+"cond": "Avoid costly inv",
+"diff": "Inverse direct",
+"diffFormula": "\Delta_I f = B \div (\nabla f) \text{ direct}",
+"nature": "Diffusion inverse direct",
+"desc": "Estimation directe inverse Hessien quasi-Newton.",
+"link": "https://en.wikipedia.org/wiki/Inverse_function"
+},
+{
+"method": "Riemannian Smoothing Framework",
+"formula": "Smooth f_\epsilon = f * kernel on manifold, NRO on smooth",
+"memory": "High O(n)",
+"conv": "Stationary nonsmooth",
+"deriv": "1st Order smoothed",
+"cond": "Generalized NRO",
+"diff": "Smoothing Riemannian",
+"diffFormula": "\Delta_{Sm} f = \div_{\epsilon} \nabla_{\epsilon} f",
+"nature": "Diffusion smoothing Riemannian",
+"desc": "Cadre lissage riemannien généralisé NRO, convergence stationnaire.",
+"link": "https://arxiv.org/abs/2102.11023"
+},
+{
+"method": "CP Factorization Riemannian",
+"formula": "Minimize on cone for CP: X = sum u_r \otimes v_r \otimes w_r, Riemannian",
+"memory": "High O(r n)",
+"conv": "Large-scale quadratic",
+"deriv": "2nd Order",
+"cond": "Conic Laplacian",
+"diff": "CP Riemannian",
+"diffFormula": "\Delta_{CP} f = \div_{cone} \nabla f",
+"nature": "Diffusion CP Riemannian",
+"desc": "Application lissage à CP factorization, Laplacien conique.",
+"link": "https://en.wikipedia.org/wiki/CP_decomposition"
+},
+{
+"method": "Primal-Dual Riemannian Interior",
+"formula": "Interior point on manifold: central path primal-dual Riemannian",
+"memory": "High O(n^2)",
+"conv": "Quadratic superlinear",
+"deriv": "2nd Order",
+"cond": "Local global",
+"diff": "Primal-dual intérieur",
+"diffFormula": "\Delta_{PD} f = \div_{int} (\nabla_{dual} f)",
+"nature": "Diffusion primal-dual intérieur",
+"desc": "Méthode intérieur primal-dual riemannien, convergence quadratique.",
+"link": "https://en.wikipedia.org/wiki/Interior-point_method"
+},
+{
+"method": "Retraction-Based Riemannian Family",
+"formula": "Family: x_{k+1} = R_{x_k} (d_k), low cost retraction",
+"memory": "Low O(n)",
+"conv": "General saddle avoided",
+"deriv": "1st Order family",
+"cond": "Iterative low cost",
+"diff": "Retraction family",
+"diffFormula": "\Delta_R f = R^{-1} \div R \nabla f",
+"nature": "Diffusion retraction family",
+"desc": "Famille méthodes retraction riemanniennes, coût itératif bas.",
+"link": "https://epubs.siam.org/doi/10.1137/12086282X"
+},
+{
+"method": "Grassmann Manifold Optimization",
+"formula": "Optimize subspaces on Grassmann: min trace(X^T A X), X ortho",
+"memory": "High O(n^2)",
+"conv": "Polynomial bases",
+"deriv": "2nd Order",
+"cond": "Algebraic varieties",
+"diff": "Grassmann",
+"diffFormula": "\Delta_{Gr} f = P_{Gr} \div \nabla f",
+"nature": "Diffusion Grassmann",
+"desc": "Optimisation Grassmann pour registration, Laplacien polynomial.",
+"link": "https://en.wikipedia.org/wiki/Grassmannian"
+},
+{
+"method": "Standard Riemannian Convergence Extension",
+"formula": "Extend steepest/Newton descent: convergence under curvature bounds",
+"memory": "Medium O(n)",
+"conv": "With constraints",
+"deriv": "1st-2nd Order",
+"cond": "Standard manifold",
+"diff": "Standard Riemannian",
+"diffFormula": "\Delta_{St} f = \div_{std} \nabla f",
+"nature": "Diffusion standard Riemannian",
+"desc": "Extension analyse convergence descente raide Newton riemannien.",
+"link": "https://www.sciencedirect.com/science/article/abs/pii/S0168927425000698"
+},
+{
+"method": "Riemannian Adaptive Framework General",
+"formula": "Stochastic adaptive step on manifold, bounded upper-Hessian",
+"memory": "Low O(n)",
+"conv": "Diminishing step",
+"deriv": "1st Order adaptive",
+"cond": "Manifolds general",
+"diff": "Adaptive general",
+"diffFormula": "\Delta_{AG} f = \eta_k \div \nabla f",
+"nature": "Diffusion adaptive general",
+"desc": "Cadre adaptatif riemannien stochastique, upper-Hessian bounded.",
+"link": "https://arxiv.org/abs/2402.18308"
+},
+{
+"method": "Cartesian Product Riemannian AMSGrad",
+"formula": "AMSGrad on product manifolds: m_k = max past v, update with m",
+"memory": "Medium O(n)",
+"conv": "No step decay",
+"deriv": "1st Order",
+"cond": "Max adaptation",
+"diff": "Cartesian AMSGrad",
+"diffFormula": "\Delta_{CA} f = \max \div \nabla f",
+"nature": "Diffusion Cartesian AMSGrad",
+"desc": "AMSGrad produits cartésiens variétés, Laplacien max adaptation.",
+"link": "https://arxiv.org/abs/1904.03590"
+},
+{
+"method": "Riemannian cRMSProp Application",
+"formula": "Coordinate-wise RMSProp on Riemannian: adaptive moments per coord",
+"memory": "Low O(n)",
+"conv": "Variety applications",
+"deriv": "1st Order",
+"cond": "Laplacian moments",
+"diff": "cRMSProp",
+"diffFormula": "\Delta_{cR} f = \div (\sqrt{E[g^2]} \nabla f)",
+"nature": "Diffusion cRMSProp",
+"desc": "cRMSProp riemannien, moments adaptatifs Laplacien.",
+"link": "https://en.wikipedia.org/wiki/RMSprop"
+},
+{
+"method": "Sharpness-Aware Riemannian SAM",
+"formula": "min max_{||e||<=\rho} f(x + e), on manifold perturbation",
+"memory": "Low O(n)",
+"conv": "Generalization minima",
+"deriv": "1st Order sharpness",
+"cond": "Laplacian region",
+"diff": "SAM sharpness",
+"diffFormula": "\Delta_{SAM} f = \max_{pert} \div \nabla f",
+"nature": "Diffusion SAM sharpness",
+"desc": "SAM riemannien, perturbation région Laplacienne.",
+"link": "https://arxiv.org/abs/2010.01412"
+},
+{
+"method": "Natural Gradient Riemannian Descent",
+"formula": "x_{k+1} = \Retr ( - F^{-1} \Grad f ), F Fisher Riemannian",
+"memory": "High O(n^2)",
+"conv": "Info-geo",
+"deriv": "Quasi-2nd Order",
+"cond": "Natural metric",
+"diff": "Natural RNGD",
+"diffFormula": "\Delta_{NR} f = F^{-1} \div (F \nabla f)",
+"nature": "Diffusion natural RNGD",
+"desc": "RNGD, Fisher métrique Laplacien naturel.",
+"link": "https://en.wikipedia.org/wiki/Natural_gradient"
+},
+{
+"method": "ROM Hessian Optimal Control",
+"formula": "Reduced order model Hess for PDE control: H_{ROM} approx full H",
+"memory": "Low O(r^2)",
+"conv": "Snapshot adjoint",
+"deriv": "2nd Order",
+"cond": "PDE optimal",
+"diff": "ROM control",
+"diffFormula": "\Delta_{ROM} f = \Pi_{ROM} \div \nabla f",
+"nature": "Diffusion ROM control",
+"desc": "Approximation ROM Hessien contrôle optimal PDE.",
+"link": "https://en.wikipedia.org/wiki/Reduced_order_modeling"
+},
+{
+"method": "Stochastic Quasi-Newton Click-Through",
+"formula": "SQN for CTR prediction: B updates on stochastic gradients",
+"memory": "Medium O(m n)",
+"conv": "Scalable ad",
+"deriv": "Quasi-2nd Order",
+"cond": "Stochastic scalable",
+"diff": "SQN application",
+"diffFormula": "\Delta_{SQC} f = B \div g_{CTR}",
+"nature": "Diffusion SQN application",
+"desc": "SQN pour prédiction click-through, gradients stochastiques.",
+"link": "https://arxiv.org/abs/1705.07061"
+},
+  {
+    "method": "Riemannian Robbins-Monro Abstract",
+    "formula": "x_{k+1}=\\exp_{x_k}(-\\alpha_k \\nabla f(x_k)) + \\epsilon_k",
+    "memory": "Low O(n)",
+    "conv": "Linear",
+    "deriv": "1st Order",
+    "cond": "Stable (manifold)",
+    "diff": "RRM itératif exponential map, surrogate Laplacien.",
+    "diffFormula": "\\Delta_{RRM} f=\\mathrm{div}_{M}(\\nabla_M f)",
+    "nature": "Diffusion RRM abstract — Propagation stochastic approximation manifold.",
+    "desc": "Algorithme stochastique sur variétés riemanniennes, généralisant Robbins-Monro.",
+    "link": "https://arxiv.org/abs/2206.06795"
+  },
+  {
+    "method": "Hessian Averaging Fast Unconstrained",
+    "formula": "\\tilde{H}_t = w_{t-1}/w_t \\tilde{H}_{t-1} + (1 - w_{t-1}/w_t) \\hat{H}_t",
+    "memory": "Medium O(n^2)",
+    "conv": "Superlinear",
+    "deriv": "2nd Order",
+    "cond": "Good (averaged Hessian)",
+    "diff": "Moyennage Hessien subsampé Newton inexact.",
+    "diffFormula": "\\Delta_{HA} f=\\operatorname{Tr}(\\tilde{H})",
+    "nature": "Diffusion averaging fast — Propagation gradient inexact fixed cost.",
+    "desc": "Moyennage d'Hessiennes stochastiques pour optimisation rapide sans contraintes.",
+    "link": "https://arxiv.org/pdf/2204.09266.pdf"
+  },
+  {
+    "method": "Quasi-Newton Stochastic Gradient Noise",
+    "formula": "x_{k+1} = x_k - \\alpha H_k^{-1} g(x_k) + \\beta_k",
+    "memory": "Medium O(n^2)",
+    "conv": "Superlinear",
+    "deriv": "Quasi-2nd Order",
+    "cond": "Robust (noise-tolerant)",
+    "diff": "Quasi-Newton avec même bruit consecutive, secant condition.",
+    "diffFormula": "\\Delta_{QN} f = H^{-1} \\nabla \\cdot (H \\nabla f)",
+    "nature": "Diffusion noise same — Propagation sublinéaire vs SGD.",
+    "desc": "Quasi-Newton tolérant au bruit pour gradients stochastiques.",
+    "link": "https://epubs.siam.org/doi/10.1137/20M1373190"
+  },
+  {
+    "method": "Riemannian Geodesics Steepest Newton",
+    "formula": "x_{k+1}=\\exp_{x_k}(-H_k^{-1} \\nabla f(x_k))",
+    "memory": "High O(n^2)",
+    "conv": "Quadratic",
+    "deriv": "2nd Order",
+    "cond": "Good (geodesic)",
+    "diff": "Descente raide géodésiques, quasi-Newton geodesics.",
+    "diffFormula": "\\Delta_{RG} f=\\mathrm{div}_g (\\nabla_g f)",
+    "nature": "Diffusion geodesics Riemannian — Propagation sous-variétés Rn.",
+    "desc": "Newton raide le long des géodésiques sur variétés riemanniennes.",
+    "link": "https://arxiv.org/abs/2502.19929"
+  },
+  {
+    "method": "Nested-Set Derivative-Free Hessian",
+    "formula": "H_{NS} = (T^{-1} S^T \\nabla^2 f S T^{-1})",
+    "memory": "Medium O(n^2)",
+    "conv": "Superlinear",
+    "deriv": "2nd Order (DFO)",
+    "cond": "Excellent (order-N)",
+    "diff": "Approximation nested-set DFO, ordre-N accuracy.",
+    "diffFormula": "\\Delta_{NS} f=\\operatorname{Tr}(H_{NS})",
+    "nature": "Diffusion derivative-free — Propagation simplex gradient generalized.",
+    "desc": "Approximation d'Hessienne sans dérivées via ensembles imbriqués.",
+    "link": "https://arxiv.org/abs/2011.02584"
+  },
+  {
+    "method": "Stochastic Quasi-Newton Efficient Robust",
+    "formula": "B_{k+1} = B_k + (y_k - B_k s_k) (s_k^T / s_k^T B_k s_k)",
+    "memory": "Low O(m n)",
+    "conv": "Superlinear",
+    "deriv": "Quasi-2nd Order",
+    "cond": "Stable (large-scale)",
+    "diff": "SQN BFGS limité, pour minimisation log-loss.",
+    "diffFormula": "\\Delta_{SQN} f = B^{-1} \\nabla \\cdot (B \\nabla f)",
+    "nature": "Diffusion efficient SQN — Propagation scalable robuste.",
+    "desc": "Quasi-Newton stochastique efficace et robuste pour grands échelles.",
+    "link": "https://epubs.siam.org/doi/10.1137/140954362"
+  },
+  {
+    "method": "Spectral CG Riemannian Accelerated",
+    "formula": "d_k = -\\nabla f(x_k) + \\beta_k d_{k-1}, \\beta_k = \\frac{\\nabla f(x_k)^T H_k \\nabla f(x_k)}{d_{k-1}^T H_{k-1} d_{k-1}}",
+    "memory": "Low O(n)",
+    "conv": "Superlinear",
+    "deriv": "2nd Order",
+    "cond": "Good (accelerated)",
+    "diff": "SCG accéléré Riemannian, optimisation manifolds.",
+    "diffFormula": "\\Delta_{SCG} f=\\operatorname{Tr}(H_k)",
+    "nature": "Diffusion spectral CG — Propagation structured problems.",
+    "desc": "Conjugé gradient spectral accéléré sur variétés riemanniennes.",
+    "link": "https://www.sciencedirect.com/science/article/pii/S0377042724007301"
+  },
+  {
+    "method": "Nested-Set Hessian DFO Routine",
+    "formula": "H = A^{-1} B, A = T^T S, B = \\nabla^2 f approx",
+    "memory": "Medium O(n^2)",
+    "conv": "Linear",
+    "deriv": "2nd Order (DFO)",
+    "cond": "Stable (routine)",
+    "diff": "Second-ordre nested-set pour routines DFO.",
+    "diffFormula": "\\Delta_{DFO} f=\\mathrm{div}(H \\nabla f)",
+    "nature": "Diffusion DFO routine — Propagation error bound radius.",
+    "desc": "Routine DFO avec approximation Hessienne nested-set.",
+    "link": "https://arxiv.org/abs/2011.02584"
+  },
+  {
+    "method": "Stochastic Newton Quasi Large-Scale",
+    "formula": "x_{k+1} = x_k - \\alpha B_k^{-1} \\nabla f(x_k, \\xi_k)",
+    "memory": "Medium O(n^2)",
+    "conv": "Superlinear",
+    "deriv": "Quasi-2nd Order",
+    "cond": "Good (block)",
+    "diff": "Newton quasi stochastique block BFGS.",
+    "diffFormula": "\\Delta_{SNQ} f = B^{-1} \\operatorname{Tr}(H)",
+    "nature": "Diffusion large-scale — Propagation convex stochastic.",
+    "desc": "Newton quasi-stochastique pour optimisation à grande échelle.",
+    "link": "https://arxiv.org/abs/2409.16971"
+  },
+  {
+    "method": "Limited Memory Quasi-Newton Eigenvalue",
+    "formula": "B_{k+1} = V_k^T B_k V_k + \\rho_k y_k y_k^T",
+    "memory": "Low O(m n)",
+    "conv": "Superlinear",
+    "deriv": "Quasi-2nd Order",
+    "cond": "Stable (low-rank)",
+    "diff": "Quasi-Newton limité eigenvalue, symmetric low-rank.",
+    "diffFormula": "\\Delta_{LM} f = \\lambda \\operatorname{Tr}(B)",
+    "nature": "Diffusion limited eigenvalue — Propagation indefinite scalable.",
+    "desc": "Quasi-Newton à mémoire limitée avec eigenvalues.",
+    "link": "https://en.wikipedia.org/wiki/BFGS_method"
+  },
+  {
+    "method": "Stochastic Cubic Momentum Improving",
+    "formula": "x_{k+1} = x_k - \\alpha \\nabla f + \\beta (x_k - x_{k-1}) + \\gamma \\|H\\|^{1/3}",
+    "memory": "Low O(n)",
+    "conv": "Superlinear",
+    "deriv": "Quasi-2nd Order",
+    "cond": "Good (momentum)",
+    "diff": "Cubic stochastique momentum version spéciale.",
+    "diffFormula": "\\Delta_{SCM} f = \\mathrm{cubic}(H \\nabla f)",
+    "nature": "Diffusion cubic momentum — Propagation non-convex stabilized.",
+    "desc": "Amélioration cubique stochastique avec momentum.",
+    "link": "https://arxiv.org/pdf/1912.04456.pdf"
+  },
+  {
+    "method": "Neural Network Second-Order Acceleration",
+    "formula": "\\theta_{k+1} = \\theta_k - H^{-1} \\nabla L(\\theta_k)",
+    "memory": "High O(n^2)",
+    "conv": "Quadratic",
+    "deriv": "2nd Order",
+    "cond": "Stable (VI)",
+    "diff": "Second-ordre pour VI riemanniennes ML.",
+    "diffFormula": "\\Delta_{NN} f = \\operatorname{Tr}(H_{ML})",
+    "nature": "Diffusion neural acceleration — Propagation variational inequalities.",
+    "desc": "Accélération second-ordre pour réseaux neuronaux.",
+    "link": "https://www.cs.toronto.edu/~jmartens/docs/HF_book_chapter.pdf"
+  },
+  {
+    "method": "Accelerated Structured SQN SLDA",
+    "formula": "B_k = diag(BFGS_k), x_{k+1} = x_k - \\alpha B_k^{-1} g_k",
+    "memory": "Medium O(n)",
+    "conv": "Superlinear",
+    "deriv": "Quasi-2nd Order",
+    "cond": "Good (diagonal)",
+    "diff": "SQN structuré SLDA second-ordre diagonal.",
+    "diffFormula": "\\Delta_{SLDA} f = \\sum \\lambda_i \\nabla_i f",
+    "nature": "Diffusion structured SLDA — Propagation secant-like accelerated.",
+    "desc": "SQN structuré accéléré pour SLDA.",
+    "link": "https://arxiv.org/pdf/1401.7020.pdf"
+  },
+  {
+    "method": "Stochastic Newton-Raphson Version",
+    "formula": "x_{k+1} = x_k - J^{-1} r(x_k, \\xi_k)",
+    "memory": "High O(n^2)",
+    "conv": "Quadratic",
+    "deriv": "2nd Order",
+    "cond": "Stable (SPSA)",
+    "diff": "SPSA second-ordre loss gradient Hessien.",
+    "diffFormula": "\\Delta_{NR} f = J^{-1} \\nabla \\cdot J",
+    "nature": "Diffusion Newton-Raphson — Propagation iteration estimation.",
+    "desc": "Version stochastique de Newton-Raphson.",
+    "link": "https://pubmed.ncbi.nlm.nih.gov/40530926/"
+  },
+  {
+    "method": "Second-Order Noise Sensitive",
+    "formula": "x_{k+1} = x_k - \\alpha H_k \\nabla f + \\eta \\epsilon_k",
+    "memory": "Medium O(n^2)",
+    "conv": "Superlinear",
+    "deriv": "2nd Order",
+    "cond": "Poor (noise)",
+    "diff": "Second-ordre sensible bruit batch SGD.",
+    "diffFormula": "\\Delta_{SN} f = H \\nabla \\cdot (\\epsilon \\nabla f)",
+    "nature": "Diffusion noise second-order — Propagation curvature correction.",
+    "desc": "Méthode second-ordre sensible au bruit.",
+    "link": "https://optimization-online.org/wp-content/uploads/2020/10/8057.pdf"
+  },
+  {
+    "method": "Quasi-Newton Forward-Backward Higher",
+    "formula": "x_{k+1} = prox_{\\alpha g}(x_k - \\alpha B_k \\nabla f(x_k))",
+    "memory": "Medium O(n^2)",
+    "conv": "Superlinear",
+    "deriv": "Quasi-2nd Order",
+    "cond": "Good (nonsmooth)",
+    "diff": "Quasi-Newton splitting higher-order secant.",
+    "diffFormula": "\\Delta_{FB} f = B^{-1} \\partial (\\nabla f + g)",
+    "nature": "Diffusion forward-backward — Propagation nonsmooth composite.",
+    "desc": "Quasi-Newton forward-backward d'ordre supérieur.",
+    "link": "https://en.wikipedia.org/wiki/Proximal_gradient_methods_for_learning"
+  },
+  {
+    "method": "Stochastic Second-Order Global Bounds",
+    "formula": "x_{k+1} = P_V (x_k - H_k \\nabla f)",
+    "memory": "High O(n^2)",
+    "conv": "Superlinear",
+    "deriv": "2nd Order",
+    "cond": "Stable (subspaces)",
+    "diff": "Second-ordre stochastique subspaces momentum.",
+    "diffFormula": "\\Delta_{SSO} f = \\mathrm{proj}_V \\operatorname{Tr}(H)",
+    "nature": "Diffusion global subspaces — Propagation nonconvex bounds.",
+    "desc": "Second-ordre stochastique avec bornes globales.",
+    "link": "https://arxiv.org/pdf/2206.06795.pdf"
+  },
+  {
+    "method": "Greedy Quasi-Newton Storage",
+    "formula": "B_{k+1} = argmin_B \\|y - B s\\| s.t. storage limit",
+    "memory": "Low O(m n)",
+    "conv": "Linear",
+    "deriv": "Quasi-2nd Order",
+    "cond": "Good (greedy)",
+    "diff": "Greedy quasi-Newton previous Hessien storage.",
+    "diffFormula": "\\Delta_{GQN} f = \\min \\operatorname{Tr}(B - H)",
+    "nature": "Diffusion greedy storage — Propagation rate matching first-order.",
+    "desc": "Quasi-Newton gourmand en stockage.",
+    "link": "https://www.diva-portal.org/smash/get/diva2:1629847/FULLTEXT01.pdf"
+  },
+  {
+    "method": "Adaptive Gradient Sampling Hessian",
+    "formula": "H_k = \\frac{1}{N} \\sum \\nabla^2 f(x_i), x_i \\sim samples",
+    "memory": "Medium O(n^2)",
+    "conv": "Superlinear",
+    "deriv": "2nd Order",
+    "cond": "Stable (adaptive)",
+    "diff": "Sampling gradient adaptatif Hessien averaging.",
+    "diffFormula": "\\Delta_{AGS} f = \\mathbb{E} [\\operatorname{Tr}(H)]",
+    "nature": "Diffusion gradient sampling — Propagation superlinear local.",
+    "desc": "Échantillonnage adaptatif de gradients pour Hessienne.",
+    "link": "https://optimization-online.org/wp-content/uploads/2024/08/TomRaghu-19.pdf"
+  },
+  {
+    "method": "Riemannian Optimization Convergence",
+    "formula": "x_{k+1} = \\exp_{x_k} (-H^{-1} \\nabla f)",
+    "memory": "High O(n^2)",
+    "conv": "Quadratic",
+    "deriv": "2nd Order",
+    "cond": "Good (convergence)",
+    "diff": "Convergence extension steepest Newton Riemannian.",
+    "diffFormula": "\\Delta_{ROC} f = \\mathrm{div}_M (H^{-1} \\nabla f)",
+    "nature": "Diffusion convergence Riemannian — Propagation standard case.",
+    "desc": "Convergence en optimisation riemannienne.",
+    "link": "https://arxiv.org/html/2506.09297v1"
+  },
+  {
+    "method": "General Riemannian Adaptive Stochastic",
+    "formula": "x_{k+1} = \\exp_{x_k} (-\\alpha_k \\nabla f(x_k, \\xi_k))",
+    "memory": "Low O(n)",
+    "conv": "Superlinear",
+    "deriv": "1st Order",
+    "cond": "Stable (L-smooth)",
+    "diff": "Cadre riemannien adaptatif stochastique L-smooth.",
+    "diffFormula": "\\Delta_{GRAS} f = \\mathrm{adapt} \\nabla_M f",
+    "nature": "Diffusion general adaptive — Propagation matrix manifolds.",
+    "desc": "Cadre riemannien adaptatif stochastique général.",
+    "link": "https://epubs.siam.org/doi/10.1137/22M1509643"
+  },
+  {
+    "method": "Modified Riemannian AMSGrad",
+    "formula": "m_k = \\beta m_{k-1} + (1-\\beta) g_k, x_{k+1} = \\exp(-\\eta / \\sqrt{v_k}) m_k",
+    "memory": "Low O(n)",
+    "conv": "Linear",
+    "deriv": "1st Order",
+    "cond": "Good (AMSGrad)",
+    "diff": "RAMSGrad modifié produits cartésiens.",
+    "diffFormula": "\\Delta_{MRA} f = \\sqrt{v} \\nabla f",
+    "nature": "Diffusion modified AMSGrad — Propagation cartesian products.",
+    "desc": "AMSGrad modifié riemannien.",
+    "link": "https://arxiv.org/abs/2206.06795"
+  },
+  {
+    "method": "Riemannian Stochastic Variance Reduction",
+    "formula": "g_k = \\nabla f_i(x_k) - \\nabla f_i(\\tilde{x}) + \\nabla F(\\tilde{x})",
+    "memory": "Medium O(n)",
+    "conv": "Linear",
+    "deriv": "1st Order",
+    "cond": "Stable (VR)",
+    "diff": "RSVRG variance reduction Riemannian.",
+    "diffFormula": "\\Delta_{RSVR} f = \\mathrm{var red} \\nabla_M f",
+    "nature": "Diffusion stochastic VR — Propagation snapshot full.",
+    "desc": "Réduction de variance stochastique riemannienne.",
+    "link": "https://arxiv.org/abs/2206.06795"
+  },
+  {
+    "method": "ROM Hessian Inexact Newton",
+    "formula": "x_{k+1} = x_k - \\tilde{H}_{ROM}^{-1} \\nabla f",
+    "memory": "Medium O(r^2)",
+    "conv": "Superlinear",
+    "deriv": "2nd Order (inexact)",
+    "cond": "Good (PDE)",
+    "diff": "Approximation ROM Hessien Newton inexact PDE.",
+    "diffFormula": "\\Delta_{ROM} f = \\mathrm{ROM} \\operatorname{Tr}(H)",
+    "nature": "Diffusion ROM inexact — Propagation objective gradient original.",
+    "desc": "Newton inexact avec Hessienne ROM pour PDE.",
+    "link": "https://arxiv.org/pdf/2204.09266.pdf"
+  },
+  {
+    "method": "Stochastic Quasi-Newton Developments",
+    "formula": "B_{k} = update_{BFGS}(B_{k-1}, s_k, y_k^{stoch})",
+    "memory": "Medium O(n^2)",
+    "conv": "Superlinear",
+    "deriv": "Quasi-2nd Order",
+    "cond": "Stable (dev)",
+    "diff": "Développements SQN convergence acceleration.",
+    "diffFormula": "\\Delta_{SQND} f = B \\nabla \\cdot update",
+    "nature": "Diffusion developments SQN — Propagation second-order exploitation.",
+    "desc": "Développements récents en quasi-Newton stochastique.",
+    "link": "https://ieeexplore.ieee.org/document/9207765/"
+  },
+  {
+    "method": "Approximation Hessian Lagrangian Remedy",
+    "formula": "H_{AL} = H + \\lambda \\nabla^2 L",
+    "memory": "High O(n^2)",
+    "conv": "Quadratic",
+    "deriv": "2nd Order",
+    "cond": "Good (singular)",
+    "diff": "Remplacement Hessien augmented Lagrangian SQP.",
+    "diffFormula": "\\Delta_{AL} f = \\lambda \\operatorname{Tr}(H_L)",
+    "nature": "Diffusion Lagrangian remedy — Propagation singular conditions.",
+    "desc": "Remède lagrangien pour approximation Hessienne.",
+    "link": "https://en.wikipedia.org/wiki/Sequential_quadratic_programming"
+  },
+  {
+    "method": "Stochastic Quasi-Newton Nonconvex Stochastic",
+    "formula": "x_{k+1} = x_k - \\alpha B_k \\nabla f_{noisy}",
+    "memory": "Medium O(n^2)",
+    "conv": "Sublinear",
+    "deriv": "Quasi-2nd Order",
+    "cond": "Poor (nonconvex)",
+    "diff": "SQN nonconvex noisy gradients.",
+    "diffFormula": "\\Delta_{SQNN} f = B^{-1} \\nabla_{noisy} f",
+    "nature": "Diffusion nonconvex stochastic — Propagation gradient information.",
+    "desc": "Quasi-Newton stochastique pour non-convexe.",
+    "link": "https://arxiv.org/pdf/1401.7020.pdf"
+  },
+  {
+    "method": "Diagonal Secant Hessian Quasi",
+    "formula": "B_k = diag( y_k / s_k ) + updates",
+    "memory": "Low O(n)",
+    "conv": "Linear",
+    "deriv": "Quasi-2nd Order",
+    "cond": "Stable (diagonal)",
+    "diff": "Approximation diagonale secant quasi-Newton.",
+    "diffFormula": "\\Delta_{DSH} f = \\sum diag(H) \\nabla_i f",
+    "nature": "Diffusion diagonal secant — Propagation low-rank updates.",
+    "desc": "Quasi-Hessienne sécante diagonale.",
+    "link": "https://en.wikipedia.org/wiki/BFGS_method"
+  },
+  {
+    "method": "Momentum Special Stochastic Second-Order",
+    "formula": "v_k = \\beta v_{k-1} + H_k \\nabla f, x_{k+1} = x_k - \\alpha v_k",
+    "memory": "Medium O(n^2)",
+    "conv": "Superlinear",
+    "deriv": "2nd Order",
+    "cond": "Good (special)",
+    "diff": "Momentum spécial cubic stochastic second-order.",
+    "diffFormula": "\\Delta_{MSSO} f = \\beta \\operatorname{Tr}(H v)",
+    "nature": "Diffusion special momentum — Propagation general non-convex.",
+    "desc": "Momentum spécial second-ordre stochastique.",
+    "link": "https://arxiv.org/pdf/1912.04456.pdf"
+  },
+  {
+    "method": "Variational Riemannian Interior Point",
+    "formula": "x_{k+1} = \\exp ( - \\nabla \\phi_{IP} )",
+    "memory": "High O(n^2)",
+    "conv": "Quadratic",
+    "deriv": "2nd Order",
+    "cond": "Stable (interior)",
+    "diff": "Interior point riemannien primal-dual quadratic.",
+    "diffFormula": "\\Delta_{VRIP} f = \\mathrm{IP} \\nabla^2 \\phi",
+    "nature": "Diffusion variational interior — Propagation linear search global.",
+    "desc": "Point intérieur variationnel riemannien.",
+    "link": "https://en.wikipedia.org/wiki/Interior-point_method"
+  },
+  {
+    "method": "Avoidance Riemannian Stochastic Methods",
+    "formula": "x_{k+1} = \\exp_{x_k} (-\\nabla f + \\epsilon surrogate)",
+    "memory": "Low O(n)",
+    "conv": "Linear",
+    "deriv": "1st Order",
+    "cond": "Good (saddle avoidance)",
+    "diff": "Méthodes stochastiques riemanniennes selles stricts.",
+    "diffFormula": "\\Delta_{ARM} f = \\mathrm{avoid} \\nabla_M f",
+    "nature": "Diffusion avoidance stochastic — Propagation surrogate gradients.",
+    "desc": "Méthodes stochastiques riemanniennes évitant les selles.",
+    "link": "https://papers.nips.cc/paper_files/paper/2023/file/5e809ba53f34d9170386ebfc8b60300f-Supplemental-Conference.pdf"
+  },
+  {
+    "method": "Unconstrained Hessian Averaging Subsamped",
+    "formula": "\\tilde{H} = \\sum w_i H_i^{subsamp}",
+    "memory": "Medium O(n^2)",
+    "conv": "Superlinear",
+    "deriv": "2nd Order",
+    "cond": "Adaptive (norm)",
+    "diff": "Moyennage Hessien subsampé unconstrained.",
+    "diffFormula": "\\Delta_{UHA} f = \\sum w \\operatorname{Tr}(H_{sub})",
+    "nature": "Diffusion unconstrained subsamped — Propagation norm condition adaptive.",
+    "desc": "Moyennage Hessien subsampé sans contraintes.",
+    "link": "https://www.stat.berkeley.edu/~mmahoney/pubs/hessian_averaging_MathProg.pdf"
+  },
+  {
+    "method": "Quasi-Newton Methods Stochastic Adaptation",
+    "formula": "B_{k+1} = adapt(B_k, s_k, y_k^{consec})",
+    "memory": "Low O(m n)",
+    "conv": "Superlinear",
+    "deriv": "Quasi-2nd Order",
+    "cond": "Stable (LBFGS)",
+    "diff": "Adaptation quasi-Newton stochastic consecutive.",
+    "diffFormula": "\\Delta_{QNMA} f = 3 \\ changes B \\nabla f",
+    "nature": "Diffusion adaptation stochastic — Propagation LBFGS changes three.",
+    "desc": "Adaptation stochastique des méthodes quasi-Newton.",
+    "link": "https://www.jmlr.org/papers/volume26/23-1565/23-1565.pdf"
+  },
+  {
+    "method": "Riemannian Manifolds Optimization Introduction",
+    "formula": "x_{k+1} = R_{x_k} (-\\alpha \\grad f(x_k))",
+    "memory": "Low O(n)",
+    "conv": "Linear",
+    "deriv": "1st Order",
+    "cond": "Good (geodesics)",
+    "diff": "Introduction optimisation riemannienne applications.",
+    "diffFormula": "\\Delta_{RMO} f = \\mathrm{Retr} \\nabla f",
+    "nature": "Diffusion manifolds introduction — Propagation geodesics along.",
+    "desc": "Introduction à l'optimisation sur variétés riemanniennes.",
+    "link": "https://www.math.fsu.edu/~whuang2/pdf/slides_2015-6_visit.pdf"
+  },
+  {
+    "method": "Hessian Approximations Nested-Set",
+    "formula": "H_{NS} \\approx \\nabla^2 f via S, T sets",
+    "memory": "Medium O(n^2)",
+    "conv": "Superlinear",
+    "deriv": "2nd Order",
+    "cond": "Excellent (identities)",
+    "diff": "Approximations Hessien nested-set DFO.",
+    "diffFormula": "\\Delta_{HAN} f = \\nabla^2_{calc} f",
+    "nature": "Diffusion approximations nested — Propagation calculus identities.",
+    "desc": "Approximations Hessienne nested-set.",
+    "link": "https://arxiv.org/abs/2011.02584"
+  },
+  {
+    "method": "Large-Scale Optimization Stochastic Quasi-Newton",
+    "formula": "x_{k+1} = x_k - L-BFGS^{-1} \\nabla_{mini-batch}",
+    "memory": "Low O(m n)",
+    "conv": "Superlinear",
+    "deriv": "Quasi-2nd Order",
+    "cond": "Scalable (limited)",
+    "diff": "Optimisation large-scale SQN efficient.",
+    "diffFormula": "\\Delta_{LSO} f = L-BFGS \\nabla f",
+    "nature": "Diffusion large-scale optimization — Propagation limited BFGS.",
+    "desc": "Optimisation à grande échelle avec quasi-Newton stochastique.",
+    "link": "https://arxiv.org/pdf/1401.7020.pdf"
+  },
+  {
+    "method": "Riemannian Manifolds Spectral CG Algorithm",
+    "formula": "d_k = -g_k + \\beta \\theta H d_{k-1}",
+    "memory": "Low O(n)",
+    "conv": "Superlinear",
+    "deriv": "2nd Order",
+    "cond": "Accelerated",
+    "diff": "Algorithme SCG spectral Riemannian.",
+    "diffFormula": "\\Delta_{RMSC} f = \\theta \\operatorname{Tr}(H d)",
+    "nature": "Diffusion manifolds spectral — Propagation accelerated structured.",
+    "desc": "Algorithme CG spectral sur variétés riemanniennes.",
+    "link": "https://www.sciencedirect.com/science/article/pii/S0377042724007301"
+  },
+  {
+    "method": "Hessian Approximations Novel Limited Memory",
+    "formula": "H_k = V^T B V + low-rank updates",
+    "memory": "Low O(m n)",
+    "conv": "Superlinear",
+    "deriv": "Quasi-2nd Order",
+    "cond": "Good (novel)",
+    "diff": "Approximations Hessien novel limited memory.",
+    "diffFormula": "\\Delta_{HANLM} f = \\mathrm{low-rank} \\nabla^2 f",
+    "nature": "Diffusion novel limited — Propagation quasi-Newton methods.",
+    "desc": "Nouvelles approximations Hessienne à mémoire limitée.",
+    "link": "https://www.diva-portal.org/smash/get/diva2:1629847/FULLTEXT01.pdf"
+  },
+  {
+    "method": "Improving Stochastic Cubic Newton Momentum",
+    "formula": "x_{k+1} = x_k - (H^{1/3} + momentum) \\nabla f",
+    "memory": "Medium O(n^2)",
+    "conv": "Superlinear",
+    "deriv": "2nd Order",
+    "cond": "Stable (improving)",
+    "diff": "Amélioration cubic Newton stochastique momentum.",
+    "diffFormula": "\\Delta_{ISCN} f = H^{1/3} \\operatorname{Tr}(m)",
+    "nature": "Diffusion improving cubic — Propagation second-order methods.",
+    "desc": "Amélioration de Newton cubique stochastique avec momentum.",
+    "link": "https://arxiv.org/pdf/1912.04456.pdf"
+  }
       ];
 
     const tbody = document.getElementById('tableBody');
@@ -404,16 +2916,6 @@
     async function typeset(){
       if (window.MathJax && MathJax.typesetPromise) {
         await MathJax.typesetPromise();
-        // Force resize après typeset pour scaling
-        setTimeout(() => {
-          document.querySelectorAll('.tex-inline .mjx-container > svg').forEach(svg => {
-            const container = svg.parentElement;
-            if (svg.getBoundingClientRect().width > container.getBoundingClientRect().width) {
-              const scale = container.getBoundingClientRect().width / svg.getBoundingClientRect().width;
-              svg.style.transform = `scale(${scale < 0.85 ? 0.85 : scale})`;
-            }
-          });
-        }, 100);
       }
     }
 
