@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="fr" data-theme="light">
 <head>
@@ -117,7 +116,17 @@
     tbody tr { background:var(--bg-secondary); transition:background .15s ease; }
     tbody tr:nth-child(even) { background:var(--bg-tertiary); }
     tbody tr:hover { background:var(--bg-primary); }
+	mjx-container {
+	  overflow-x: auto;
+	  overflow-y: hidden;
+	  text-align: left !important;
+	  max-width: 100%;
+	}
 
+	mjx-container svg {
+	  height: auto !important;
+	  max-width: 100%;
+	}
     td {
       padding:12px; border-bottom:1px solid var(--border-color);
       font-size:.92rem; color:var(--text-primary); vertical-align:top;
@@ -230,7 +239,7 @@
     function texSpan(texString){
       // heuristique: si la chaîne est longue, on ajoute .long pour casser en block
       const long = texString.length > 80 ? ' long' : '';
-      return `<span class="tex-inline${long}">\\(${texString}\\)</span>`;
+  return `<span class="tex-inline${long}">\( ${texString} \)</span>`;
     }
 
     const dataRows = [
@@ -2919,7 +2928,9 @@
         await MathJax.typesetPromise();
       }
     }
-
+    if (window.MathJax && MathJax.typesetPromise) {
+	  MathJax.typesetPromise();
+	}
     async function render(){
       tbody.innerHTML = view.map(rowHTML).join('');
       await typeset();
