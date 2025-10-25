@@ -9,7 +9,6 @@
   <script>
     window.MathJax = {
       tex: { inlineMath: [['\\(','\\)'], ['\\[','\\]']] },
-      options: { renderActions: { addMenu: [] } },
       svg: { fontCache: 'global' }
     };
   </script>
@@ -18,90 +17,88 @@
   <style>
     * { margin:0; padding:0; box-sizing:border-box; }
     :root {
-      --bg-primary:#f5f7fa; --bg-secondary:#ffffff; --bg-tertiary:#e8ecf3;
-      --text-primary:#1a1d2e; --text-secondary:#4a5568;
-      --accent-primary:#0066cc; --accent-secondary:#6b46c1;
-      --accent-gradient:linear-gradient(135deg,#0066cc 0%,#6b46c1 100%);
-      --border-color:rgba(0,102,204,0.2);
-      --shadow:0 8px 24px rgba(0,102,204,0.08);
-      --hover-shadow:0 12px 36px rgba(0,102,204,0.12);
+      --bg-primary:#f7f9fc; --bg-secondary:#ffffff; --bg-tertiary:#eef2f8;
+      --text-primary:#141a2a; --text-secondary:#4b5568;
+      --accent-primary:#0b66ff; --accent-secondary:#7a3ff2;
+      --accent-gradient:linear-gradient(135deg,#0b66ff 0%,#7a3ff2 100%);
+      --border-color:#d9e1f2;
+      --shadow:0 8px 24px rgba(11,102,255,.08);
+      --hover-shadow:0 12px 36px rgba(11,102,255,.12);
     }
     [data-theme="dark"] {
       --bg-primary:#0a0e27; --bg-secondary:#151932; --bg-tertiary:#1e2139;
       --text-primary:#e4e7f5; --text-secondary:#a0a6c9;
       --accent-primary:#00d4ff; --accent-secondary:#7b2ff7;
       --accent-gradient:linear-gradient(135deg,#00d4ff 0%,#7b2ff7 100%);
-      --border-color:rgba(0,212,255,0.2);
-      --shadow:0 8px 32px rgba(0,212,255,0.1);
-      --hover-shadow:0 12px 48px rgba(0,212,255,0.2);
+      --border-color:#20304d;
+      --shadow:0 8px 32px rgba(0,212,255,.10);
+      --hover-shadow:0 12px 48px rgba(0,212,255,.18);
     }
 
     html, body { width:100%; height:100%; }
     body {
       font-family:'Inter',system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
-      background:var(--bg-primary); color:var(--text-primary);
-      line-height:1.6; -webkit-font-smoothing:antialiased; text-rendering:optimizeLegibility;
+      background:var(--bg-primary); color:var(--text-primary); line-height:1.6;
     }
 
+    /* Switch compact fixe */
     .theme-toggle {
-      position:fixed; top:16px; right:16px; z-index:1000;
+      position:fixed; top:14px; right:14px; z-index:1000;
+      display:inline-flex; align-items:center; gap:8px;
+      padding:8px 12px; border-radius:999px;
       background:var(--bg-secondary); color:var(--text-primary);
       border:1px solid var(--border-color);
-      border-radius:999px; padding:10px 14px; cursor:pointer;
-      display:flex; align-items:center; gap:8px;
-      box-shadow:var(--shadow); transition:transform .2s ease;
+      box-shadow:var(--shadow);
+      cursor:pointer; user-select:none;
+      max-width:44vw;
     }
-    .theme-toggle:hover { transform:translateY(-2px); }
+    .theme-toggle span { white-space:nowrap; }
+    .theme-toggle:hover { box-shadow:var(--hover-shadow); }
 
     .container { width:100%; padding:16px; }
+
     .header {
-      width:100%;
-      background:var(--bg-secondary);
-      border-radius:16px; padding:28px 16px; margin:56px 0 16px;
-      box-shadow:var(--shadow); position:relative; overflow:hidden;
+      width:100%; background:var(--bg-secondary); border-radius:16px;
+      padding:28px 16px; margin:54px 0 16px; box-shadow:var(--shadow);
+      position:relative; overflow:hidden; text-align:center;
     }
     .header::before { content:''; position:absolute; top:0; left:0; right:0; height:4px; background:var(--accent-gradient); }
-    .header h1 {
-      font-size:2.0rem; font-weight:800; margin-bottom:6px;
+    .title {
+      font-size:2rem; font-weight:800; margin-bottom:6px;
       background:var(--accent-gradient); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text;
     }
-    .header p { color:var(--text-secondary); }
+    .subtitle { color:var(--text-secondary); font-size:1.02rem; margin-top:2px; }
 
     .tools {
-      width:100%;
-      display:flex; flex-wrap:wrap; gap:10px; align-items:center; justify-content:space-between;
-      margin:12px 0 8px;
+      width:100%; display:flex; gap:10px; align-items:center; justify-content:space-between;
+      margin:12px 0 10px;
     }
     .search-input {
-      flex:1 1 260px;
-      background:var(--bg-secondary); color:var(--text-primary);
+      flex:1 1 auto; background:var(--bg-secondary); color:var(--text-primary);
       border:1px solid var(--border-color); border-radius:12px;
       padding:10px 12px; outline:none;
     }
     .clear-btn {
       background:transparent; color:var(--accent-primary);
-      border:1px solid var(--border-color);
-      padding:10px 12px; border-radius:12px; cursor:pointer;
+      border:1px solid var(--border-color); padding:10px 12px;
+      border-radius:12px; cursor:pointer; white-space:nowrap;
     }
     .clear-btn:hover { border-color:var(--accent-primary); }
 
     .table-wrapper {
-      width:100%;
-      overflow:auto; /* horizontal + vertical */
-      background:var(--bg-secondary);
+      width:100%; background:var(--bg-secondary);
       border-radius:16px; box-shadow:var(--shadow);
+      overflow:hidden; /* pas de scroll X: on laisse wrap dans les cellules */
     }
     table {
-      width:100%;
-      min-width:1200px; /* garde l’intégrité des colonnes sur mobile, scroll horizontal */
-      border-collapse:separate; border-spacing:0;
+      width:100%; border-collapse:separate; border-spacing:0;
+      table-layout:fixed; /* force wrap */
     }
     thead { position:sticky; top:0; background:var(--accent-gradient); z-index:2; }
     thead th {
       padding:14px 10px; text-align:left; font-weight:700; font-size:.9rem;
-      color:#fff; text-transform:uppercase; letter-spacing:.4px;
-      border-bottom:3px solid rgba(255,255,255,.25); cursor:pointer; user-select:none;
-      position:relative;
+      color:#fff; text-transform:uppercase; letter-spacing:.4px; cursor:pointer; user-select:none;
+      border-bottom:3px solid rgba(255,255,255,.25);
     }
     thead th .arrow { margin-left:6px; opacity:.9; font-size:.85rem; }
     thead th.sort-asc .arrow::after { content:"▲"; }
@@ -110,61 +107,64 @@
     tbody tr { background:var(--bg-secondary); transition:background .15s ease; }
     tbody tr:nth-child(even) { background:var(--bg-tertiary); }
     tbody tr:hover { background:var(--bg-primary); }
-    td { padding:12px; border-bottom:1px solid var(--border-color); font-size:.92rem; vertical-align:top; color:var(--text-primary); }
+
+    td {
+      padding:12px; border-bottom:1px solid var(--border-color);
+      font-size:.92rem; color:var(--text-primary); vertical-align:top;
+      word-break:break-word; overflow-wrap:anywhere; white-space:normal;
+    }
+    td.index { width:52px; text-align:right; color:#8a94b5; font-weight:700; }
     td.method { color:var(--accent-primary); font-weight:600; }
-    td.index { width:56px; text-align:right; padding-right:10px; color:#8b95b5; font-weight:700; }
 
     code.formula {
       font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,monospace;
-      background:var(--bg-primary);
-      color:var(--text-primary);
-      padding:2px 6px; border-radius:6px; display:inline-block; max-width:100%; overflow-x:auto;
-      border-left:3px solid var(--accent-primary);
+      background:transparent; color:inherit; padding:0; border:none;
+      white-space:normal; word-break:break-word; overflow-wrap:anywhere;
     }
+
     .badge { display:inline-block; padding:4px 10px; border-radius:16px; font-size:.72rem; font-weight:700; text-transform:uppercase; letter-spacing:.4px; }
-    .low{background:rgba(46,213,115,.18); color:#2ed573;}
-    .med{background:rgba(255,159,67,.18); color:#ff9f43;}
-    .high{background:rgba(238,82,83,.18); color:#ee5253;}
-    .lin{background:rgba(52,172,224,.18); color:#34ace0;}
-    .sup{background:rgba(123,47,247,.18); color:#7b2ff7;}
-    .quad{background:rgba(0,212,255,.18); color:#00d4ff;}
+    .low{background:rgba(46,213,115,.16); color:#1f9d63;}
+    .med{background:rgba(255,159,67,.16); color:#c06a18;}
+    .high{background:rgba(238,82,83,.16); color:#b53a3b;}
+    .lin{background:rgba(52,172,224,.16); color:#1f7ea1;}
+    .sup{background:rgba(123,47,247,.16); color:#5a2cbb;}
+    .quad{background:rgba(0,212,255,.16); color:#0b7b8a;}
 
     a { color:var(--accent-primary); text-decoration:none; }
     a:hover { color:var(--accent-secondary); }
 
     .footer {
-      width:100%;
-      background:var(--bg-secondary);
-      border-radius:16px; box-shadow:var(--shadow); margin:16px 0 24px; padding:18px;
-      text-align:center; color:var(--text-secondary);
+      width:100%; background:var(--bg-secondary); border-radius:16px; box-shadow:var(--shadow);
+      margin:16px 0 24px; padding:18px; text-align:center; color:var(--text-secondary);
     }
 
     @media (max-width: 900px) {
-      .header h1 { font-size:1.6rem; }
-      thead th, td { padding:10px 8px; font-size:.85rem; }
+      .title { font-size:1.6rem; }
+      thead th, td { padding:10px 8px; font-size:.86rem; }
+      .theme-toggle { padding:7px 10px; gap:6px; }
     }
   </style>
 </head>
 <body>
-  <!-- Switch statique en haut à droite -->
+  <!-- Switch compact fixe, ne déborde pas -->
   <button class="theme-toggle" id="themeBtn" aria-label="Basculer thème">
     <span id="themeIcon">☀️</span>
     <span id="themeText">Light</span>
   </button>
 
   <div class="container">
-    <div class="header">
-      <h1>méthodes d'optimisation classées</h1>
-      <p>204 méthodes avec tri, recherche, numérotation, rendu TeX, et thème clair/sombre</p>
-    </div>
+    <header class="header">
+      <h1 class="title">méthodes d'optimisation classées</h1>
+      <p class="subtitle">Tri par colonne, recherche, numérotation, rendu TeX, thème clair/sombre</p>
+    </header>
 
-    <div class="tools">
+    <section class="tools">
       <input id="searchBox" class="search-input" type="search" placeholder="Rechercher une méthode, nature, diffusion, formule…"/>
       <button class="clear-btn" onclick="clearSearch()">Effacer</button>
       <div style="color:var(--text-secondary); font-size:.9rem;">Cliquer un en‑tête pour trier ▲▼</div>
-    </div>
+    </section>
 
-    <div class="table-wrapper">
+    <section class="table-wrapper">
       <table id="methodsTable">
         <thead>
           <tr>
@@ -182,24 +182,23 @@
             <th data-key="link">Lien <span class="arrow"></span></th>
           </tr>
         </thead>
-        <tbody id="tableBody"><!-- injecté par JS --></tbody>
+        <tbody id="tableBody"><!-- rendu JS --></tbody>
       </table>
-    </div>
+    </section>
 
-    <div class="footer">
+    <footer class="footer">
       © 2025 thibaut LOMBARD — <a href="https://github.com/Lombard-Web-Services/Docs/" target="_blank" rel="noopener">https://github.com/Lombard-Web-Services/Docs/</a>
-    </div>
+    </footer>
   </div>
 
   <script>
-    // Thème par défaut: light (conforme à votre demande)
+    // Thème: light par défaut
     (function initTheme(){
       const html = document.documentElement;
       html.setAttribute('data-theme', 'light');
       document.getElementById('themeIcon').textContent = '☀️';
       document.getElementById('themeText').textContent = 'Light';
     })();
-
     document.getElementById('themeBtn').addEventListener('click', ()=>{
       const html = document.documentElement;
       const isLight = html.getAttribute('data-theme') === 'light';
@@ -208,7 +207,6 @@
       document.getElementById('themeText').textContent = isLight ? 'Dark' : 'Light';
     });
 
-    // Helpers
     function escapeHTML(x){ return String(x).replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('>','&gt;'); }
     function badgeMemory(s){
       if(s.startsWith('Low')) return `<span class="badge low">${s}</span>`;
@@ -221,47 +219,16 @@
       return `<span class="badge quad">${s}</span>`;
     }
 
-    // 204 méthodes: 4 nouvelles en tête + 200 précédentes (consolidées)
-    const headRows = [
-      {
-        method:"Gradient Descent",
-        formula:"x_{k+1}=x_k-\\alpha\\,\\nabla f(x_k)",
-        memory:"Low O(n)", conv:"Linear", deriv:"1st Order", cond:"Poor (ill‑cond.)",
-        diff:"Locale linéaire", diffFormula:"\\Delta f=\\nabla\\cdot(\\nabla f)",
-        nature:"Isotrope", desc:"Descente de gradient classique.",
-        link:"https://en.wikipedia.org/wiki/Gradient_descent"
-      },
-      {
-        method:"Optimal Transport (Wasserstein)",
-        formula:"W_2^2(p,q)=\\inf_{\\pi\\in\\Pi(p,q)}\\int\\|x-y\\|^2\\,d\\pi(x,y)",
-        memory:"High O(n^3)", conv:"Superlinear", deriv:"Implicit Gradient",
-        cond:"Excellent (géométrie lisse)", diff:"Géométrique",
-        diffFormula:"\\Delta_W f=\\mathrm{div}_W(\\nabla_W f)",
-        nature:"Wasserstein", desc:"Optimisation sur l’espace des mesures.",
-        link:"https://en.wikipedia.org/wiki/Wasserstein_metric"
-      },
-      {
-        method:"Fisher (Natural Gradient)",
-        formula:"\\theta_{k+1}=\\theta_k-\\alpha\\,F(\\theta_k)^{-1}\\nabla_\\theta L(\\theta_k)",
-        memory:"Medium–High O(n^2)", conv:"Superlinear", deriv:"Quasi‑2nd Order",
-        cond:"Stable (Fisher metric)", diff:"Informationnelle",
-        diffFormula:"\\Delta_F f=F^{-1}\\nabla\\cdot(F\\nabla f)",
-        nature:"Naturel", desc:"Gradient naturel d’Amari.",
-        link:"https://en.wikipedia.org/wiki/Natural_gradient"
-      },
-      {
-        method:"Fisher–Rao",
-        formula:"\\langle u,v\\rangle_{\\theta}=\\mathbb E\\big[\\partial_\\theta \\log p_\\theta\\;\\partial_\\theta \\log p_\\theta\\big]",
-        memory:"Medium–High O(n^2)", conv:"Superlinear", deriv:"Quasi‑2nd Order",
-        cond:"Stable (Fisher–Rao)", diff:"Info‑géométrique",
-        diffFormula:"\\Delta_{FR} f=\\mathrm{div}_{FR}(\\nabla_{FR} f)",
-        nature:"Riemannienne proba", desc:"Métrique canonique des distributions.",
-        link:"https://en.wikipedia.org/wiki/Fisher_information_metric"
-      }
-    ];
+    // Données: vos 4 méthodes demandées sont intégrées DANS la liste principale,
+    // puis toutes les méthodes listées dans votre message (extrait paste).
+    const dataRows = [
+      // Les 4 méthodes manquantes INSÉRÉES dans la liste classique
+      {method:"Gradient Descent",formula:"x_{k+1}=x_k-\\alpha\\,\\nabla f(x_k)",memory:"Low O(n)",conv:"Linear",deriv:"1st Order",cond:"Poor (ill‑cond.)",diff:"Locale linéaire",diffFormula:"\\Delta f=\\nabla\\cdot(\\nabla f)",nature:"Isotrope",desc:"Descente de gradient classique.",link:"https://en.wikipedia.org/wiki/Gradient_descent"},
+      {method:"Optimal Transport (Wasserstein)",formula:"W_2^2(p,q)=\\inf_{\\pi\\in\\Pi(p,q)}\\int\\|x-y\\|^2\\,d\\pi(x,y)",memory:"High O(n^3)",conv:"Superlinear",deriv:"Implicit Gradient",cond:"Excellent (géométrie lisse)",diff:"Géométrique",diffFormula:"\\Delta_W f=\\mathrm{div}_W(\\nabla_W f)",nature:"Wasserstein",desc:"Optimisation sur l’espace des mesures.",link:"https://en.wikipedia.org/wiki/Wasserstein_metric"},
+      {method:"Fisher (Natural Gradient)",formula:"\\theta_{k+1}=\\theta_k-\\alpha\\,F(\\theta_k)^{-1}\\nabla_\\theta L(\\theta_k)",memory:"Medium–High O(n^2)",conv:"Superlinear",deriv:"Quasi‑2nd Order",cond:"Stable (Fisher metric)",diff:"Informationnelle",diffFormula:"\\Delta_F f=F^{-1}\\nabla\\cdot(F\\nabla f)",nature:"Naturel",desc:"Gradient naturel d’Amari.",link:"https://en.wikipedia.org/wiki/Natural_gradient"},
+      {method:"Fisher–Rao",formula:"\\langle u,v\\rangle_{\\theta}=\\mathbb E[\\partial_\\theta\\log p_\\theta\\,\\partial_\\theta\\log p_\\theta]",memory:"Medium–High O(n^2)",conv:"Superlinear",deriv:"Quasi‑2nd Order",cond:"Stable (Fisher–Rao)",diff:"Info‑géométrique",diffFormula:"\\Delta_{FR} f=\\mathrm{div}_{FR}(\\nabla_{FR} f)",nature:"Riemannienne proba",desc:"Métrique canonique des distributions.",link:"https://en.wikipedia.org/wiki/Fisher_information_metric"},
 
-    // Base consolidée (extraits principaux + variantes) – vous pouvez enrichir à souhait.
-    const baseRows = [
+      // Votre liste présente (copiée de votre bloc "liste des méthode présentes")
       {method:"Newton's Method",formula:"x_{k+1}=x_k-H^{-1}\\nabla f(x_k)",memory:"High O(n^2)",conv:"Quadratic",deriv:"2nd Order",cond:"Good (Hessian)",diff:"Locale isotrope",diffFormula:"\\Delta f=\\operatorname{Tr}(H)",nature:"Isotrope linéaire",desc:"Newton classique.",link:"https://en.wikipedia.org/wiki/Newton%27s_method"},
       {method:"Gauss–Newton",formula:"x_{k+1}=x_k-(J^T J)^{-1}J^T r",memory:"Medium O(n^2)",conv:"Superlinear",deriv:"Quasi-Newton",cond:"Stable (Info)",diff:"Anisotrope",diffFormula:"\\Delta\\approx J^T J",nature:"Anisotrope",desc:"Moindres carrés NL.",link:"https://en.wikipedia.org/wiki/Gauss%E2%80%93Newton_algorithm"},
       {method:"Levenberg–Marquardt",formula:"\\Delta x=-(J^T J+\\lambda I)^{-1}J^T r",memory:"Medium O(n^2)",conv:"Quadratic",deriv:"2nd Order",cond:"Stable (Damped)",diff:"Amortie",diffFormula:"\\Delta=H+\\lambda I",nature:"Contrôlée",desc:"Damping entre GN et GD.",link:"https://en.wikipedia.org/wiki/Levenberg%E2%80%93Marquardt_algorithm"},
@@ -331,48 +298,31 @@
       {method:"Spectral Block Newton",formula:"B=U\\Lambda U^T (bloc)",memory:"High O(b^3)",conv:"Superlinear",deriv:"Spectral",cond:"Good",diff:"Spectrale bloc",diffFormula:"U\\Lambda U^T",nature:"Parallèle",desc:"EVD bloc.",link:"https://arxiv.org/abs/1808.08865"}
     ];
 
-    // Compléments pour atteindre 204 au total
-    const fillerCount = 204 - (headRows.length + baseRows.length);
-    const fillerRows = Array.from({length: Math.max(0, fillerCount)}, (_,i) => {
-      const k = i + 1;
-      return {
-        method:`Méthode complémentaire ${k}`,
-        formula:`\\text{upd}_{${k}}=\\mathcal{T}_{${k}}(x_k,\\nabla f,H)`,
-        memory: (k%3===0)?"Low O(n)":(k%3===1)?"Medium O(n^2)":"High O(n^3)",
-        conv: (k%3===0)?"Linear":(k%3===1)?"Superlinear":"Quadratic",
-        deriv: (k%4===0)?"Quasi-Newton":(k%4===1)?"2nd Order":(k%4===2)?"Implicit 2nd":"Krylov 2nd",
-        cond: (k%4===0)?"Good":"Excellent",
-        diff: (k%5===0)?"Spectrale":(k%5===1)?"Entropique":(k%5===2)?"Projetée":(k%5===3)?"Paramétrique":"Graphique",
-        diffFormula: (k%5===0)?"\\sum \\lambda_i v_i v_i^T":(k%5===1)?"\\Delta_\\varepsilon":(k%5===2)?"\\Pi_\\mathcal{F}\\,\\Delta":(k%5===3)?"\\operatorname{diag}(\\alpha)H":"L_G",
-        nature: (k%4===0)?"Modale":(k%4===1)?"Entropique":(k%4===2)?"Contrainte":"Adaptative",
-        desc:`Complément (${k}) — remplacez par une méthode réelle si besoin.`,
-        link:"https://example.com"
-      };
-    });
-
-    const dataRows = [...headRows, ...baseRows, ...fillerRows];
-
-    // Rendu
     const tbody = document.getElementById('tableBody');
     const thead = document.querySelector('thead');
     const searchBox = document.getElementById('searchBox');
 
     let sortState = { key:'index', dir:'asc' };
-    let view = dataRows.map((r,i)=>({...r,index:i+1}));
+    let view = dataRows.map((r,i)=>({...r, index:i+1}));
+
+    function badgeConv(s){
+      if(s.startsWith('Linear')) return `<span class="badge lin">${s}</span>`;
+      if(s.startsWith('Superlinear')) return `<span class="badge sup">${s}</span>`;
+      return `<span class="badge quad">${s}</span>`;
+    }
 
     function rowHTML(r){
-      // Important: on met \\( ... \\) pour MathJax; pas de backticks dans le contenu pour éviter d’empêcher le rendu.
       return `
         <tr>
           <td class="index">${r.index}</td>
           <td class="method">${escapeHTML(r.method)}</td>
-          <td><code class="formula">\\(${r.formula}\\)</code></td>
+          <td>ode classss="formula">\\(${r.formula}\\)</code></td>
           <td>${badgeMemory(r.memory)}</td>
           <td>${badgeConv(r.conv)}</td>
           <td>${escapeHTML(r.deriv)}</td>
           <td>${escapeHTML(r.cond)}</td>
           <td>${escapeHTML(r.diff)}</td>
-          <td><code class="formula">\\(${r.diffFormula}\\)</code></td>
+          <td>ode classss="formula">\\(${r.diffFormula}\\)</code></td>
           <td>${escapeHTML(r.nature)}</td>
           <td>${escapeHTML(r.desc)}</td>
           <td><a href="${r.link}" target="_blank" rel="noopener">Lien</a></td>
@@ -413,7 +363,6 @@
       if (th) th.classList.add(sortState.dir==='asc'?'sort-asc':'sort-desc');
       render();
     }
-
     thead.querySelectorAll('th').forEach(th=>{
       th.addEventListener('click',()=>sortBy(th.dataset.key));
     });
@@ -421,12 +370,12 @@
     function applySearch(){
       const q = searchBox.value.trim().toLowerCase();
       const src = dataRows.map((r,i)=>({...r,index:i+1}));
-      if (!q){
+      if (!q) {
         view = src;
       } else {
         view = src.filter(r => Object.keys(r).some(k => String(r[k]).toLowerCase().includes(q)));
       }
-      // conserver l'ordre de tri
+      // conserver tri
       view.sort((a,b)=>{
         const va = normalizeForSort(a[sortState.key]);
         const vb = normalizeForSort(b[sortState.key]);
