@@ -5,34 +5,23 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>méthodes d'optimisation classées</title>
 
-  <!-- MathJax CSP-safe : tex-html.js (sans eval), AMS, scale pour fit -->
+  <!-- MathJax v3 : config simple, synchrone pour timing fiable -->
 <script>
   window.MathJax = {
     tex: {
       inlineMath: [['\\(','\\)'], ['\\[','\\]']],
       displayMath: [['\\[','\\]']],
       processEscapes: true,
-      packages: {'[+]': ['ams']}  // AMS pour \nabla, \inf
+      packages: ['ams']  // AMS direct pour \nabla, \inf
     },
-    // Options pour adaptation largeur (scale auto, wrap)
-    html: {
+    chtml: {  // Output CHTML ; scale pour fit cellules
       scale: 1,
-      minScale: 0.8,
-      matchFontHeight: false
-    },
-    startup: {
-      pageReady() {
-        return MathJax.startup.defaultPageReady().then(() => {
-          // Force re-init après MathJax prêt : réinitialise état et re-rendu
-          if (typeof initTable === 'function') {
-            initTable(true);  // true = force MathJax mode
-          }
-        });
-      }
+      minScale: 0.8
     }
   };
 </script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-html.js" id="MathJax-script" async></script>
+<!-- Synchrone (sans async) pour éviter timing issues -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-chtml.js"></script>
   <style>
     * { margin:0; padding:0; box-sizing:border-box; }
     :root {
@@ -126,7 +115,7 @@
       color:#fff; text-transform:uppercase; letter-spacing:.4px; cursor:pointer; user-select:none;
       border-bottom:3px solid rgba(255,255,255,.25);
     }
-    /* Largeurs colonnes pour fit : formules 15% chacune, adaptées */
+    /* Largeurs colonnes pour adaptation formules */
     thead th:nth-child(3), td:nth-child(3) { width: 15%; } /* Formule */
     thead th:nth-child(9), td:nth-child(9) { width: 15%; } /* Diff Formula */
     thead th .arrow { margin-left:6px; opacity:.9; font-size:.85rem; }
@@ -138,19 +127,18 @@
     tbody tr:hover { background:var(--bg-primary); }
     .MathJax { display: inline-block; max-width: 100%; }
     .MathJax .merror { color: red; background: yellow; }
-    /* Adaptation largeur pour MathJax HTML output */
     .MathJax span { max-width: 100%; word-wrap: break-word; }
     .tex-inline { 
       display: inline-block; max-width: 100%; 
       overflow-wrap: break-word; word-break: break-all; 
       vertical-align: middle; 
     }
-    .tex-inline.long { display: block; } /* Block pour longues */
+    .tex-inline.long { display: block; }
     td {
       padding:12px; border-bottom:1px solid var(--border-color);
       font-size:.92rem; color:var(--text-primary); vertical-align:top;
       word-break:break-word; overflow-wrap:anywhere; white-space:normal;
-      max-width: 0; overflow: hidden; text-overflow: ellipsis; /* Anti-overflow */
+      max-width: 0; overflow: hidden; text-overflow: ellipsis;
     }
     td.index { width:52px; text-align:right; color:#8a94b5; font-weight:700; }
     td.method { color:var(--accent-primary); font-weight:600; }
@@ -175,7 +163,7 @@
       .title { font-size:1.6rem; }
       thead th, td { padding:10px 8px; font-size:.86rem; }
       .theme-toggle { gap:8px; padding:6px 8px; }
-      thead th:nth-child(3), td:nth-child(3), thead th:nth-child(9), td:nth-child(9) { width: 20%; } /* Plus large mobile */
+      thead th:nth-child(3), td:nth-child(3), thead th:nth-child(9), td:nth-child(9) { width: 20%; }
     }
   </style>
 </head>
@@ -225,11 +213,7 @@
   </div>
 
   <script>
-    // Variables globales pour état partagé
-    let globalView = [];
-    let globalSortState = { key:'index', dir:'asc' };
-    let globalHasMathJax = false;  // Mise à jour dynamique
-
+    // Fonctions utilitaires
     function escapeHTML(x){ return String(x).replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('>','&gt;'); }
     function badgeMemory(s){
       if(s.startsWith('Low')) return `<span class="badge low">${s}</span>`;
@@ -243,9 +227,7 @@
     }
     function texSpan(texString){
       const long = texString.length > 80 ? ' long' : '';
-      return globalHasMathJax 
-        ? `<span class="tex-inline${long}">\( ${texString} \)</span>`  // TeX pour MathJax
-        : `<span class="tex-inline${long}">${escapeHTML(texString)}</span>`;  // Plaintext sinon
+      return `<span class="tex-inline${long}">\( ${texString} \)</span>`;  // Delimiters v3 inline
     }
 
     const dataRows = [
@@ -290,23 +272,17 @@
       }
     ];
 
-    function initTable(forceMathJax = false) {
+    let globalView = [];
+    let globalSortState = { key:'index', dir:'asc' };
+
+    function initTable() {
       const tbody = document.getElementById('tableBody');
       if (!tbody) return;
 
       const thead = document.querySelector('thead');
       const searchBox = document.getElementById('searchBox');
 
-      // Mise à jour globale hasMathJax si forcé ou détecté
-      if (forceMathJax || (typeof window.MathJax !== 'undefined' && MathJax.typesetPromise)) {
-        globalHasMathJax = true;
-      }
-
-      // Réinitialise view si premier appel ou force
-      if (forceMathJax || globalView.length === 0) {
-        globalView = dataRows.map((r,i)=>({...r, index:i+1}));
-        applySearch();  // Applique recherche courante sur nouvelle view
-      }
+      globalView = dataRows.map((r,i)=>({...r, index:i+1}));
 
       function rowHTML(r){
         return `
@@ -327,14 +303,15 @@
         `;
       }
 
-      async function render(){
+      async function render() {
         tbody.innerHTML = globalView.map(rowHTML).join('');
-        if (globalHasMathJax) {
+        // Typeset v3 : clear + promise pour dynamic (table)
+        if (typeof MathJax !== 'undefined' && MathJax.typesetPromise) {
           try {
-            MathJax.typesetClear([tbody]);
+            MathJax.typesetClear([tbody]);  // Nettoie anciens nœuds si besoin
             await MathJax.typesetPromise([tbody]);
-          } catch (e) {
-            console.warn('MathJax typeset échoué :', e);
+          } catch (err) {
+            console.error('MathJax typeset error:', err);
           }
         }
       }
@@ -360,7 +337,7 @@
         globalView.forEach((r,i)=>r.index=i+1);
         const th = thead.querySelector(`th[data-key="${key}"]`);
         if (th) th.classList.add(globalSortState.dir==='asc'?'sort-asc':'sort-desc');
-        render();
+        render();  // Re-typeset async
       }
       if (thead) {
         thead.querySelectorAll('th').forEach(th=>{
@@ -381,7 +358,7 @@
         });
         if (globalSortState.dir==='desc') globalView.reverse();
         globalView.forEach((r,i)=>r.index=i+1);
-        render();
+        render();  // Re-typeset async
       }
       function clearSearch(){ 
         if (searchBox) searchBox.value=''; 
@@ -392,8 +369,8 @@
         searchBox.addEventListener('input', applySearch);
       }
 
-      // Rendu immédiat avec état actuel
-      render();
+      render();  // Initial render
+      sortBy('index');
     }
 
     // Thème toggle
@@ -409,15 +386,12 @@
       });
     }
 
-    // Initialisation DOM + écoute MathJax load pour force re-init
+    // Initialisation DOM + typeset global v3
     document.addEventListener('DOMContentLoaded', () => {
-      initTable();  // Initial plaintext
-      // Écoute load MathJax pour re-init auto
-      const mathJaxScript = document.getElementById('MathJax-script');
-      if (mathJaxScript) {
-        mathJaxScript.addEventListener('load', () => {
-          setTimeout(() => initTable(true), 100);  // Petit délai pour startup
-        });
+      initTable();
+      // Typeset initial global (comme suggéré)
+      if (typeof MathJax !== 'undefined' && MathJax.typesetPromise) {
+        MathJax.typesetPromise().catch(err => console.error('Initial MathJax typeset failed:', err));
       }
     });
   </script>
