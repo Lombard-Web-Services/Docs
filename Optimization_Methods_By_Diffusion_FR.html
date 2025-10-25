@@ -14,7 +14,12 @@
         linebreaks: { 
           automatic: true, 
           width: 'container' 
-        } 
+        },
+        scale: 1.0
+      },
+      options: {
+        skipHtmlTags: ['code', 'span.tex-inline'],
+        ignoreHtmlClass: 'tex-inline'
       }
     };
   </script>
@@ -146,25 +151,44 @@
     td.method { color:var(--accent-primary); font-weight:600; }
     td.index { text-align:right; color:#8a94b5; font-weight:700; white-space:nowrap; }
 
-    /* Fix rendu TeX: adaptation automatique à 100% largeur cellule, sans débord */
+    /* Fix rendu TeX: adaptation automatique à 100% largeur cellule, sans débord, réduction taille si nécessaire */
     .tex-inline {
       display:inline-block; max-width:100%; width:100%;
       white-space:normal; word-break:break-word; overflow-wrap:anywhere;
       line-height:1.4;
     }
-    /* Si une formule est longue, force block pour retours à la ligne via MathJax */
-    .tex-inline.long { display:block; }
+    /* Si une formule est longue, force block et réduit la taille pour fit responsive */
+    .tex-inline.long { 
+      display:block; 
+      font-size:0.85em; 
+    }
+    .tex-inline.very-long { 
+      display:block; 
+      font-size:0.75em; 
+    }
 
-    /* Contrainte MathJax SVG à la largeur de la cellule, force wrap */
+    /* Contrainte MathJax SVG à la largeur de la cellule, force wrap et scale */
     .tex-inline .mjx-container { 
       max-width:100% !important; overflow:hidden !important; display:block !important; 
-      word-break:break-word !important; 
+      word-break:break-word !important; overflow-wrap:anywhere !important;
+      transform-origin: left top;
     }
     .tex-inline .mjx-svg { 
       max-width:100% !important; height:auto !important; 
       word-break:break-word !important; overflow-wrap:anywhere !important;
     }
-    .mjx-mrow { white-space:normal !important; }
+    .mjx-mrow { white-space:normal !important; word-break:break-all !important; }
+    /* Scale down si overflow détecté, mais via CSS max-width */
+    .tex-inline .mjx-container > svg {
+      max-width: 100% !important;
+      transform: scale(1);
+    }
+    .tex-inline.long .mjx-container > svg {
+      transform: scale(0.95);
+    }
+    .tex-inline.very-long .mjx-container > svg {
+      transform: scale(0.85);
+    }
 
     .badge { display:inline-block; padding:4px 8px; border-radius:16px; font-size:.72rem; font-weight:700; text-transform:uppercase; letter-spacing:.4px; }
     .low{background:rgba(46,213,115,.16); color:#1f9d63;}
@@ -193,6 +217,8 @@
       th[data-key="desc"], td:nth-child(11) { width:16%; }
       th[data-key="link"], td:nth-child(12) { width:40px; }
       thead th { font-size:.8rem; letter-spacing:.2px; }
+      .tex-inline.long { font-size:0.8em; }
+      .tex-inline.very-long { font-size:0.7em; }
     }
   </style>
 </head>
@@ -268,9 +294,11 @@
 
     // IMPORTANT: on utilise des spans .tex-inline au lieu de <code>, et on insère les délimiteurs \( \)
     function texSpan(texString){
-      // heuristique: si la chaîne est longue, on ajoute .long pour casser en block
-      const long = texString.length > 80 ? ' long' : '';
-      return `<span class="tex-inline${long}">\\(${texString}\\)</span>`;
+      let cls = '';
+      // heuristique: classes pour scaling basé sur longueur
+      if (texString.length > 100) cls = ' very-long';
+      else if (texString.length > 80) cls = ' long';
+      return `<span class="tex-inline${cls}">\\(${texString}\\)</span>`;
     }
 
     const dataRows = [
@@ -307,7 +335,7 @@
       {method:"Anderson Acceleration",formula:"x^+=\\sum w_i x_{k-i}",memory:"Medium O(kn)",conv:"Superlinear",deriv:"Extrapolation",cond:"Good",diff:"Accélérée",diffFormula:"\\Delta\\text{ extrapolé}",nature:"Multi‑pas",desc:"Extrapolation fixe‑point.",link:"https://en.wikipedia.org/wiki/Anderson_acceleration"},
       {method:"DFP",formula:"H^+=H+\\frac{ss^T}{s^Ty}-\\frac{Hyy^TH}{y^THy}",memory:"Medium O(n^2)",conv:"Superlinear",deriv:"Quasi-Newton",cond:"Good",diff:"Symétrique",diffFormula:"H^{-1}",nature:"Inverse PD",desc:"Mise à jour inverse.",link:"https://en.wikipedia.org/wiki/Davidon%E2%80%93Fletcher%E2%80%93Powell_formula"},
       {method:"SR1",formula:"B^+=B+\\frac{(y-Bs)(y-Bs)^T}{(y-Bs)^Ts}",memory:"Medium O(n^2)",conv:"Superlinear",deriv:"Quasi-Newton",cond:"Indef (ok)",diff:"Minimale",diffFormula:"\\text{rang‑1}",nature:"Correction",desc:"Sans PD obligatoire.",link:"https://en.wikipedia.org/wiki/Symmetric_rank-one"},
-      {method:"PSB",formula:"B^+=B+\\frac{(y-Bs)s^T+s(y-Bs)^T}{s^Ts}-\\frac{(s^T(y-Bs))ss^T}{(s^Ts)^2}",memory:"Medium O(n^2)",conv:"Superlinear",deriv:"Quasi-Newton",cond:"Good",diff:"Asymétrique",diffFormula:"\\text{non‑diag}",nature:"Directionnelle",desc:"Capture asymétries.",link:"https://optimization-online.org/2011/09/3164/"},
+      {method:"PSB",formula:"B^+=B+\\frac{(y-Bs)s^T+s(y-Bs)^T}{s^Ts}-\\frac{s^T(y-Bs)ss^T}{(s^Ts)^2}",memory:"Medium O(n^2)",conv:"Superlinear",deriv:"Quasi-Newton",cond:"Good",diff:"Asymétrique",diffFormula:"\\text{non‑diag}",nature:"Directionnelle",desc:"Capture asymétries.",link:"https://optimization-online.org/2011/09/3164/"},
       {method:"Stochastic Quasi‑Newton",formula:"B_k \\text{ avec gradients stoch.}",memory:"Medium O(n^2)",conv:"Linear–Super",deriv:"SQN",cond:"Good",diff:"Quasi stoch.",diffFormula:"\\mathbb E[\\Delta_B]",nature:"Mémoire",desc:"L‑BFGS stochastique.",link:"https://arxiv.org/abs/1401.7020"},
       {method:"AdaHessian",formula:"\\theta^+=\\theta-\\alpha\\,\\operatorname{diag}(H)^{-1/2}\\nabla L",memory:"Medium O(n)",conv:"Superlinear",deriv:"Diag 2nd",cond:"Good",diff:"Neuronale",diffFormula:"\\operatorname{diag}(H)^{1/2}",nature:"Anisotrope",desc:"Courbure diagonale.",link:"https://arxiv.org/abs/2006.00719"},
       {method:"Shampoo",formula:"\\theta^+=\\theta-\\alpha (L^{-1/4}\\otimes R^{-1/4})g",memory:"High O(n^{3/2})",conv:"Superlinear",deriv:"Kronecker 2nd",cond:"Excellent",diff:"Tensorielle",diffFormula:"L\\otimes R",nature:"Facteurs",desc:"Précond. tensoriel.",link:"https://arxiv.org/abs/1802.09568"},
@@ -376,6 +404,16 @@
     async function typeset(){
       if (window.MathJax && MathJax.typesetPromise) {
         await MathJax.typesetPromise();
+        // Force resize après typeset pour scaling
+        setTimeout(() => {
+          document.querySelectorAll('.tex-inline .mjx-container > svg').forEach(svg => {
+            const container = svg.parentElement;
+            if (svg.getBoundingClientRect().width > container.getBoundingClientRect().width) {
+              const scale = container.getBoundingClientRect().width / svg.getBoundingClientRect().width;
+              svg.style.transform = `scale(${scale < 0.85 ? 0.85 : scale})`;
+            }
+          });
+        }, 100);
       }
     }
 
