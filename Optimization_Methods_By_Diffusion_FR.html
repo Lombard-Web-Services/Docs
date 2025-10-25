@@ -154,7 +154,7 @@
 
   <div class="container">
     <header class="header">
-      <h1 class="title">méthodes d'optimisation classées</h1>
+      <h1 class="title">méthodes d'optimisation classées par diffusion</h1>
       <p class="subtitle">Tri par colonne, recherche, numérotation, rendu TeX, thème clair/sombre</p>
     </header>
 
@@ -219,16 +219,12 @@
       return `<span class="badge quad">${s}</span>`;
     }
 
-    // Données: vos 4 méthodes demandées sont intégrées DANS la liste principale,
-    // puis toutes les méthodes listées dans votre message (extrait paste).
     const dataRows = [
-      // Les 4 méthodes manquantes INSÉRÉES dans la liste classique
+    
       {method:"Gradient Descent",formula:"x_{k+1}=x_k-\\alpha\\,\\nabla f(x_k)",memory:"Low O(n)",conv:"Linear",deriv:"1st Order",cond:"Poor (ill‑cond.)",diff:"Locale linéaire",diffFormula:"\\Delta f=\\nabla\\cdot(\\nabla f)",nature:"Isotrope",desc:"Descente de gradient classique.",link:"https://en.wikipedia.org/wiki/Gradient_descent"},
       {method:"Optimal Transport (Wasserstein)",formula:"W_2^2(p,q)=\\inf_{\\pi\\in\\Pi(p,q)}\\int\\|x-y\\|^2\\,d\\pi(x,y)",memory:"High O(n^3)",conv:"Superlinear",deriv:"Implicit Gradient",cond:"Excellent (géométrie lisse)",diff:"Géométrique",diffFormula:"\\Delta_W f=\\mathrm{div}_W(\\nabla_W f)",nature:"Wasserstein",desc:"Optimisation sur l’espace des mesures.",link:"https://en.wikipedia.org/wiki/Wasserstein_metric"},
       {method:"Fisher (Natural Gradient)",formula:"\\theta_{k+1}=\\theta_k-\\alpha\\,F(\\theta_k)^{-1}\\nabla_\\theta L(\\theta_k)",memory:"Medium–High O(n^2)",conv:"Superlinear",deriv:"Quasi‑2nd Order",cond:"Stable (Fisher metric)",diff:"Informationnelle",diffFormula:"\\Delta_F f=F^{-1}\\nabla\\cdot(F\\nabla f)",nature:"Naturel",desc:"Gradient naturel d’Amari.",link:"https://en.wikipedia.org/wiki/Natural_gradient"},
       {method:"Fisher–Rao",formula:"\\langle u,v\\rangle_{\\theta}=\\mathbb E[\\partial_\\theta\\log p_\\theta\\,\\partial_\\theta\\log p_\\theta]",memory:"Medium–High O(n^2)",conv:"Superlinear",deriv:"Quasi‑2nd Order",cond:"Stable (Fisher–Rao)",diff:"Info‑géométrique",diffFormula:"\\Delta_{FR} f=\\mathrm{div}_{FR}(\\nabla_{FR} f)",nature:"Riemannienne proba",desc:"Métrique canonique des distributions.",link:"https://en.wikipedia.org/wiki/Fisher_information_metric"},
-
-      // Votre liste présente (copiée de votre bloc "liste des méthode présentes")
       {method:"Newton's Method",formula:"x_{k+1}=x_k-H^{-1}\\nabla f(x_k)",memory:"High O(n^2)",conv:"Quadratic",deriv:"2nd Order",cond:"Good (Hessian)",diff:"Locale isotrope",diffFormula:"\\Delta f=\\operatorname{Tr}(H)",nature:"Isotrope linéaire",desc:"Newton classique.",link:"https://en.wikipedia.org/wiki/Newton%27s_method"},
       {method:"Gauss–Newton",formula:"x_{k+1}=x_k-(J^T J)^{-1}J^T r",memory:"Medium O(n^2)",conv:"Superlinear",deriv:"Quasi-Newton",cond:"Stable (Info)",diff:"Anisotrope",diffFormula:"\\Delta\\approx J^T J",nature:"Anisotrope",desc:"Moindres carrés NL.",link:"https://en.wikipedia.org/wiki/Gauss%E2%80%93Newton_algorithm"},
       {method:"Levenberg–Marquardt",formula:"\\Delta x=-(J^T J+\\lambda I)^{-1}J^T r",memory:"Medium O(n^2)",conv:"Quadratic",deriv:"2nd Order",cond:"Stable (Damped)",diff:"Amortie",diffFormula:"\\Delta=H+\\lambda I",nature:"Contrôlée",desc:"Damping entre GN et GD.",link:"https://en.wikipedia.org/wiki/Levenberg%E2%80%93Marquardt_algorithm"},
@@ -316,13 +312,13 @@
         <tr>
           <td class="index">${r.index}</td>
           <td class="method">${escapeHTML(r.method)}</td>
-          <td>ode classss="formula">\\(${r.formula}\\)</code></td>
+          <td>ode class="formula">\\(${r.formula}\\)</code></td>
           <td>${badgeMemory(r.memory)}</td>
           <td>${badgeConv(r.conv)}</td>
           <td>${escapeHTML(r.deriv)}</td>
           <td>${escapeHTML(r.cond)}</td>
           <td>${escapeHTML(r.diff)}</td>
-          <td>ode classss="formula">\\(${r.diffFormula}\\)</code></td>
+          <td>ode class="formula">\\(${r.diffFormula}\\)</code></td>
           <td>${escapeHTML(r.nature)}</td>
           <td>${escapeHTML(r.desc)}</td>
           <td><a href="${r.link}" target="_blank" rel="noopener">Lien</a></td>
