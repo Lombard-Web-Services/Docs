@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>méthodes d'optimisation classées</title>
 
-  <!-- MathJax: rendu TeX -->
+  <!-- MathJax pour TeX -->
   <script>
     window.MathJax = {
       tex: { inlineMath: [['\\(','\\)'], ['\\[','\\]']] },
@@ -41,33 +41,45 @@
       background:var(--bg-primary); color:var(--text-primary); line-height:1.6;
     }
 
-    /* Switch compact fixe */
+    /* Switch refondu type iOS */
     .theme-toggle {
       position:fixed; top:14px; right:14px; z-index:1000;
-      display:inline-flex; align-items:center; gap:8px;
-      padding:8px 12px; border-radius:999px;
+      display:inline-flex; align-items:center; gap:10px;
+      padding:6px 10px; border-radius:999px;
       background:var(--bg-secondary); color:var(--text-primary);
       border:1px solid var(--border-color);
       box-shadow:var(--shadow);
-      cursor:pointer; user-select:none;
-      max-width:44vw;
     }
-    .theme-toggle span { white-space:nowrap; }
-    .theme-toggle:hover { box-shadow:var(--hover-shadow); }
+    .toggle {
+      --w:46px; --h:26px;
+      position:relative; width:var(--w); height:var(--h);
+      border-radius:var(--h); background:#c9d3ea; transition:.2s;
+      border:1px solid var(--border-color); cursor:pointer;
+      flex-shrink:0;
+    }
+    .toggle::after {
+      content:''; position:absolute; top:2px; left:2px;
+      width:22px; height:22px; border-radius:50%;
+      background:#fff; box-shadow:0 2px 6px rgba(0,0,0,.15);
+      transition:transform .2s ease;
+    }
+    .toggle[aria-pressed="true"] { background:#7a3ff2; }
+    .toggle[aria-pressed="true"]::after { transform:translateX(20px); }
+    .toggle-label { font-size:.9rem; color:var(--text-secondary); }
 
     .container { width:100%; padding:16px; }
 
     .header {
       width:100%; background:var(--bg-secondary); border-radius:16px;
-      padding:28px 16px; margin:54px 0 16px; box-shadow:var(--shadow);
-      position:relative; overflow:hidden; text-align:center;
+      padding:28px 16px; margin:56px 0 16px; box-shadow:var(--shadow);
+      position:relative; text-align:center;
     }
     .header::before { content:''; position:absolute; top:0; left:0; right:0; height:4px; background:var(--accent-gradient); }
     .title {
       font-size:2rem; font-weight:800; margin-bottom:6px;
       background:var(--accent-gradient); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text;
     }
-    .subtitle { color:var(--text-secondary); font-size:1.02rem; margin-top:2px; }
+    .subtitle { color:var(--text-secondary); font-size:1.02rem; }
 
     .tools {
       width:100%; display:flex; gap:10px; align-items:center; justify-content:space-between;
@@ -88,12 +100,9 @@
     .table-wrapper {
       width:100%; background:var(--bg-secondary);
       border-radius:16px; box-shadow:var(--shadow);
-      overflow:hidden; /* pas de scroll X: on laisse wrap dans les cellules */
+      overflow:hidden; /* pas de scroll X */
     }
-    table {
-      width:100%; border-collapse:separate; border-spacing:0;
-      table-layout:fixed; /* force wrap */
-    }
+    table { width:100%; border-collapse:separate; border-spacing:0; table-layout:fixed; }
     thead { position:sticky; top:0; background:var(--accent-gradient); z-index:2; }
     thead th {
       padding:14px 10px; text-align:left; font-weight:700; font-size:.9rem;
@@ -116,11 +125,12 @@
     td.index { width:52px; text-align:right; color:#8a94b5; font-weight:700; }
     td.method { color:var(--accent-primary); font-weight:600; }
 
-    code.formula {
-      font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,monospace;
-      background:transparent; color:inherit; padding:0; border:none;
-      white-space:normal; word-break:break-word; overflow-wrap:anywhere;
+    /* Fix rendu TeX: pas de tag code visible + wrap doux */
+    .tex-inline {
+      display:inline; white-space:normal; word-break:break-word; overflow-wrap:anywhere;
     }
+    /* Si une formule devient vraiment longue, on la bloque en block pour casser les lignes */
+    .tex-inline.long { display:block; }
 
     .badge { display:inline-block; padding:4px 10px; border-radius:16px; font-size:.72rem; font-weight:700; text-transform:uppercase; letter-spacing:.4px; }
     .low{background:rgba(46,213,115,.16); color:#1f9d63;}
@@ -141,20 +151,20 @@
     @media (max-width: 900px) {
       .title { font-size:1.6rem; }
       thead th, td { padding:10px 8px; font-size:.86rem; }
-      .theme-toggle { padding:7px 10px; gap:6px; }
+      .theme-toggle { gap:8px; padding:6px 8px; }
     }
   </style>
 </head>
 <body>
-  <!-- Switch compact fixe, ne déborde pas -->
-  <button class="theme-toggle" id="themeBtn" aria-label="Basculer thème">
-    <span id="themeIcon">☀️</span>
-    <span id="themeText">Light</span>
-  </button>
+  <!-- Switch glissière accessible -->
+  <div class="theme-toggle" aria-live="polite">
+    <button id="toggleBtn" class="toggle" aria-pressed="false" aria-label="Basculer clair/sombre"></button>
+    <span id="toggleText" class="toggle-label">Light</span>
+  </div>
 
   <div class="container">
     <header class="header">
-      <h1 class="title">méthodes d'optimisation classées par diffusion</h1>
+      <h1 class="title">méthodes d'optimisation classées</h1>
       <p class="subtitle">Tri par colonne, recherche, numérotation, rendu TeX, thème clair/sombre</p>
     </header>
 
@@ -192,19 +202,15 @@
   </div>
 
   <script>
-    // Thème: light par défaut
-    (function initTheme(){
-      const html = document.documentElement;
-      html.setAttribute('data-theme', 'light');
-      document.getElementById('themeIcon').textContent = '☀️';
-      document.getElementById('themeText').textContent = 'Light';
-    })();
-    document.getElementById('themeBtn').addEventListener('click', ()=>{
-      const html = document.documentElement;
-      const isLight = html.getAttribute('data-theme') === 'light';
-      html.setAttribute('data-theme', isLight ? 'dark' : 'light');
-      document.getElementById('themeIcon').textContent = isLight ? '🌙' : '☀️';
-      document.getElementById('themeText').textContent = isLight ? 'Dark' : 'Light';
+    // Thème
+    const htmlEl = document.documentElement;
+    const btn = document.getElementById('toggleBtn');
+    const txt = document.getElementById('toggleText');
+    btn.addEventListener('click', ()=>{
+      const toDark = htmlEl.getAttribute('data-theme') === 'light';
+      htmlEl.setAttribute('data-theme', toDark ? 'dark' : 'light');
+      btn.setAttribute('aria-pressed', String(toDark));
+      txt.textContent = toDark ? 'Dark' : 'Light';
     });
 
     function escapeHTML(x){ return String(x).replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('>','&gt;'); }
@@ -219,8 +225,14 @@
       return `<span class="badge quad">${s}</span>`;
     }
 
+    // IMPORTANT: on utilise des spans .tex-inline au lieu de <code>, et on insère les délimiteurs \( \)
+    function texSpan(texString){
+      // heuristique: si la chaîne est longue, on ajoute .long pour casser en block
+      const long = texString.length > 80 ? ' long' : '';
+      return `<span class="tex-inline${long}">\\(${texString}\\)</span>`;
+    }
+
     const dataRows = [
-    
       {method:"Gradient Descent",formula:"x_{k+1}=x_k-\\alpha\\,\\nabla f(x_k)",memory:"Low O(n)",conv:"Linear",deriv:"1st Order",cond:"Poor (ill‑cond.)",diff:"Locale linéaire",diffFormula:"\\Delta f=\\nabla\\cdot(\\nabla f)",nature:"Isotrope",desc:"Descente de gradient classique.",link:"https://en.wikipedia.org/wiki/Gradient_descent"},
       {method:"Optimal Transport (Wasserstein)",formula:"W_2^2(p,q)=\\inf_{\\pi\\in\\Pi(p,q)}\\int\\|x-y\\|^2\\,d\\pi(x,y)",memory:"High O(n^3)",conv:"Superlinear",deriv:"Implicit Gradient",cond:"Excellent (géométrie lisse)",diff:"Géométrique",diffFormula:"\\Delta_W f=\\mathrm{div}_W(\\nabla_W f)",nature:"Wasserstein",desc:"Optimisation sur l’espace des mesures.",link:"https://en.wikipedia.org/wiki/Wasserstein_metric"},
       {method:"Fisher (Natural Gradient)",formula:"\\theta_{k+1}=\\theta_k-\\alpha\\,F(\\theta_k)^{-1}\\nabla_\\theta L(\\theta_k)",memory:"Medium–High O(n^2)",conv:"Superlinear",deriv:"Quasi‑2nd Order",cond:"Stable (Fisher metric)",diff:"Informationnelle",diffFormula:"\\Delta_F f=F^{-1}\\nabla\\cdot(F\\nabla f)",nature:"Naturel",desc:"Gradient naturel d’Amari.",link:"https://en.wikipedia.org/wiki/Natural_gradient"},
@@ -292,7 +304,7 @@
       {method:"Entropic Reg QN",formula:"QN + \\varepsilon\\,\\mathcal H",memory:"Medium O(n^2)",conv:"Linear–Super",deriv:"Entropic QN",cond:"Good",diff:"Entropique",diffFormula:"\\Delta_\\varepsilon",nature:"OT‑like",desc:"Régularisation.",link:"https://arxiv.org/abs/1610.06519"},
       {method:"Bayesian Hessian",formula:"H\\approx-\\mathbb E[\\nabla^2\\log p(\\theta|D)]",memory:"High O(n^2)",conv:"Quadratic",deriv:"Bayes 2nd",cond:"Good",diff:"Bayésienne",diffFormula:"-\\mathbb E[\\nabla^2\\log p]",nature:"Incertitude",desc:"Courbure post.",link:"https://arxiv.org/abs/1703.04977"},
       {method:"Spectral Block Newton",formula:"B=U\\Lambda U^T (bloc)",memory:"High O(b^3)",conv:"Superlinear",deriv:"Spectral",cond:"Good",diff:"Spectrale bloc",diffFormula:"U\\Lambda U^T",nature:"Parallèle",desc:"EVD bloc.",link:"https://arxiv.org/abs/1808.08865"}
-    ];
+      ];
 
     const tbody = document.getElementById('tableBody');
     const thead = document.querySelector('thead');
@@ -301,24 +313,18 @@
     let sortState = { key:'index', dir:'asc' };
     let view = dataRows.map((r,i)=>({...r, index:i+1}));
 
-    function badgeConv(s){
-      if(s.startsWith('Linear')) return `<span class="badge lin">${s}</span>`;
-      if(s.startsWith('Superlinear')) return `<span class="badge sup">${s}</span>`;
-      return `<span class="badge quad">${s}</span>`;
-    }
-
     function rowHTML(r){
       return `
         <tr>
           <td class="index">${r.index}</td>
           <td class="method">${escapeHTML(r.method)}</td>
-          <td>ode class="formula">\\(${r.formula}\\)</code></td>
+          <td>${texSpan(r.formula)}</td>
           <td>${badgeMemory(r.memory)}</td>
           <td>${badgeConv(r.conv)}</td>
           <td>${escapeHTML(r.deriv)}</td>
           <td>${escapeHTML(r.cond)}</td>
           <td>${escapeHTML(r.diff)}</td>
-          <td>ode class="formula">\\(${r.diffFormula}\\)</code></td>
+          <td>${texSpan(r.diffFormula)}</td>
           <td>${escapeHTML(r.nature)}</td>
           <td>${escapeHTML(r.desc)}</td>
           <td><a href="${r.link}" target="_blank" rel="noopener">Lien</a></td>
@@ -366,12 +372,8 @@
     function applySearch(){
       const q = searchBox.value.trim().toLowerCase();
       const src = dataRows.map((r,i)=>({...r,index:i+1}));
-      if (!q) {
-        view = src;
-      } else {
-        view = src.filter(r => Object.keys(r).some(k => String(r[k]).toLowerCase().includes(q)));
-      }
-      // conserver tri
+      view = !q ? src : src.filter(r => Object.values(r).some(v => String(v).toLowerCase().includes(q)));
+      // conserver le tri courant
       view.sort((a,b)=>{
         const va = normalizeForSort(a[sortState.key]);
         const vb = normalizeForSort(b[sortState.key]);
