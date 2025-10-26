@@ -1,0 +1,649 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Stylistic Classification of Camera Shots</title>
+    <style>
+        :root {
+            --bg-primary: #fafafa;
+            --bg-secondary: #ffffff;
+            --text-primary: #222222;
+            --text-secondary: #555555;
+            --border-color: #e0e0e0;
+            --card-bg: #ffffff;
+            --accent-gold: #c9b037;
+            --shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+        }
+
+        [data-theme="dark"] {
+            --bg-primary: #121212;
+            --bg-secondary: #1e1e1e;
+            --text-primary: #f0f0f0;
+            --text-secondary: #aaaaaa;
+            --border-color: #3a3a3a;
+            --card-bg: #252525;
+            --accent-gold: #d4af37;
+            --shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
+        }
+
+        body {
+            font-family: system-ui, -apple-system, 'Segoe UI', Roboto, Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            transition: background 0.3s ease, color 0.3s ease;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: var(--bg-secondary);
+            border-radius: 16px;
+            padding: 30px;
+            box-shadow: var(--shadow);
+            border: 1px solid var(--border-color);
+            position: relative;
+        }
+
+        .theme-switch {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            z-index: 10;
+        }
+
+        .switch {
+            position: relative;
+            display: inline-block;
+            width: 52px;
+            height: 28px;
+        }
+
+        .switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #888;
+            transition: 0.4s;
+            border-radius: 28px;
+        }
+
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 20px;
+            width: 20px;
+            left: 4px;
+            bottom: 4px;
+            background-color: white;
+            transition: 0.4s;
+            border-radius: 50%;
+        }
+
+        input:checked + .slider {
+            background-color: var(--accent-gold);
+        }
+
+        input:checked + .slider:before {
+            transform: translateX(24px);
+        }
+
+        h1 {
+            text-align: center;
+            font-size: 2.2em;
+            margin: 0 0 30px;
+            color: var(--accent-gold);
+            font-weight: 700;
+            letter-spacing: -0.5px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+            background: var(--card-bg);
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: var(--shadow);
+            border: 1px solid var(--border-color);
+        }
+
+        th, td {
+            padding: 14px 16px;
+            text-align: left;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        th {
+            background: var(--bg-secondary);
+            color: var(--accent-gold);
+            font-weight: 700;
+            text-transform: uppercase;
+            font-size: 0.9em;
+            letter-spacing: 0.5px;
+        }
+
+        [data-theme="dark"] th {
+            background: var(--bg-primary);
+        }
+
+        tr:last-child td {
+            border-bottom: none;
+        }
+
+        tr:hover td {
+            background: var(--bg-primary);
+        }
+
+        .category {
+            font-weight: 700;
+            color: var(--accent-gold);
+            background: transparent !important;
+            font-size: 1em;
+        }
+
+        footer {
+            text-align: center;
+            margin-top: 40px;
+            padding: 20px;
+            color: var(--text-secondary);
+            font-size: 0.95em;
+        }
+
+        footer a {
+            color: var(--accent-gold);
+            text-decoration: none;
+        }
+
+        footer a:hover {
+            text-decoration: underline;
+        }
+
+        /* Mobile */
+        @media (max-width: 768px) {
+            .container {
+                padding: 20px 15px 40px;
+            }
+
+            .theme-switch {
+                position: static;
+                justify-content: flex-end;
+                margin-bottom: 15px;
+            }
+
+            h1 {
+                font-size: 1.8em;
+            }
+
+            table, thead, tbody, th, td, tr {
+                display: block;
+            }
+
+            thead tr {
+                display: none;
+            }
+
+            tr {
+                margin-bottom: 16px;
+                border: 1px solid var(--border-color);
+                border-radius: 12px;
+                padding: 16px;
+                background: var(--card-bg);
+            }
+
+            td {
+                border: none;
+                position: relative;
+                padding-left: 30% !important;
+                padding-top: 12px;
+                padding-bottom: 12px;
+            }
+
+            td:before {
+                content: attr(data-label);
+                position: absolute;
+                left: 16px;
+                top: 12px;
+                width: 28%;
+                font-weight: 700;
+                color: var(--accent-gold);
+            }
+
+            .category {
+                padding-left: 16px !important;
+                padding-right: 16px !important;
+                font-size: 1.1em;
+                border-bottom: 2px solid var(--accent-gold);
+                margin-bottom: 10px;
+            }
+        }
+    </style>
+</head>
+<body data-theme="light">
+    <div class="container">
+        <div class="theme-switch">
+            <label class="switch">
+                <input type="checkbox" id="themeToggle" />
+                <span class="slider"></span>
+            </label>
+            <span>Dark Mode</span>
+        </div>
+
+        <h1>Stylistic Classification of Camera Shots</h1>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Category</th>
+                    <th>Technique</th>
+                    <th>Description</th>
+                    <th>Visual Effect</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td rowspan="4" class="category" data-label="Category">Rotation</td>
+                    <td data-label="Technique">Horizontal Pan (Pan)</td>
+                    <td data-label="Description">Left-right rotation to follow or reveal</td>
+                    <td data-label="Visual Effect">Captivating Image</td>
+                </tr>
+                <tr>
+                    <td data-label="Technique">Vertical Pan (Tilt)</td>
+                    <td data-label="Description">Up-down rotation to reveal scale</td>
+                    <td data-label="Visual Effect">Captivating Image / Stunning Image</td>
+                </tr>
+                <tr>
+                    <td data-label="Technique">Axial Rotation (Roll)</td>
+                    <td data-label="Description">Tilt around the optical axis → vertigo</td>
+                    <td data-label="Visual Effect">Stunning Image</td>
+                </tr>
+                <tr>
+                    <td data-label="Technique">Whip Pan</td>
+                    <td data-label="Description">Very fast pan, energetic transition</td>
+                    <td data-label="Visual Effect">Captivating Image</td>
+                </tr>
+                <tr>
+                    <td rowspan="6" class="category" data-label="Category">Translation</td>
+                    <td data-label="Technique">Forward Dolly</td>
+                    <td data-label="Description">Camera advances toward the subject → intensity</td>
+                    <td data-label="Visual Effect">Captivating Image</td>
+                </tr>
+                <tr>
+                    <td data-label="Technique">Backward Dolly</td>
+                    <td data-label="Description">Camera recedes → reveals context</td>
+                    <td data-label="Visual Effect">Captivating Image / Stunning Image</td>
+                </tr>
+                <tr>
+                    <td data-label="Technique">Lateral Dolly (Truck/Slide)</td>
+                    <td data-label="Description">Parallel movement → parallax</td>
+                    <td data-label="Visual Effect">Captivating Image</td>
+                </tr>
+                <tr>
+                    <td data-label="Technique">Circular Dolly (Arc/Orbit)</td>
+                    <td data-label="Description">Circular movement around the subject</td>
+                    <td data-label="Visual Effect">Stunning Image / Mise en Abyme</td>
+                </tr>
+                <tr>
+                    <td data-label="Technique">Pedestal Up/Down</td>
+                    <td data-label="Description">Pure vertical rise/descent</td>
+                    <td data-label="Visual Effect">Captivating Image</td>
+                </tr>
+                <tr>
+                    <td data-label="Technique">Crane/Jib/Boom</td>
+                    <td data-label="Description">Ample movement in space (3D)</td>
+                    <td data-label="Visual Effect">Stunning Image</td>
+                </tr>
+                <tr>
+                    <td rowspan="4" class="category" data-label="Category">Optics & Combination</td>
+                    <td data-label="Technique">Zoom In/Out</td>
+                    <td data-label="Description">Focal length change without movement</td>
+                    <td data-label="Visual Effect">Captivating Image</td>
+                </tr>
+                <tr>
+                    <td data-label="Technique">Dolly Zoom (Vertigo Effect)</td>
+                    <td data-label="Description">Dolly + inverse zoom → distortion</td>
+                    <td data-label="Visual Effect">Stunning Image / Mise en Abyme</td>
+                </tr>
+                <tr>
+                    <td data-label="Technique">Push-In / Pull-Out</td>
+                    <td data-label="Description">Fluid approach/withdrawal (dolly, slider)</td>
+                    <td data-label="Visual Effect">Captivating Image</td>
+                </tr>
+                <tr>
+                    <td data-label="Technique">Reveal by Movement</td>
+                    <td data-label="Description">Movement that reveals a key element</td>
+                    <td data-label="Visual Effect">Captivating Image / Stunning Image</td>
+                </tr>
+                <tr>
+                    <td rowspan="4" class="category" data-label="Category">Stabilization & Carries</td>
+                    <td data-label="Technique">Steadicam / Gimbal</td>
+                    <td data-label="Description">Fluid shoulder movement</td>
+                    <td data-label="Visual Effect">Captivating Image</td>
+                </tr>
+                <tr>
+                    <td data-label="Technique">Handheld</td>
+                    <td data-label="Description">Handheld camera → realism, urgency</td>
+                    <td data-label="Visual Effect">Captivating Image</td>
+                </tr>
+                <tr>
+                    <td data-label="Technique">Slider</td>
+                    <td data-label="Description">Short ultra-stable translation</td>
+                    <td data-label="Visual Effect">Captivating Image</td>
+                </tr>
+                <tr>
+                    <td data-label="Technique">Motion Control</td>
+                    <td data-label="Description">Robotic repeatable movements (VFX, timelapse)</td>
+                    <td data-label="Visual Effect">Stunning Image / Mise en Abyme</td>
+                </tr>
+                <tr>
+                    <td rowspan="4" class="category" data-label="Category">Aerial & Drone</td>
+                    <td data-label="Technique">Drone Push/Pull</td>
+                    <td data-label="Description">Aerial approach/removal</td>
+                    <td data-label="Visual Effect">Stunning Image</td>
+                </tr>
+                <tr>
+                    <td data-label="Technique">Drone Orbit</td>
+                    <td data-label="Description">Aerial circle around the subject</td>
+                    <td data-label="Visual Effect">Stunning Image</td>
+                </tr>
+                <tr>
+                    <td data-label="Technique">Top-Down Flyover</td>
+                    <td data-label="Description">Vertical view from above → graphics</td>
+                    <td data-label="Visual Effect">Stunning Image / Mise en Abyme</td>
+                </tr>
+                <tr>
+                    <td data-label="Technique">Rise-Reveal</td>
+                    <td data-label="Description">Rise from an obstacle then reveal</td>
+                    <td data-label="Visual Effect">Stunning Image</td>
+                </tr>
+                <tr>
+                    <td rowspan="3" class="category" data-label="Category">Timelapse & Speed</td>
+                    <td data-label="Technique">Timelapse + Slider</td>
+                    <td data-label="Description">Slow cumulative movement over long duration</td>
+                    <td data-label="Visual Effect">Stunning Image</td>
+                </tr>
+                <tr>
+                    <td data-label="Technique">Hyperlapse</td>
+                    <td data-label="Description">Movement by jumps → speed effect</td>
+                    <td data-label="Visual Effect">Stunning Image</td>
+                </tr>
+                <tr>
+                    <td data-label="Technique">Speed Ramping Applied to Moves</td>
+                    <td data-label="Description">Speed variation in movement</td>
+                    <td data-label="Visual Effect">Captivating Image</td>
+                </tr>
+                <tr>
+                    <td rowspan="4" class="category" data-label="Category">Virtual & 2.5D</td>
+                    <td data-label="Technique">Ken Burns Effect</td>
+                    <td data-label="Description">Digital pan/zoom on still image</td>
+                    <td data-label="Visual Effect">Captivating Image</td>
+                </tr>
+                <tr>
+                    <td data-label="Technique">2.5D Parallax</td>
+                    <td data-label="Description">Layer breakdown → fake movement</td>
+                    <td data-label="Visual Effect">Mise en Abyme</td>
+                </tr>
+                <tr>
+                    <td data-label="Technique">Camera Mapping / Projection</td>
+                    <td data-label="Description">3D reconstruction from still images</td>
+                    <td data-label="Visual Effect">Mise en Abyme / Stunning Image</td>
+                </tr>
+                <tr>
+                    <td data-label="Technique">Digital Stabilization / Warp</td>
+                    <td data-label="Description">Correction or stylization in post-production</td>
+                    <td data-label="Visual Effect">Captivating Image / Stunning Image</td>
+                </tr>
+                <tr>
+                    <td rowspan="4" class="category" data-label="Category">Tracking & Interaction</td>
+                    <td data-label="Technique">Tracking (Lateral Follow)</td>
+                    <td data-label="Description">Camera follows subject in parallel</td>
+                    <td data-label="Visual Effect">Captivating Image</td>
+                </tr>
+                <tr>
+                    <td data-label="Technique">Lead / Follow</td>
+                    <td data-label="Description">Camera precedes or follows in axis</td>
+                    <td data-label="Visual Effect">Captivating Image</td>
+                </tr>
+                <tr>
+                    <td data-label="Technique">Focal Orbit</td>
+                    <td data-label="Description">Subject centered during an arc</td>
+                    <td data-label="Visual Effect">Stunning Image / Mise en Abyme</td>
+                </tr>
+                <tr>
+                    <td data-label="Technique">Walk-and-Talk</td>
+                    <td data-label="Description">Continuous movement in dialogue</td>
+                    <td data-label="Visual Effect">Captivating Image</td>
+                </tr>
+                <tr>
+                    <td rowspan="4" class="category" data-label="Category">Common Combinations</td>
+                    <td data-label="Technique">Tilt-Up Reveal + Forward Dolly</td>
+                    <td data-label="Description">Rise + approach → visual impact</td>
+                    <td data-label="Visual Effect">Stunning Image</td>
+                </tr>
+                <tr>
+                    <td data-label="Technique">Pan + Lateral Dolly</td>
+                    <td data-label="Description">Spatial description + parallax</td>
+                    <td data-label="Visual Effect">Captivating Image</td>
+                </tr>
+                <tr>
+                    <td data-label="Technique">Forward Dolly + Backward Zoom</td>
+                    <td data-label="Description">Psychological tension (dolly zoom)</td>
+                    <td data-label="Visual Effect">Stunning Image / Mise en Abyme</td>
+                </tr>
+                <tr>
+                    <td data-label="Technique">Orbit + Speed Ramp</td>
+                    <td data-label="Description">Spectacular accent on a point</td>
+                    <td data-label="Visual Effect">Stunning Image</td>
+                </tr>
+                <tr>
+                    <td rowspan="30" class="category" data-label="Category">Framing & Perspective</td>
+                    <td data-label="Technique">Over-the-Shoulder (OTS)</td>
+                    <td data-label="Description">View over the shoulder</td>
+                    <td data-label="Visual Effect">Captivating Image</td>
+                </tr>
+                <tr>
+                    <td data-label="Technique">Point of View (POV)</td>
+                    <td data-label="Description">Camera = character's gaze</td>
+                    <td data-label="Visual Effect">Captivating Image / Mise en Abyme</td>
+                </tr>
+                <tr>
+                    <td data-label="Technique">Dutch Angle</td>
+                    <td data-label="Description">Tilted frame → tension</td>
+                    <td data-label="Visual Effect">Captivating Image / Stunning Image</td>
+                </tr>
+                <tr>
+                    <td data-label="Technique">Extreme Close-Up (ECU)</td>
+                    <td data-label="Description">Extreme close-up (eye, drop)</td>
+                    <td data-label="Visual Effect">Captivating Image</td>
+                </tr>
+                <tr>
+                    <td data-label="Technique">Extreme Wide Shot (EWS)</td>
+                    <td data-label="Description">Tiny character in landscape</td>
+                    <td data-label="Visual Effect">Stunning Image</td>
+                </tr>
+                <tr>
+                    <td data-label="Technique">Bird’s-Eye View</td>
+                    <td data-label="Description">Vertical overhead view</td>
+                    <td data-label="Visual Effect">Stunning Image / Mise en Abyme</td>
+                </tr>
+                <tr>
+                    <td data-label="Technique">Worm’s-Eye View</td>
+                    <td data-label="Description">View from the ground upward</td>
+                    <td data-label="Visual Effect">Stunning Image</td>
+                </tr>
+                <tr>
+                    <td data-label="Technique">Rack Focus</td>
+                    <td data-label="Description">Focus shift</td>
+                    <td data-label="Visual Effect">Captivating Image</td>
+                </tr>
+                <tr>
+                    <td data-label="Technique">Tilt-Shift</td>
+                    <td data-label="Description">Miniaturization effect via selective blur</td>
+                    <td data-label="Visual Effect">Mise en Abyme</td>
+                </tr>
+                <tr>
+                    <td data-label="Technique">SnorriCam</td>
+                    <td data-label="Description">Camera fixed on body → background moves</td>
+                    <td data-label="Visual Effect">Stunning Image / Mise en Abyme</td>
+                </tr>
+                <tr>
+                    <td data-label="Technique">Mirror Shot</td>
+                    <td data-label="Description">Subject filmed via mirror</td>
+                    <td data-label="Visual Effect">Mise en Abyme</td>
+                </tr>
+                <tr>
+                    <td data-label="Technique">Through-the-Lens (TTL)</td>
+                    <td data-label="Description">View through object (binoculars, keyhole)</td>
+                    <td data-label="Visual Effect">Captivating Image / Mise en Abyme</td>
+                </tr>
+                <tr>
+                    <td data-label="Technique">Silhouette Shot</td>
+                    <td data-label="Description">Subject in backlight</td>
+                    <td data-label="Visual Effect">Captivating Image / Stunning Image</td>
+                </tr>
+                <tr>
+                    <td data-label="Technique">Frame Within a Frame</td>
+                    <td data-label="Description">Framing through an opening</td>
+                    <td data-label="Visual Effect">Mise en Abyme</td>
+                </tr>
+                <tr>
+                    <td data-label="Technique">Freeze Frame</td>
+                    <td data-label="Description">Image frozen in time</td>
+                    <td data-label="Visual Effect">Captivating Image</td>
+                </tr>
+                <tr>
+                    <td data-label="Technique">Bullet Time</td>
+                    <td data-label="Description">Sequence of fixed cameras in a circle</td>
+                    <td data-label="Visual Effect">Stunning Image</td>
+                </tr>
+                <tr>
+                    <td data-label="Technique">First-Person Shooter (FPS)</td>
+                    <td data-label="Description">Subjective immersion (games, VR)</td>
+                    <td data-label="Visual Effect">Captivating Image</td>
+                </tr>
+                <tr>
+                    <td data-label="Technique">Surveillance Shot</td>
+                    <td data-label="Description">Security camera aesthetic</td>
+                    <td data-label="Visual Effect">Mise en Abyme</td>
+                </tr>
+                <tr>
+                    <td data-label="Technique">God’s-Eye Shot</td>
+                    <td data-label="Description">Omniscient centered view</td>
+                    <td data-label="Visual Effect">Stunning Image / Mise en Abyme</td>
+                </tr>
+                <tr>
+                    <td data-label="Technique">Dolly Out Reveal</td>
+                    <td data-label="Description">Slow recede that reveals dramatic context</td>
+                    <td data-label="Visual Effect">Stunning Image</td>
+                </tr>
+                <tr>
+                    <td data-label="Technique">Insert Shot</td>
+                    <td data-label="Description">Close-up on narrative object</td>
+                    <td data-label="Visual Effect">Captivating Image</td>
+                </tr>
+                <tr>
+                    <td data-label="Technique">Establishing Shot</td>
+                    <td data-label="Description">Wide shot to situate the action</td>
+                    <td data-label="Visual Effect">Captivating Image / Stunning Image</td>
+                </tr>
+                <tr>
+                    <td data-label="Technique">Match Cut</td>
+                    <td data-label="Description">Transition by visual similarity</td>
+                    <td data-label="Visual Effect">Mise en Abyme</td>
+                </tr>
+                <tr>
+                    <td data-label="Technique">Reverse Tracking Shot</td>
+                    <td data-label="Description">Camera recedes as subject advances</td>
+                    <td data-label="Visual Effect">Captivating Image</td>
+                </tr>
+                <tr>
+                    <td data-label="Technique">Forced Perspective</td>
+                    <td data-label="Description">Illusion of size/distance via framing</td>
+                    <td data-label="Visual Effect">Mise en Abyme</td>
+                </tr>
+                <tr>
+                    <td data-label="Technique">Anamorphic Lens Flare</td>
+                    <td data-label="Description">Characteristic horizontal flares</td>
+                    <td data-label="Visual Effect">Stunning Image</td>
+                </tr>
+                <tr>
+                    <td data-label="Technique">Lens Distortion Close-Up</td>
+                    <td data-label="Description">Close-up with wide-angle → deformation</td>
+                    <td data-label="Visual Effect">Stunning Image / Mise en Abyme</td>
+                </tr>
+                <tr>
+                    <td data-label="Technique">One-Shot Wonder</td>
+                    <td data-label="Description">Complex sequence simulated in one shot</td>
+                    <td data-label="Visual Effect">Stunning Image</td>
+                </tr>
+                <tr>
+                    <td data-label="Technique">Subjective Blur</td>
+                    <td data-label="Description">Blur to simulate mental state</td>
+                    <td data-label="Visual Effect">Captivating Image / Mise en Abyme</td>
+                </tr>
+                <tr>
+                    <td data-label="Technique">Refraction Shot</td>
+                    <td data-label="Description">View through distorting material (water, glass)</td>
+                    <td data-label="Visual Effect">Mise en Abyme</td>
+                </tr>
+                <tr>
+                    <td rowspan="4" class="category" data-label="Category">Montage (Non-Movement)</td>
+                    <td data-label="Technique">Shot/Reverse Shot</td>
+                    <td data-label="Description">Alternation of opposing angles</td>
+                    <td data-label="Visual Effect">Captivating Image</td>
+                </tr>
+                <tr>
+                    <td data-label="Technique">Sequence Shot</td>
+                    <td data-label="Description">Long shot with integrated movements</td>
+                    <td data-label="Visual Effect">Captivating Image / Stunning Image</td>
+                </tr>
+                <tr>
+                    <td data-label="Technique">Moving Matches</td>
+                    <td data-label="Description">Fluid transitions via direction/speed</td>
+                    <td data-label="Visual Effect">Captivating Image</td>
+                </tr>
+                <tr>
+                    <td data-label="Technique">Kuleshov Effect</td>
+                    <td data-label="Description">Montage of neutral shots to infer emotion/meaning</td>
+                    <td data-label="Visual Effect">Captivating Image / Mise en Abyme</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <footer>
+        Copyright Thibaut Lombard <a href="https://github.com/Lombard-Web-Services/Docs/">Lombard-web-services</a>.
+    </footer>
+
+    <script>
+        function toggleTheme() {
+            const body = document.body;
+            const theme = body.getAttribute('data-theme') === 'light' ? 'dark' : 'light';
+            body.setAttribute('data-theme', theme);
+            localStorage.setItem('theme', theme);
+        }
+
+        document.getElementById('themeToggle').addEventListener('change', toggleTheme);
+
+        // Load saved theme
+        const savedTheme = localStorage.getItem('theme') || 'light';
+        document.body.setAttribute('data-theme', savedTheme);
+        document.getElementById('themeToggle').checked = savedTheme === 'dark';
+    </script>
+</body>
+</html>
