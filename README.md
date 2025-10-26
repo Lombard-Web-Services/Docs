@@ -15,6 +15,42 @@ A compilation of key "scientific walls" in physics and cosmology: equations (LaT
 
 👉 [Access here](https://lombard-web-services.github.io/Docs/Scientific_walls_EN.html)
 
+## 🇫🇷 Méthodes d’Optimisation par Diffusion
+
+Un tableau classé des méthodes d’optimisation inspirées par la diffusion, indiquant complexité, ordre de convergence, familles (spectrales, bayésiennes, entropiques, Krylov, scaling, deep), et un lien par méthode.  
+
+👉 [Accéder ici](https://lombard-web-services.github.io/Docs/Optimization_Methods_By_Diffusion_FR.html)
+
+## 🇬🇧 Optimization Methods by Diffusion
+
+A ranked table of diffusion‑inspired optimization methods listing complexity, convergence order, families (spectral, Bayesian, entropic, Krylov, scaling, deep), and one reference link per method.  
+
+👉 [Access here](https://lombard-web-services.github.io/Docs/Optimization_Methods_By_Diffusion_EN.html)
+
+## 🇫🇷 Technologies : Stable Diffusion, I2VGen, SVD
+
+Un tableau non exhaustif (2025) des outils et modèles vidéo par diffusion (SVD, SVD 2.0, I2VGen‑XL, AnimateDiff, ModelScope) détaillant cohérence temporelle, réalisme, contrôle caméra, artefacts, accessibilité et capacités.  
+
+👉 [Accéder ici](https://lombard-web-services.github.io/Docs/Stable_diffusion-I2Vgen-SVD-Technologies_FR.html)
+
+## 🇬🇧 Technologies: Stable Diffusion, I2VGen, SVD
+
+A non‑exhaustive (2025) table of diffusion‑based video tools and models (SVD, SVD 2.0, I2VGen‑XL, AnimateDiff, ModelScope) covering temporal coherence, realism, camera control, artifacts, accessibility, and capabilities.  
+
+👉 [Access here](https://lombard-web-services.github.io/Docs/Stable_diffusion-I2Vgen-SVD-Technologies_EN.html)
+
+## 🇫🇷 Classification des Points de Vue (PoV)
+
+Un tableau de classification stylistique des plans et mouvements caméra (panoramique horizontal/vertical, roll, whip pan, dolly avant/arrière/latéral/circulaire) avec l’effet visuel associé.  
+
+👉 [Accéder ici](https://lombard-web-services.github.io/Docs/PoV-classification_FR.html)
+
+## 🇬🇧 PoV Classification
+
+A stylistic classification table of camera shots and motions (horizontal/vertical pan, roll, whip pan, forward/backward/lateral/circular dolly) with the associated visual effect.  
+
+👉 [Access here](https://lombard-web-services.github.io/Docs/PoV-classification_EN.html)
+
 ## 🇫🇷 Cartographie spectrale des mécanismes d'émission
 
 Cartographie visuelle et interactive des mécanismes d’émission de lumière, reliant chaque processus à ses gammes spectrales typiques et déterminants physiques.
