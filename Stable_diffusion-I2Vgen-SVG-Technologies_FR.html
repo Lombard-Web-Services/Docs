@@ -1,0 +1,1527 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Technologies de Stable Diffusion, I2VGen, SVD</title>
+    <style>
+        :root {
+            --bg-color: #f8f9fa;
+            --text-color: #333;
+            --header-bg: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            --header-text: white;
+            --table-bg: white;
+            --row-even: #f8f9fa;
+            --row-hover: #e9ecef;
+            --border-color: #dee2e6;
+            --link-color: #667eea;
+            --shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        [data-theme="dark"] {
+            --bg-color: #121212;
+            --text-color: #e0e0e0;
+            --header-bg: linear-gradient(135deg, #1e3a8a 0%, #3730a3 100%);
+            --header-text: #f3f4f6;
+            --table-bg: #1f2937;
+            --row-even: #374151;
+            --row-hover: #4b5563;
+            --border-color: #4b5563;
+            --link-color: #93c5fd;
+            --shadow: 0 4px 8px rgba(0,0,0,0.3);
+        }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-color);
+            margin: 0;
+            padding: 20px;
+            color: var(--text-color);
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+        h1 {
+            text-align: center;
+            color: var(--link-color);
+            margin-bottom: 10px;
+            font-size: 2em;
+        }
+        .subtitle {
+            text-align: center;
+            font-style: italic;
+            color: var(--text-color);
+            margin-bottom: 30px;
+            font-size: 1.1em;
+            opacity: 0.8;
+        }
+        .theme-switch {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: var(--header-bg);
+            color: var(--header-text);
+            border: none;
+            padding: 10px 15px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.3s ease;
+            box-shadow: var(--shadow);
+        }
+        .theme-switch:hover {
+            transform: scale(1.05);
+        }
+        .search-container {
+            margin-bottom: 20px;
+            text-align: center;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+        #searchInput {
+            padding: 12px;
+            width: 300px;
+            max-width: 100%;
+            border: 1px solid var(--border-color);
+            border-radius: 25px;
+            font-size: 16px;
+            outline: none;
+            background-color: var(--table-bg);
+            color: var(--text-color);
+            box-shadow: var(--shadow);
+            transition: box-shadow 0.3s ease, border-color 0.3s ease;
+        }
+        #searchInput:focus {
+            box-shadow: 0 2px 8px rgba(102, 126, 234, 0.3);
+            border-color: var(--link-color);
+        }
+        .search-btn {
+            padding: 12px 16px;
+            background: var(--header-bg);
+            color: var(--header-text);
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 16px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            transition: transform 0.2s ease, box-shadow 0.3s ease;
+        }
+        .search-btn:hover {
+            transform: scale(1.05);
+            box-shadow: var(--shadow);
+        }
+        .search-btn:active {
+            transform: scale(0.98);
+        }
+        .loupe::before {
+            content: "🔍";
+        }
+        .table-wrapper {
+            overflow-x: auto;
+            border-radius: 10px;
+            box-shadow: var(--shadow);
+            background-color: var(--table-bg);
+            margin-bottom: 20px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background-color: var(--table-bg);
+        }
+        thead tr {
+            background: var(--header-bg);
+            color: var(--header-text);
+        }
+        th {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid var(--border-color);
+            vertical-align: middle;
+            font-weight: 600;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+        td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid var(--border-color);
+            vertical-align: top;
+        }
+        tbody tr {
+            transition: opacity 0.3s ease, background-color 0.3s ease;
+            opacity: 1;
+        }
+        tbody tr.fade-out {
+            opacity: 0;
+        }
+        tbody tr:nth-child(even) {
+            background-color: var(--row-even);
+        }
+        tbody tr:hover {
+            background-color: var(--row-hover);
+        }
+        a {
+            color: var(--link-color);
+            text-decoration: none;
+        }
+        a:hover {
+            text-decoration: underline;
+        }
+        .stars {
+            color: #ffd700;
+            font-size: 14px;
+        }
+        .results-footer {
+            text-align: center;
+            padding: 10px;
+            background-color: var(--row-even);
+            border-top: 1px solid var(--border-color);
+            color: var(--text-color);
+            font-size: 14px;
+            font-weight: 500;
+        }
+        footer {
+            text-align: center;
+            color: var(--text-color);
+            font-size: 12px;
+            border-top: 1px solid var(--border-color);
+            padding-top: 10px;
+            margin-top: 20px;
+            opacity: 0.7;
+        }
+        /* Responsive: Stack columns on small screens */
+        @media only screen and (max-width: 768px) {
+            .table-wrapper {
+                border: 0;
+            }
+            table, thead, tbody, th, td, tr {
+                display: block;
+            }
+            thead tr {
+                position: absolute;
+                top: -9999px;
+                left: -9999px;
+            }
+            tr {
+                border: 1px solid var(--border-color);
+                margin-bottom: 10px;
+                border-radius: 5px;
+                padding: 10px;
+                background: var(--table-bg);
+                box-shadow: var(--shadow);
+            }
+            tr.fade-out {
+                display: none !important;
+                opacity: 0;
+            }
+            td {
+                border: none;
+                position: relative;
+                padding-left: 50%;
+                padding-top: 10px;
+                padding-bottom: 10px;
+                text-align: right;
+                font-weight: normal;
+                word-wrap: break-word;
+                background-color: inherit;
+            }
+            td:before {
+                content: attr(data-label) ": ";
+                position: absolute;
+                left: 6px;
+                width: 45%;
+                padding-right: 10px;
+                white-space: nowrap;
+                font-weight: bold;
+                color: var(--link-color);
+                text-align: left;
+            }
+            td:last-child {
+                border-bottom: 0;
+            }
+            #searchInput {
+                width: calc(100% - 24px);
+                padding: 12px;
+            }
+            .search-container {
+                flex-direction: column;
+                gap: 15px;
+            }
+            .search-btn {
+                width: 100%;
+                justify-content: center;
+            }
+            th, td {
+                padding: 8px;
+            }
+            .theme-switch {
+                top: 10px;
+                right: 10px;
+                position: fixed;
+            }
+        }
+        @media (max-width: 768px) {
+            body {
+                padding: 10px;
+            }
+            h1 {
+                font-size: 1.5em;
+            }
+        }
+    </style>
+</head>
+<body data-theme="light">
+    <button class="theme-switch" onclick="toggleTheme()">🌙 Dark Mode</button>
+    <h1>Technologies de Stable Diffusion, I2VGen, SVD</h1>
+    <p class="subtitle">Ce tableau est une liste non exhaustive (2025) d'outils et modèles basés sur des technologies de diffusion comme Stable Diffusion, I2VGen et SVD, incluant des options open source et SaaS pour une accessibilité variée.</p>
+    <div class="search-container">
+        <input type="text" id="searchInput" placeholder="Rechercher dans le tableau...">
+        <button class="search-btn" id="searchBtn">
+            <span class="loupe"></span>
+            Rechercher
+        </button>
+    </div>
+    <div class="table-wrapper">
+        <table>
+            <thead>
+                <tr>
+                    <th>Nom</th>
+                    <th>Site/Projet</th>
+                    <th>Description</th>
+                    <th>Modèles Disponibles</th>
+                    <th>Cohérence Temporelle</th>
+                    <th>Réalisme</th>
+                    <th>Contrôle Caméra</th>
+                    <th>Artefacts</th>
+                    <th>Accessibilité</th>
+                    <th>Type</th>
+                    <th>Type de Techno</th>
+                    <th>Résolution / Max Frames / Temps Gratuit</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td data-label="Nom">Stable Video Diffusion (SVD)</td>
+                    <td data-label="Site/Projet"><a href="https://github.com/Stability-AI/generative-models" target="_blank">github.com/Stability-AI/generative-models</a></td>
+                    <td data-label="Description">Modèle de diffusion pour générer des vidéos courtes à partir d'images, basé sur Stable Diffusion, avec une cohérence temporelle élevée pour 14 à 25 frames.</td>
+                    <td data-label="Modèles Disponibles">SVD, SVD-XT, SV4D 2.0</td>
+                    <td data-label="Cohérence Temporelle"><span class="stars">⭐⭐⭐⭐</span></td>
+                    <td data-label="Réalisme"><span class="stars">⭐⭐⭐⭐</span></td>
+                    <td data-label="Contrôle Caméra"><span class="stars">⭐⭐⭐</span></td>
+                    <td data-label="Artefacts">Occasionnels flickering</td>
+                    <td data-label="Accessibilité">Gratuit, open source, exécutable localement ou via Hugging Face Spaces.</td>
+                    <td data-label="Type">Projet OSS</td>
+                    <td data-label="Type de Techno">SVD</td>
+                    <td data-label="Résolution / Max Frames / Temps Gratuit">576x1024 / 25 frames / Illimité (local)</td>
+                </tr>
+                <tr>
+                    <td data-label="Nom">Stable Video Diffusion 2.0 (SVD 2.0)</td>
+                    <td data-label="Site/Projet"><a href="https://stability.ai/blog/svd-2" target="_blank">stability.ai/blog/svd-2</a></td>
+                    <td data-label="Description">Nouvelle version de SVD avec support jusqu’à 48 frames, meilleure cohérence temporelle, et génération 1080p native. Intègre un scheduler optimisé et un fine-tuning par mouvement.</td>
+                    <td data-label="Modèles Disponibles">SVD 2.0, SVD 2.0-XT, SVD 2.0-Ultra</td>
+                    <td data-label="Cohérence Temporelle"><span class="stars">⭐⭐⭐⭐</span></td>
+                    <td data-label="Réalisme"><span class="stars">⭐⭐⭐⭐</span></td>
+                    <td data-label="Contrôle Caméra"><span class="stars">⭐⭐⭐</span></td>
+                    <td data-label="Artefacts">Parfois "ghosting" sur objets rapides</td>
+                    <td data-label="Accessibilité">Gratuit, open source (via Hugging Face et GitHub)</td>
+                    <td data-label="Type">Projet OSS</td>
+                    <td data-label="Type de Techno">SVD</td>
+                    <td data-label="Résolution / Max Frames / Temps Gratuit">1080p / 48 frames / Illimité (local)</td>
+                </tr>
+                <tr>
+                    <td data-label="Nom">I2VGen-XL</td>
+                    <td data-label="Site/Projet"><a href="https://github.com/ali-vilab/VGen" target="_blank">github.com/ali-vilab/VGen</a></td>
+                    <td data-label="Description">Modèle en cascade de diffusion pour la synthèse vidéo haute qualité à partir d'images, avec une bonne généralisation sur divers types de données.</td>
+                    <td data-label="Modèles Disponibles">I2VGen-XL (3.7B paramètres)</td>
+                    <td data-label="Cohérence Temporelle"><span class="stars">⭐⭐⭐</span></td>
+                    <td data-label="Réalisme"><span class="stars">⭐⭐⭐</span></td>
+                    <td data-label="Contrôle Caméra"><span class="stars">⭐⭐</span></td>
+                    <td data-label="Artefacts">Morphing mineur</td>
+                    <td data-label="Accessibilité">Gratuit, open source, via Hugging Face ou localement.</td>
+                    <td data-label="Type">Projet OSS</td>
+                    <td data-label="Type de Techno">I2VGen</td>
+                    <td data-label="Résolution / Max Frames / Temps Gratuit">512x512 / 16 frames / Illimité (local)</td>
+                </tr>
+                <tr>
+                    <td data-label="Nom">AnimateDiff</td>
+                    <td data-label="Site/Projet"><a href="https://github.com/guoyww/AnimateDiff" target="_blank">github.com/guoyww/AnimateDiff</a></td>
+                    <td data-label="Description">Extension pour animer des images statiques en vidéos via Stable Diffusion et ComfyUI, en ajoutant des modules de mouvement.</td>
+                    <td data-label="Modèles Disponibles">AnimateDiff v1, v2, v3 ; Motion Modules (divers)</td>
+                    <td data-label="Cohérence Temporelle"><span class="stars">⭐⭐⭐</span></td>
+                    <td data-label="Réalisme"><span class="stars">⭐⭐⭐</span></td>
+                    <td data-label="Contrôle Caméra"><span class="stars">⭐⭐⭐</span></td>
+                    <td data-label="Artefacts">Flickering sur mouvements rapides</td>
+                    <td data-label="Accessibilité">Gratuit, open source, local via ComfyUI.</td>
+                    <td data-label="Type">Projet OSS</td>
+                    <td data-label="Type de Techno">Stable Diffusion</td>
+                    <td data-label="Résolution / Max Frames / Temps Gratuit">512x512 / 16-32 frames / Illimité (local)</td>
+                </tr>
+                <tr>
+                    <td data-label="Nom">ModelScope i2vgen-XL</td>
+                    <td data-label="Site/Projet"><a href="https://huggingface.co/damo-vilab/modelscope-damo-text-to-video-synthesis" target="_blank">huggingface.co/damo-vilab</a></td>
+                    <td data-label="Description">Pipeline image/texte vers vidéo open source, développé par DAMO Academy, pour une génération fluide et cohérente.</td>
+                    <td data-label="Modèles Disponibles">i2vgen-XL</td>
+                    <td data-label="Cohérence Temporelle"><span class="stars">⭐⭐⭐</span></td>
+                    <td data-label="Réalisme"><span class="stars">⭐⭐⭐</span></td>
+                    <td data-label="Contrôle Caméra"><span class="stars">⭐⭐</span></td>
+                    <td data-label="Artefacts">Distorsion légère</td>
+                    <td data-label="Accessibilité">Gratuit, open source, via studios ou local.</td>
+                    <td data-label="Type">Projet OSS</td>
+                    <td data-label="Type de Techno">I2VGen</td>
+                    <td data-label="Résolution / Max Frames / Temps Gratuit">256x256 / 49 frames / Illimité (local)</td>
+                </tr>
+                <tr>
+                    <td data-label="Nom">Runway Gen-3 Alpha</td>
+                    <td data-label="Site/Projet"><a href="https://runwayml.com/" target="_blank">runwayml.com</a></td>
+                    <td data-label="Description">Plateforme SaaS pour transformer images en vidéos avec support texte et image, idéale pour l'usage créatif.</td>
+                    <td data-label="Modèles Disponibles">Gen-3 Alpha, Gen-4 Turbo</td>
+                    <td data-label="Cohérence Temporelle"><span class="stars">⭐⭐⭐⭐</span></td>
+                    <td data-label="Réalisme"><span class="stars">⭐⭐⭐⭐⭐</span></td>
+                    <td data-label="Contrôle Caméra"><span class="stars">⭐⭐⭐⭐</span></td>
+                    <td data-label="Artefacts">Minimal</td>
+                    <td data-label="Accessibilité">Essai gratuit (125 crédits), plans payants à partir de 15$/mois.</td>
+                    <td data-label="Type">SaaS payant</td>
+                    <td data-label="Type de Techno">Stable Diffusion</td>
+                    <td data-label="Résolution / Max Frames / Temps Gratuit">1080p / 16s / 4s (125 crédits)</td>
+                </tr>
+                <tr>
+                    <td data-label="Nom">Runway Gen-4 Turbo</td>
+                    <td data-label="Site/Projet"><a href="https://runwayml.com/gen4" target="_blank">runwayml.com/gen4</a></td>
+                    <td data-label="Description">Successeur de Gen-3 Alpha, avec génération vidéo en temps réel (moins de 5s), support caméra 3D, et fidélité photoréaliste accrue. Compatible image + texte + audio.</td>
+                    <td data-label="Modèles Disponibles">Gen-4 Turbo</td>
+                    <td data-label="Cohérence Temporelle"><span class="stars">⭐⭐⭐⭐⭐</span></td>
+                    <td data-label="Réalisme"><span class="stars">⭐⭐⭐⭐⭐</span></td>
+                    <td data-label="Contrôle Caméra"><span class="stars">⭐⭐⭐⭐⭐</span></td>
+                    <td data-label="Artefacts">Presque aucun</td>
+                    <td data-label="Accessibilité">Essai gratuit (125 crédits), abonnements à partir de $15/mois</td>
+                    <td data-label="Type">SaaS payant</td>
+                    <td data-label="Type de Techno">Stable Diffusion</td>
+                    <td data-label="Résolution / Max Frames / Temps Gratuit">1280x720 / 10s / 10s (125 crédits)</td>
+                </tr>
+                <tr>
+                    <td data-label="Nom">Pika Labs</td>
+                    <td data-label="Site/Projet"><a href="https://pika.art/" target="_blank">pika.art</a></td>
+                    <td data-label="Description">Outil "idea-to-video" avec mode image-to-video, accessible via web pour une génération rapide.</td>
+                    <td data-label="Modèles Disponibles">Pika 1.0, Pika 1.5</td>
+                    <td data-label="Cohérence Temporelle"><span class="stars">⭐⭐⭐</span></td>
+                    <td data-label="Réalisme"><span class="stars">⭐⭐⭐</span></td>
+                    <td data-label="Contrôle Caméra"><span class="stars">⭐⭐⭐</span></td>
+                    <td data-label="Artefacts">Sur-stylisation</td>
+                    <td data-label="Accessibilité">Essais gratuits périodiques, crédits limités.</td>
+                    <td data-label="Type">SaaS</td>
+                    <td data-label="Type de Techno">Stable Diffusion</td>
+                    <td data-label="Résolution / Max Frames / Temps Gratuit">1080p / 5s / 3s (essai)</td>
+                </tr>
+                <tr>
+                    <td data-label="Nom">Pika 2.0</td>
+                    <td data-label="Site/Projet"><a href="https://pika.art/" target="_blank">pika.art</a></td>
+                    <td data-label="Description">Nouvelle architecture avec diffusion temporelle jointe et support audio-to-motion. Permet d’animer une image avec une piste audio (ex: lip sync).</td>
+                    <td data-label="Modèles Disponibles">Pika 2.0, Pika 2.0 Pro</td>
+                    <td data-label="Cohérence Temporelle"><span class="stars">⭐⭐⭐⭐</span></td>
+                    <td data-label="Réalisme"><span class="stars">⭐⭐⭐</span></td>
+                    <td data-label="Contrôle Caméra"><span class="stars">⭐⭐⭐⭐</span></td>
+                    <td data-label="Artefacts">Sur-stylisation</td>
+                    <td data-label="Accessibilité">Accès anticipé gratuit, version Pro payante</td>
+                    <td data-label="Type">SaaS</td>
+                    <td data-label="Type de Techno">Stable Diffusion</td>
+                    <td data-label="Résolution / Max Frames / Temps Gratuit">1080p / 10s / Limité (accès anticipé)</td>
+                </tr>
+                <tr>
+                    <td data-label="Nom">Luma Dream Machine</td>
+                    <td data-label="Site/Projet"><a href="https://lumalabs.ai/dream-machine" target="_blank">lumalabs.ai/dream-machine</a></td>
+                    <td data-label="Description">Générateur image-to-video rapide, produisant des clips de 5 secondes avec mouvements réalistes.</td>
+                    <td data-label="Modèles Disponibles">Dream Machine v1, v2</td>
+                    <td data-label="Cohérence Temporelle"><span class="stars">⭐⭐⭐⭐</span></td>
+                    <td data-label="Réalisme"><span class="stars">⭐⭐⭐⭐</span></td>
+                    <td data-label="Contrôle Caméra"><span class="stars">⭐⭐⭐⭐</span></td>
+                    <td data-label="Artefacts">Distorsion occasionnelle</td>
+                    <td data-label="Accessibilité">Accès gratuit avec essais, plans payants.</td>
+                    <td data-label="Type">SaaS</td>
+                    <td data-label="Type de Techno">Stable Diffusion</td>
+                    <td data-label="Résolution / Max Frames / Temps Gratuit">720p / 120 frames / 5s (essai)</td>
+                </tr>
+                <tr>
+                    <td data-label="Nom">Luma Dream Machine v3</td>
+                    <td data-label="Site/Projet"><a href="https://lumalabs.ai/dream-machine" target="_blank">lumalabs.ai/dream-machine</a></td>
+                    <td data-label="Description">Nouvelle génération avec "motion brush", génération 4K, et latence <3s. Supporte l’upload d’image + prompt + référence de mouvement.</td>
+                    <td data-label="Modèles Disponibles">Dream Machine v3</td>
+                    <td data-label="Cohérence Temporelle"><span class="stars">⭐⭐⭐⭐⭐</span></td>
+                    <td data-label="Réalisme"><span class="stars">⭐⭐⭐⭐</span></td>
+                    <td data-label="Contrôle Caméra"><span class="stars">⭐⭐⭐⭐⭐</span></td>
+                    <td data-label="Artefacts">Léger flou</td>
+                    <td data-label="Accessibilité">Accès gratuit limité (5 vidéos/jour), plans Pro à $24/mois</td>
+                    <td data-label="Type">SaaS</td>
+                    <td data-label="Type de Techno">Stable Diffusion</td>
+                    <td data-label="Résolution / Max Frames / Temps Gratuit">4K / 120 frames / 5s (5 vidéos/jour)</td>
+                </tr>
+                <tr>
+                    <td data-label="Nom">Krea AI Motion</td>
+                    <td data-label="Site/Projet"><a href="https://www.krea.ai/" target="_blank">krea.ai</a></td>
+                    <td data-label="Description">Outil pour transformer images en vidéos en transférant du mouvement, avec fonctions gratuites pour Motion/Video.</td>
+                    <td data-label="Modèles Disponibles">Krea Motion, Video Leap</td>
+                    <td data-label="Cohérence Temporelle"><span class="stars">⭐⭐⭐</span></td>
+                    <td data-label="Réalisme"><span class="stars">⭐⭐⭐</span></td>
+                    <td data-label="Contrôle Caméra"><span class="stars">⭐⭐⭐</span></td>
+                    <td data-label="Artefacts">Morphing modéré</td>
+                    <td data-label="Accessibilité">Fonctions gratuites, premium payant.</td>
+                    <td data-label="Type">SaaS</td>
+                    <td data-label="Type de Techno">Stable Diffusion</td>
+                    <td data-label="Résolution / Max Frames / Temps Gratuit">1080p / 5s / 3s (gratuit)</td>
+                </tr>
+                <tr>
+                    <td data-label="Nom">Pixverse AI</td>
+                    <td data-label="Site/Projet"><a href="https://app.pixverse.ai/create/image-text" target="_blank">app.pixverse.ai</a></td>
+                    <td data-label="Description">Plateforme pour générer vidéos à partir d'images et texte, avec interface web simple.</td>
+                    <td data-label="Modèles Disponibles">Pixverse v1, v2</td>
+                    <td data-label="Cohérence Temporelle"><span class="stars">⭐⭐⭐</span></td>
+                    <td data-label="Réalisme"><span class="stars">⭐⭐⭐</span></td>
+                    <td data-label="Contrôle Caméra"><span class="stars">⭐⭐</span></td>
+                    <td data-label="Artefacts">Flickering fréquent</td>
+                    <td data-label="Accessibilité">Crédits gratuits, options payantes.</td>
+                    <td data-label="Type">SaaS</td>
+                    <td data-label="Type de Techno">Stable Diffusion</td>
+                    <td data-label="Résolution / Max Frames / Temps Gratuit">720p / 5s / 3s (crédits gratuits)</td>
+                </tr>
+                <tr>
+                    <td data-label="Nom">Vidnoz AI</td>
+                    <td data-label="Site/Projet"><a href="https://www.vidnoz.com/image-to-video-ai.html" target="_blank">vidnoz.com</a></td>
+                    <td data-label="Description">Outil IA pour convertir images en vidéos, avec support pour divers formats et effets.</td>
+                    <td data-label="Modèles Disponibles">Vidnoz Image-to-Video</td>
+                    <td data-label="Cohérence Temporelle"><span class="stars">⭐⭐</span></td>
+                    <td data-label="Réalisme"><span class="stars">⭐⭐⭐</span></td>
+                    <td data-label="Contrôle Caméra"><span class="stars">⭐⭐</span></td>
+                    <td data-label="Artefacts">Distorsion visible</td>
+                    <td data-label="Accessibilité">Gratuit avec limites, premium payant.</td>
+                    <td data-label="Type">SaaS</td>
+                    <td data-label="Type de Techno">Stable Diffusion</td>
+                    <td data-label="Résolution / Max Frames / Temps Gratuit">1080p / 4s / 1 vidéo/jour</td>
+                </tr>
+                <tr>
+                    <td data-label="Nom">Hailuo AI</td>
+                    <td data-label="Site/Projet"><a href="https://hailuoai.video/create/image-to-video" target="_blank">hailuoai.video</a></td>
+                    <td data-label="Description">Générateur image-to-video avec focus sur la qualité HD et mouvements naturels.</td>
+                    <td data-label="Modèles Disponibles">Hailuo MiniMax</td>
+                    <td data-label="Cohérence Temporelle"><span class="stars">⭐⭐⭐⭐</span></td>
+                    <td data-label="Réalisme"><span class="stars">⭐⭐⭐⭐</span></td>
+                    <td data-label="Contrôle Caméra"><span class="stars">⭐⭐⭐</span></td>
+                    <td data-label="Artefacts">Léger flou</td>
+                    <td data-label="Accessibilité">Essais gratuits, API payante.</td>
+                    <td data-label="Type">SaaS</td>
+                    <td data-label="Type de Techno">Stable Diffusion</td>
+                    <td data-label="Résolution / Max Frames / Temps Gratuit">720p / 5s / 3-5 vidéos/jour</td>
+                </tr>
+                <tr>
+                    <td data-label="Nom">Kling AI</td>
+                    <td data-label="Site/Projet"><a href="https://kling.kuaishou.com/" target="_blank">kling.kuaishou.com</a></td>
+                    <td data-label="Description">Modèle vidéo IA chinois pour image-to-video, avec haute fidélité et contrôle caméra.</td>
+                    <td data-label="Modèles Disponibles">Kling 1.0, 1.5</td>
+                    <td data-label="Cohérence Temporelle"><span class="stars">⭐⭐⭐⭐</span></td>
+                    <td data-label="Réalisme"><span class="stars">⭐⭐⭐⭐⭐</span></td>
+                    <td data-label="Contrôle Caméra"><span class="stars">⭐⭐⭐⭐</span></td>
+                    <td data-label="Artefacts">Léger flou en arrière-plan</td>
+                    <td data-label="Accessibilité">Crédits gratuits limités, payant.</td>
+                    <td data-label="Type">SaaS</td>
+                    <td data-label="Type de Techno">Stable Diffusion</td>
+                    <td data-label="Résolution / Max Frames / Temps Gratuit">1080p / 5s / 3-4 vidéos/jour</td>
+                </tr>
+                <tr>
+                    <td data-label="Nom">Kling 2.0</td>
+                    <td data-label="Site/Projet"><a href="https://kling.kuaishou.com/" target="_blank">kling.kuaishou.com</a></td>
+                    <td data-label="Description">Version 2025 de la plateforme chinoise : résolution 4K, contrôle caméra avancé (dolly, zoom, rotation), et génération de 8s à 12s.</td>
+                    <td data-label="Modèles Disponibles">Kling 2.0, Kling 2.0 Pro</td>
+                    <td data-label="Cohérence Temporelle"><span class="stars">⭐⭐⭐⭐</span></td>
+                    <td data-label="Réalisme"><span class="stars">⭐⭐⭐⭐⭐</span></td>
+                    <td data-label="Contrôle Caméra"><span class="stars">⭐⭐⭐⭐⭐</span></td>
+                    <td data-label="Artefacts">Léger flou en arrière-plan</td>
+                    <td data-label="Accessibilité">Crédits gratuits limités, API payante</td>
+                    <td data-label="Type">SaaS</td>
+                    <td data-label="Type de Techno">Stable Diffusion</td>
+                    <td data-label="Résolution / Max Frames / Temps Gratuit">4K / 10s / 5s (166 crédits gratuits)</td>
+                </tr>
+                <tr>
+                    <td data-label="Nom">Wan 2.2 A14B</td>
+                    <td data-label="Site/Projet"><a href="https://huggingface.co/Wan-AI/Wan2.2-I2V-A14B" target="_blank">huggingface.co/Wan-AI</a></td>
+                    <td data-label="Description">Modèle open source avancé pour image-to-video avec architecture MoE pour une meilleure esthétique et mouvement.</td>
+                    <td data-label="Modèles Disponibles">Wan 2.2 I2V A14B</td>
+                    <td data-label="Cohérence Temporelle"><span class="stars">⭐⭐⭐⭐</span></td>
+                    <td data-label="Réalisme"><span class="stars">⭐⭐⭐⭐</span></td>
+                    <td data-label="Contrôle Caméra"><span class="stars">⭐⭐</span></td>
+                    <td data-label="Artefacts">Flou temporel mineur</td>
+                    <td data-label="Accessibilité">Gratuit, open source.</td>
+                    <td data-label="Type">Projet OSS</td>
+                    <td data-label="Type de Techno">SVD</td>
+                    <td data-label="Résolution / Max Frames / Temps Gratuit">1024x576 / 25 frames / Illimité (local)</td>
+                </tr>
+                <tr>
+                    <td data-label="Nom">Wan 3.0 MoE</td>
+                    <td data-label="Site/Projet"><a href="https://huggingface.co/Wan-AI/Wan3-I2V-MoE" target="_blank">huggingface.co/Wan-AI/Wan3-I2V-MoE</a></td>
+                    <td data-label="Description">Modèle sparse (Mixture of Experts) avec 12B paramètres effectifs, spécialisé en mouvements naturels (eau, feu, cheveux).</td>
+                    <td data-label="Modèles Disponibles">Wan 3.0 I2V MoE</td>
+                    <td data-label="Cohérence Temporelle"><span class="stars">⭐⭐⭐⭐</span></td>
+                    <td data-label="Réalisme"><span class="stars">⭐⭐⭐⭐</span></td>
+                    <td data-label="Contrôle Caméra"><span class="stars">⭐⭐</span></td>
+                    <td data-label="Artefacts">Moins bon sur visages</td>
+                    <td data-label="Accessibilité">Gratuit, open source</td>
+                    <td data-label="Type">Projet OSS</td>
+                    <td data-label="Type de Techno">SVD</td>
+                    <td data-label="Résolution / Max Frames / Temps Gratuit">1080p / 120 frames / Illimité (local)</td>
+                </tr>
+                <tr>
+                    <td data-label="Nom">HunyuanVideo</td>
+                    <td data-label="Site/Projet"><a href="https://huggingface.co/Tencent-Hunyuan/HunyuanVideo" target="_blank">huggingface.co/Tencent-Hunyuan</a></td>
+                    <td data-label="Description">Modèle open source de Tencent pour vidéo à partir d'images, étendu en 2025 avec capacités i2v.</td>
+                    <td data-label="Modèles Disponibles">HunyuanVideo I2V</td>
+                    <td data-label="Cohérence Temporelle"><span class="stars">⭐⭐⭐⭐</span></td>
+                    <td data-label="Réalisme"><span class="stars">⭐⭐⭐⭐</span></td>
+                    <td data-label="Contrôle Caméra"><span class="stars">⭐⭐⭐</span></td>
+                    <td data-label="Artefacts">Ghosting modéré</td>
+                    <td data-label="Accessibilité">Gratuit, open source.</td>
+                    <td data-label="Type">Projet OSS</td>
+                    <td data-label="Type de Techno">I2VGen</td>
+                    <td data-label="Résolution / Max Frames / Temps Gratuit">720p / 5s / Illimité (local)</td>
+                </tr>
+                <tr>
+                    <td data-label="Nom">HunyuanVideo I2V v2</td>
+                    <td data-label="Site/Projet"><a href="https://huggingface.co/Tencent-Hunyuan" target="_blank">huggingface.co/Tencent-Hunyuan</a></td>
+                    <td data-label="Description">Mise à jour majeure du modèle Tencent avec support multi-view, interpolation temporelle améliorée et génération jusqu’à 60 fps.</td>
+                    <td data-label="Modèles Disponibles">HunyuanVideo-I2V-v2</td>
+                    <td data-label="Cohérence Temporelle"><span class="stars">⭐⭐⭐⭐⭐</span></td>
+                    <td data-label="Réalisme"><span class="stars">⭐⭐⭐⭐</span></td>
+                    <td data-label="Contrôle Caméra"><span class="stars">⭐⭐⭐⭐</span></td>
+                    <td data-label="Artefacts">Minimal</td>
+                    <td data-label="Accessibilité">Gratuit, open source</td>
+                    <td data-label="Type">Projet OSS</td>
+                    <td data-label="Type de Techno">I2VGen</td>
+                    <td data-label="Résolution / Max Frames / Temps Gratuit">720p / 60 fps / Illimité (local)</td>
+                </tr>
+                <tr>
+                    <td data-label="Nom">Hugging Face Spaces (SVD Apps)</td>
+                    <td data-label="Site/Projet"><a href="https://huggingface.co/spaces" target="_blank">huggingface.co/spaces</a></td>
+                    <td data-label="Description">Espaces hébergés pour tester SVD et autres modèles i2v, avec API Inference gratuite.</td>
+                    <td data-label="Modèles Disponibles">Divers SVD, I2VGen apps</td>
+                    <td data-label="Cohérence Temporelle"><span class="stars">⭐⭐⭐</span></td>
+                    <td data-label="Réalisme"><span class="stars">⭐⭐⭐</span></td>
+                    <td data-label="Contrôle Caméra"><span class="stars">⭐⭐</span></td>
+                    <td data-label="Artefacts">Varie par app</td>
+                    <td data-label="Accessibilité">Palier gratuit API, hébergé.</td>
+                    <td data-label="Type">Plateforme hébergée</td>
+                    <td data-label="Type de Techno">SVD</td>
+                    <td data-label="Résolution / Max Frames / Temps Gratuit">Varie / 25 frames / Limité API gratuite</td>
+                </tr>
+                <tr>
+                    <td data-label="Nom">Meta Create/Vibes</td>
+                    <td data-label="Site/Projet"><a href="https://ai.meta.com/" target="_blank">ai.meta.com</a></td>
+                    <td data-label="Description">Outil gratuit de Meta pour image-to-video avec lipsync et formats 16:9/9:16.</td>
+                    <td data-label="Modèles Disponibles">Vibes, Create</td>
+                    <td data-label="Cohérence Temporelle"><span class="stars">⭐⭐⭐⭐</span></td>
+                    <td data-label="Réalisme"><span class="stars">⭐⭐⭐⭐</span></td>
+                    <td data-label="Contrôle Caméra"><span class="stars">⭐⭐⭐</span></td>
+                    <td data-label="Artefacts">Minimal</td>
+                    <td data-label="Accessibilité">Illimité gratuit, sans watermark.</td>
+                    <td data-label="Type">SaaS gratuit</td>
+                    <td data-label="Type de Techno">Stable Diffusion</td>
+                    <td data-label="Résolution / Max Frames / Temps Gratuit">1080p / 10s / Illimité</td>
+                </tr>
+                <tr>
+                    <td data-label="Nom">Meta Create v2 (Vibes+)</td>
+                    <td data-label="Site/Projet"><a href="https://ai.meta.com/create" target="_blank">ai.meta.com/create</a></td>
+                    <td data-label="Description">Mise à jour de l’outil gratuit de Meta : support image-to-video avec fond transparent, effets de caméra, et export 1080p sans watermark.</td>
+                    <td data-label="Modèles Disponibles">Vibes+, Create v2</td>
+                    <td data-label="Cohérence Temporelle"><span class="stars">⭐⭐⭐⭐</span></td>
+                    <td data-label="Réalisme"><span class="stars">⭐⭐⭐⭐</span></td>
+                    <td data-label="Contrôle Caméra"><span class="stars">⭐⭐⭐⭐</span></td>
+                    <td data-label="Artefacts">Minimal</td>
+                    <td data-label="Accessibilité">Gratuit, illimité, sans watermark</td>
+                    <td data-label="Type">SaaS gratuit</td>
+                    <td data-label="Type de Techno">Stable Diffusion</td>
+                    <td data-label="Résolution / Max Frames / Temps Gratuit">1080p / 10s / Illimité</td>
+                </tr>
+                <tr>
+                    <td data-label="Nom">Grok Image-to-Video</td>
+                    <td data-label="Site/Projet"><a href="https://grok.x.ai/" target="_blank">grok.x.ai</a></td>
+                    <td data-label="Description">Fonctionnalité xAI pour générer vidéos à partir d'images avec lipsync, intégrable via API.</td>
+                    <td data-label="Modèles Disponibles">Grok Video</td>
+                    <td data-label="Cohérence Temporelle"><span class="stars">⭐⭐⭐</span></td>
+                    <td data-label="Réalisme"><span class="stars">⭐⭐⭐</span></td>
+                    <td data-label="Contrôle Caméra"><span class="stars">⭐⭐</span></td>
+                    <td data-label="Artefacts">Distorsion API</td>
+                    <td data-label="Accessibilité">Gratuit via API xAI, routes fast.</td>
+                    <td data-label="Type">API/LLM</td>
+                    <td data-label="Type de Techno">Stable Diffusion</td>
+                    <td data-label="Résolution / Max Frames / Temps Gratuit">720p / 5s / Limité API gratuite</td>
+                </tr>
+                <tr>
+                    <td data-label="Nom">Haiper</td>
+                    <td data-label="Site/Projet"><a href="https://haiper.ai/" target="_blank">haiper.ai</a></td>
+                    <td data-label="Description">Plateforme AI pour création vidéo à partir d'images, focalisée sur l'expression créative.</td>
+                    <td data-label="Modèles Disponibles">Haiper I2V</td>
+                    <td data-label="Cohérence Temporelle"><span class="stars">⭐⭐⭐</span></td>
+                    <td data-label="Réalisme"><span class="stars">⭐⭐⭐</span></td>
+                    <td data-label="Contrôle Caméra"><span class="stars">⭐⭐⭐</span></td>
+                    <td data-label="Artefacts">Modéré</td>
+                    <td data-label="Accessibilité">Essais gratuits, payant.</td>
+                    <td data-label="Type">SaaS</td>
+                    <td data-label="Type de Techno">Stable Diffusion</td>
+                    <td data-label="Résolution / Max Frames / Temps Gratuit">1080p / 8s / 2 vidéos/jour</td>
+                </tr>
+                <tr>
+                    <td data-label="Nom">Moonvalley</td>
+                    <td data-label="Site/Projet"><a href="https://moonvalley.ai/" target="_blank">moonvalley.ai</a></td>
+                    <td data-label="Description">Outil pour image-to-video avec effets avancés, bien que moins pratique pour certains usages.</td>
+                    <td data-label="Modèles Disponibles">Moonvalley v1</td>
+                    <td data-label="Cohérence Temporelle"><span class="stars">⭐⭐</span></td>
+                    <td data-label="Réalisme"><span class="stars">⭐⭐⭐</span></td>
+                    <td data-label="Contrôle Caméra"><span class="stars">⭐⭐</span></td>
+                    <td data-label="Artefacts">Élevé</td>
+                    <td data-label="Accessibilité">Gratuit limité, payant.</td>
+                    <td data-label="Type">SaaS</td>
+                    <td data-label="Type de Techno">Stable Diffusion</td>
+                    <td data-label="Résolution / Max Frames / Temps Gratuit">720p / 5s / 1 vidéo/jour</td>
+                </tr>
+                <tr>
+                    <td data-label="Nom">Vheer</td>
+                    <td data-label="Site/Projet"><a href="https://vheer.com/" target="_blank">vheer.com</a></td>
+                    <td data-label="Description">Outil web pour animer images en vidéos avec contrôle caméra et mouvements.</td>
+                    <td data-label="Modèles Disponibles">Vheer Motion</td>
+                    <td data-label="Cohérence Temporelle"><span class="stars">⭐⭐⭐</span></td>
+                    <td data-label="Réalisme"><span class="stars">⭐⭐⭐</span></td>
+                    <td data-label="Contrôle Caméra"><span class="stars">⭐⭐⭐⭐</span></td>
+                    <td data-label="Artefacts">Minimal</td>
+                    <td data-label="Accessibilité">Gratuit illimité, sans watermark.</td>
+                    <td data-label="Type">SaaS gratuit</td>
+                    <td data-label="Type de Techno">Stable Diffusion</td>
+                    <td data-label="Résolution / Max Frames / Temps Gratuit">1080p / 5-10s / Illimité</td>
+                </tr>
+                <tr>
+                    <td data-label="Nom">Qwen Video</td>
+                    <td data-label="Site/Projet"><a href="https://qwen.ai/" target="_blank">qwen.ai</a></td>
+                    <td data-label="Description">Modèle pour text-to-video extensible à image-to-video, avec prompts efficaces.</td>
+                    <td data-label="Modèles Disponibles">Qwen 2.5 Video</td>
+                    <td data-label="Cohérence Temporelle"><span class="stars">⭐⭐⭐</span></td>
+                    <td data-label="Réalisme"><span class="stars">⭐⭐⭐</span></td>
+                    <td data-label="Contrôle Caméra"><span class="stars">⭐⭐</span></td>
+                    <td data-label="Artefacts">Ghosting</td>
+                    <td data-label="Accessibilité">Open source gratuit.</td>
+                    <td data-label="Type">Projet OSS</td>
+                    <td data-label="Type de Techno">Stable Diffusion</td>
+                    <td data-label="Résolution / Max Frames / Temps Gratuit">720p / 16 frames / Illimité (local)</td>
+                </tr>
+                <tr>
+                    <td data-label="Nom">Qwen Video 2.5</td>
+                    <td data-label="Site/Projet"><a href="https://qwen.ai/models/qwen-video" target="_blank">qwen.ai/models/qwen-video</a></td>
+                    <td data-label="Description">Version améliorée avec support image initiale, génération 720p/30fps, et intégration directe dans Tongyi Wanxiang.</td>
+                    <td data-label="Modèles Disponibles">Qwen Video 2.5</td>
+                    <td data-label="Cohérence Temporelle"><span class="stars">⭐⭐⭐⭐</span></td>
+                    <td data-label="Réalisme"><span class="stars">⭐⭐⭐⭐</span></td>
+                    <td data-label="Contrôle Caméra"><span class="stars">⭐⭐⭐</span></td>
+                    <td data-label="Artefacts">Minimal</td>
+                    <td data-label="Accessibilité">Open source (Apache 2.0), via ModelScope</td>
+                    <td data-label="Type">Projet OSS</td>
+                    <td data-label="Type de Techno">Stable Diffusion</td>
+                    <td data-label="Résolution / Max Frames / Temps Gratuit">720p / 30 fps / Illimité (local)</td>
+                </tr>
+                <tr>
+                    <td data-label="Nom">CogVideoX</td>
+                    <td data-label="Site/Projet"><a href="https://github.com/THUDM/CogVideo" target="_blank">github.com/THUDM/CogVideo</a></td>
+                    <td data-label="Description">Modèle open source de génération vidéo à partir de texte ou d’images, développé par Zhipu AI, avec support multi-frame.</td>
+                    <td data-label="Modèles Disponibles">CogVideoX-2b, CogVideoX-5b</td>
+                    <td data-label="Cohérence Temporelle"><span class="stars">⭐⭐⭐⭐</span></td>
+                    <td data-label="Réalisme"><span class="stars">⭐⭐⭐⭐</span></td>
+                    <td data-label="Contrôle Caméra"><span class="stars">⭐⭐⭐</span></td>
+                    <td data-label="Artefacts">Flickering mineur</td>
+                    <td data-label="Accessibilité">Gratuit, open source, via Hugging Face</td>
+                    <td data-label="Type">Projet OSS</td>
+                    <td data-label="Type de Techno">SVD</td>
+                    <td data-label="Résolution / Max Frames / Temps Gratuit">480p / 49 frames / Illimité (local)</td>
+                </tr>
+                <tr>
+                    <td data-label="Nom">Open-Sora</td>
+                    <td data-label="Site/Projet"><a href="https://github.com/hpcaitech/Open-Sora" target="_blank">github.com/hpcaitech/Open-Sora</a></td>
+                    <td data-label="Description">Initiative open source pour reproduire Sora de OpenAI, avec support image-to-video et text-to-video.</td>
+                    <td data-label="Modèles Disponibles">Open-Sora v1.0, v1.1</td>
+                    <td data-label="Cohérence Temporelle"><span class="stars">⭐⭐⭐</span></td>
+                    <td data-label="Réalisme"><span class="stars">⭐⭐⭐</span></td>
+                    <td data-label="Contrôle Caméra"><span class="stars">⭐⭐</span></td>
+                    <td data-label="Artefacts">Inconsistant</td>
+                    <td data-label="Accessibilité">Gratuit, open source</td>
+                    <td data-label="Type">Projet OSS</td>
+                    <td data-label="Type de Techno">Stable Diffusion</td>
+                    <td data-label="Résolution / Max Frames / Temps Gratuit">768x768 / 128 frames / Illimité (local)</td>
+                </tr>
+                <tr>
+                    <td data-label="Nom">Open-Sora Plan v2</td>
+                    <td data-label="Site/Projet"><a href="https://github.com/hpcaitech/Open-Sora-Plan" target="_blank">github.com/hpcaitech/Open-Sora-Plan</a></td>
+                    <td data-label="Description">Évolution d’Open-Sora avec support longue durée (jusqu’à 30s), meilleure gestion des objets en mouvement, et fine-tuning par dataset personnalisé.</td>
+                    <td data-label="Modèles Disponibles">Open-Sora-Plan v2.0</td>
+                    <td data-label="Cohérence Temporelle"><span class="stars">⭐⭐⭐⭐</span></td>
+                    <td data-label="Réalisme"><span class="stars">⭐⭐⭐</span></td>
+                    <td data-label="Contrôle Caméra"><span class="stars">⭐⭐⭐</span></td>
+                    <td data-label="Artefacts">Modéré sur longue durée</td>
+                    <td data-label="Accessibilité">Gratuit, open source</td>
+                    <td data-label="Type">Projet OSS</td>
+                    <td data-label="Type de Techno">Stable Diffusion</td>
+                    <td data-label="Résolution / Max Frames / Temps Gratuit">720p / 30s / Illimité (local)</td>
+                </tr>
+                <tr>
+                    <td data-label="Nom">Stable Video 3D</td>
+                    <td data-label="Site/Projet"><a href="https://stability.ai/blog/stable-video-3d" target="_blank">stability.ai/blog/stable-video-3d</a></td>
+                    <td data-label="Description">Extension de SVD pour générer des vues 3D à partir d’une seule image, compatible NeRF.</td>
+                    <td data-label="Modèles Disponibles">SV3D, SV3D-u</td>
+                    <td data-label="Cohérence Temporelle"><span class="stars">⭐⭐⭐</span></td>
+                    <td data-label="Réalisme"><span class="stars">⭐⭐⭐</span></td>
+                    <td data-label="Contrôle Caméra"><span class="stars">⭐⭐⭐⭐</span></td>
+                    <td data-label="Artefacts">Déformation 3D</td>
+                    <td data-label="Accessibilité">Gratuit via Hugging Face</td>
+                    <td data-label="Type">Projet OSS</td>
+                    <td data-label="Type de Techno">SVD</td>
+                    <td data-label="Résolution / Max Frames / Temps Gratuit">576x1024 / 25 frames / Illimité (local)</td>
+                </tr>
+                <tr>
+                    <td data-label="Nom">Emu Video</td>
+                    <td data-label="Site/Projet"><a href="https://emu-video.metademolab.com" target="_blank">emu-video.metademolab.com</a></td>
+                    <td data-label="Description">Modèle de Meta pour génération vidéo à partir d’images et texte, avec haute résolution.</td>
+                    <td data-label="Modèles Disponibles">Emu Video (non open)</td>
+                    <td data-label="Cohérence Temporelle"><span class="stars">⭐⭐⭐</span></td>
+                    <td data-label="Réalisme"><span class="stars">⭐⭐⭐</span></td>
+                    <td data-label="Contrôle Caméra"><span class="stars">⭐⭐</span></td>
+                    <td data-label="Artefacts">Recherche limité</td>
+                    <td data-label="Accessibilité">Accès restreint, recherche</td>
+                    <td data-label="Type">Recherche</td>
+                    <td data-label="Type de Techno">Stable Diffusion</td>
+                    <td data-label="Résolution / Max Frames / Temps Gratuit">720p / 2s / N/A (recherche)</td>
+                </tr>
+                <tr>
+                    <td data-label="Nom">Phenaki</td>
+                    <td data-label="Site/Projet"><a href="https://phenaki.video" target="_blank">phenaki.video</a></td>
+                    <td data-label="Description">Modèle de Google pour vidéo longue à partir de texte, adaptable à image-to-video.</td>
+                    <td data-label="Modèles Disponibles">Phenaki (non open)</td>
+                    <td data-label="Cohérence Temporelle"><span class="stars">⭐⭐</span></td>
+                    <td data-label="Réalisme"><span class="stars">⭐⭐</span></td>
+                    <td data-label="Contrôle Caméra"><span class="stars">⭐⭐</span></td>
+                    <td data-label="Artefacts">Élevé</td>
+                    <td data-label="Accessibilité">Non public</td>
+                    <td data-label="Type">Recherche</td>
+                    <td data-label="Type de Techno">I2VGen</td>
+                    <td data-label="Résolution / Max Frames / Temps Gratuit">480p / 10s+ / N/A</td>
+                </tr>
+                <tr>
+                    <td data-label="Nom">Make-A-Video</td>
+                    <td data-label="Site/Projet"><a href="https://ai.facebook.com/blog/make-a-video" target="_blank">ai.facebook.com/blog/make-a-video</a></td>
+                    <td data-label="Description">Ancêtre d’Emu, par Meta, pour génération vidéo à partir de prompts textuels ou images.</td>
+                    <td data-label="Modèles Disponibles">Make-A-Video</td>
+                    <td data-label="Cohérence Temporelle"><span class="stars">⭐⭐</span></td>
+                    <td data-label="Réalisme"><span class="stars">⭐⭐</span></td>
+                    <td data-label="Contrôle Caméra"><span class="stars">⭐</span></td>
+                    <td data-label="Artefacts">N/A</td>
+                    <td data-label="Accessibilité">Non open</td>
+                    <td data-label="Type">Recherche</td>
+                    <td data-label="Type de Techno">Stable Diffusion</td>
+                    <td data-label="Résolution / Max Frames / Temps Gratuit">256x256 / 4s / N/A</td>
+                </tr>
+                <tr>
+                    <td data-label="Nom">VideoCrafter</td>
+                    <td data-label="Site/Projet"><a href="https://github.com/VideoCrafter/VideoCrafter2" target="_blank">github.com/VideoCrafter/VideoCrafter2</a></td>
+                    <td data-label="Description">Suite open source pour génération vidéo haute qualité à partir de texte ou d’images fixes.</td>
+                    <td data-label="Modèles Disponibles">VideoCrafter2</td>
+                    <td data-label="Cohérence Temporelle"><span class="stars">⭐⭐⭐</span></td>
+                    <td data-label="Réalisme"><span class="stars">⭐⭐⭐</span></td>
+                    <td data-label="Contrôle Caméra"><span class="stars">⭐⭐</span></td>
+                    <td data-label="Artefacts">Modéré</td>
+                    <td data-label="Accessibilité">Gratuit, open source</td>
+                    <td data-label="Type">Projet OSS</td>
+                    <td data-label="Type de Techno">Stable Diffusion</td>
+                    <td data-label="Résolution / Max Frames / Temps Gratuit">1024x576 / 49 frames / Illimité (local)</td>
+                </tr>
+                <tr>
+                    <td data-label="Nom">LaVie</td>
+                    <td data-label="Site/Projet"><a href="https://github.com/Vchitect/LaVie" target="_blank">github.com/Vchitect/LaVie</a></td>
+                    <td data-label="Description">Modèle open source pour génération vidéo réaliste à partir de texte ou d’images.</td>
+                    <td data-label="Modèles Disponibles">LaVie-base, LaVie-large</td>
+                    <td data-label="Cohérence Temporelle"><span class="stars">⭐⭐⭐</span></td>
+                    <td data-label="Réalisme"><span class="stars">⭐⭐⭐</span></td>
+                    <td data-label="Contrôle Caméra"><span class="stars">⭐⭐</span></td>
+                    <td data-label="Artefacts">Flickering</td>
+                    <td data-label="Accessibilité">Gratuit, open source</td>
+                    <td data-label="Type">Projet OSS</td>
+                    <td data-label="Type de Techno">Stable Diffusion</td>
+                    <td data-label="Résolution / Max Frames / Temps Gratuit">512x512 / 16 frames / Illimité (local)</td>
+                </tr>
+                <tr>
+                    <td data-label="Nom">Tune-A-Video</td>
+                    <td data-label="Site/Projet"><a href="https://github.com/showlab/Tune-A-Video" target="_blank">github.com/showlab/Tune-A-Video</a></td>
+                    <td data-label="Description">Méthode fine-tuning pour adapter Stable Diffusion à la génération vidéo personnalisée.</td>
+                    <td data-label="Modèles Disponibles">Tune-A-Video</td>
+                    <td data-label="Cohérence Temporelle"><span class="stars">⭐⭐⭐</span></td>
+                    <td data-label="Réalisme"><span class="stars">⭐⭐⭐</span></td>
+                    <td data-label="Contrôle Caméra"><span class="stars">⭐⭐</span></td>
+                    <td data-label="Artefacts">Dépend du fine-tuning</td>
+                    <td data-label="Accessibilité">Gratuit, open source</td>
+                    <td data-label="Type">Projet OSS</td>
+                    <td data-label="Type de Techno">Stable Diffusion</td>
+                    <td data-label="Résolution / Max Frames / Temps Gratuit">512x512 / 16 frames / Illimité (local)</td>
+                </tr>
+                <tr>
+                    <td data-label="Nom">Text2Video-Zero</td>
+                    <td data-label="Site/Projet"><a href="https://github.com/Picsart-AI-Research/Text2Video-Zero" target="_blank">github.com/Picsart-AI-Research/Text2Video-Zero</a></td>
+                    <td data-label="Description">Génération vidéo sans entraînement, à partir de SD, compatible avec image initiale.</td>
+                    <td data-label="Modèles Disponibles">Text2Video-Zero</td>
+                    <td data-label="Cohérence Temporelle"><span class="stars">⭐⭐</span></td>
+                    <td data-label="Réalisme"><span class="stars">⭐⭐</span></td>
+                    <td data-label="Contrôle Caméra"><span class="stars">⭐</span></td>
+                    <td data-label="Artefacts">Élevé</td>
+                    <td data-label="Accessibilité">Gratuit, open source</td>
+                    <td data-label="Type">Projet OSS</td>
+                    <td data-label="Type de Techno">Stable Diffusion</td>
+                    <td data-label="Résolution / Max Frames / Temps Gratuit">512x512 / 25 frames / Illimité (local)</td>
+                </tr>
+                <tr>
+                    <td data-label="Nom">ZeroScope</td>
+                    <td data-label="Site/Projet"><a href="https://huggingface.co/cerspense/zeroscope_v2_576w" target="_blank">huggingface.co/cerspense/zeroscope_v2_576w</a></td>
+                    <td data-label="Description">Modèle léger open source pour génération vidéo à partir de texte (adaptable à i2v).</td>
+                    <td data-label="Modèles Disponibles">ZeroScope v2</td>
+                    <td data-label="Cohérence Temporelle"><span class="stars">⭐⭐</span></td>
+                    <td data-label="Réalisme"><span class="stars">⭐⭐</span></td>
+                    <td data-label="Contrôle Caméra"><span class="stars">⭐</span></td>
+                    <td data-label="Artefacts">Fréquent</td>
+                    <td data-label="Accessibilité">Gratuit, open source</td>
+                    <td data-label="Type">Projet OSS</td>
+                    <td data-label="Type de Techno">Stable Diffusion</td>
+                    <td data-label="Résolution / Max Frames / Temps Gratuit">1024x576 / 24 frames / Illimité (local)</td>
+                </tr>
+                <tr>
+                    <td data-label="Nom">ModelScope Text-to-Video</td>
+                    <td data-label="Site/Projet"><a href="https://modelscope.cn/models/damo" target="_blank">modelscope.cn/models/damo</a></td>
+                    <td data-label="Description">Suite vidéo de DAMO Academy, incluant des pipelines i2v et t2v.</td>
+                    <td data-label="Modèles Disponibles">DAMO T2V, I2VGen-XL</td>
+                    <td data-label="Cohérence Temporelle"><span class="stars">⭐⭐⭐</span></td>
+                    <td data-label="Réalisme"><span class="stars">⭐⭐⭐</span></td>
+                    <td data-label="Contrôle Caméra"><span class="stars">⭐⭐</span></td>
+                    <td data-label="Artefacts">Modéré</td>
+                    <td data-label="Accessibilité">Gratuit, open source</td>
+                    <td data-label="Type">Projet OSS</td>
+                    <td data-label="Type de Techno">I2VGen</td>
+                    <td data-label="Résolution / Max Frames / Temps Gratuit">256x256 / 49 frames / Illimité (local)</td>
+                </tr>
+                <tr>
+                    <td data-label="Nom">Stable Diffusion Video (SDV)</td>
+                    <td data-label="Site/Projet"><a href="https://github.com/nateraw/stable-diffusion-videos" target="_blank">github.com/nateraw/stable-diffusion-videos</a></td>
+                    <td data-label="Description">Bibliothèque pour générer des vidéos à partir de prompts ou d’images avec interpolation.</td>
+                    <td data-label="Modèles Disponibles">SDV v1</td>
+                    <td data-label="Cohérence Temporelle"><span class="stars">⭐⭐</span></td>
+                    <td data-label="Réalisme"><span class="stars">⭐⭐</span></td>
+                    <td data-label="Contrôle Caméra"><span class="stars">⭐</span></td>
+                    <td data-label="Artefacts">Élevé</td>
+                    <td data-label="Accessibilité">Gratuit, open source</td>
+                    <td data-label="Type">Projet OSS</td>
+                    <td data-label="Type de Techno">Stable Diffusion</td>
+                    <td data-label="Résolution / Max Frames / Temps Gratuit">512x512 / 16 frames / Illimité (local)</td>
+                </tr>
+                <tr>
+                    <td data-label="Nom">Deforum</td>
+                    <td data-label="Site/Projet"><a href="https://github.com/deforum-art/deforum-stable-diffusion" target="_blank">github.com/deforum-art/deforum-stable-diffusion</a></td>
+                    <td data-label="Description">Animation de prompts SD via interpolation, compatible avec image initiale.</td>
+                    <td data-label="Modèles Disponibles">Deforum + SD</td>
+                    <td data-label="Cohérence Temporelle"><span class="stars">⭐⭐⭐</span></td>
+                    <td data-label="Réalisme"><span class="stars">⭐⭐⭐</span></td>
+                    <td data-label="Contrôle Caméra"><span class="stars">⭐⭐⭐</span></td>
+                    <td data-label="Artefacts">Interpolation instable</td>
+                    <td data-label="Accessibilité">Gratuit, open source</td>
+                    <td data-label="Type">Projet OSS</td>
+                    <td data-label="Type de Techno">Stable Diffusion</td>
+                    <td data-label="Résolution / Max Frames / Temps Gratuit">512x512 / 100+ frames / Illimité (local)</td>
+                </tr>
+                <tr>
+                    <td data-label="Nom">AnimateAnyone</td>
+                    <td data-label="Site/Projet"><a href="https://github.com/IDEA-Research/AnimateAnyone" target="_blank">github.com/IDEA-Research/AnimateAnyone</a></td>
+                    <td data-label="Description">Génération vidéo à partir d’image + pose, très utilisé pour avatar humain.</td>
+                    <td data-label="Modèles Disponibles">AnimateAnyone</td>
+                    <td data-label="Cohérence Temporelle"><span class="stars">⭐⭐⭐</span></td>
+                    <td data-label="Réalisme"><span class="stars">⭐⭐⭐</span></td>
+                    <td data-label="Contrôle Caméra"><span class="stars">⭐⭐</span></td>
+                    <td data-label="Artefacts">Pose limitée</td>
+                    <td data-label="Accessibilité">Gratuit, open source</td>
+                    <td data-label="Type">Projet OSS</td>
+                    <td data-label="Type de Techno">Stable Diffusion</td>
+                    <td data-label="Résolution / Max Frames / Temps Gratuit">512x512 / 16 frames / Illimité (local)</td>
+                </tr>
+                <tr>
+                    <td data-label="Nom">MagicAnimate</td>
+                    <td data-label="Site/Projet"><a href="https://github.com/magic-research/magic-animate" target="_blank">github.com/magic-research/magic-animate</a></td>
+                    <td data-label="Description">Animation d’images humaines à partir de séquences de poses.</td>
+                    <td data-label="Modèles Disponibles">MagicAnimate</td>
+                    <td data-label="Cohérence Temporelle"><span class="stars">⭐⭐⭐</span></td>
+                    <td data-label="Réalisme"><span class="stars">⭐⭐⭐</span></td>
+                    <td data-label="Contrôle Caméra"><span class="stars">⭐⭐</span></td>
+                    <td data-label="Artefacts">Distorsion humaine</td>
+                    <td data-label="Accessibilité">Gratuit, open source</td>
+                    <td data-label="Type">Projet OSS</td>
+                    <td data-label="Type de Techno">Stable Diffusion</td>
+                    <td data-label="Résolution / Max Frames / Temps Gratuit">512x512 / 33 frames / Illimité (local)</td>
+                </tr>
+                <tr>
+                    <td data-label="Nom">MotionCtrl</td>
+                    <td data-label="Site/Projet"><a href="https://github.com/Tencent/MotionCtrl" target="_blank">github.com/Tencent/MotionCtrl</a></td>
+                    <td data-label="Description">Contrôle explicite du mouvement dans les vidéos générées à partir d’images.</td>
+                    <td data-label="Modèles Disponibles">MotionCtrl</td>
+                    <td data-label="Cohérence Temporelle"><span class="stars">⭐⭐⭐⭐</span></td>
+                    <td data-label="Réalisme"><span class="stars">⭐⭐⭐</span></td>
+                    <td data-label="Contrôle Caméra"><span class="stars">⭐⭐⭐⭐</span></td>
+                    <td data-label="Artefacts">Mouvement forcé</td>
+                    <td data-label="Accessibilité">Gratuit, open source</td>
+                    <td data-label="Type">Projet OSS</td>
+                    <td data-label="Type de Techno">SVD</td>
+                    <td data-label="Résolution / Max Frames / Temps Gratuit">576x1024 / 25 frames / Illimité (local)</td>
+                </tr>
+                <tr>
+                    <td data-label="Nom">VideoReDo</td>
+                    <td data-label="Site/Projet"><a href="https://github.com/VideoReDo-Lab/VideoReDo" target="_blank">github.com/VideoReDo-Lab/VideoReDo</a></td>
+                    <td data-label="Description">Amélioration et réinterprétation de vidéos existantes via diffusion.</td>
+                    <td data-label="Modèles Disponibles">VideoReDo</td>
+                    <td data-label="Cohérence Temporelle"><span class="stars">⭐⭐⭐</span></td>
+                    <td data-label="Réalisme"><span class="stars">⭐⭐⭐</span></td>
+                    <td data-label="Contrôle Caméra"><span class="stars">⭐⭐</span></td>
+                    <td data-label="Artefacts">Réinterprétation variable</td>
+                    <td data-label="Accessibilité">Gratuit, open source</td>
+                    <td data-label="Type">Projet OSS</td>
+                    <td data-label="Type de Techno">Stable Diffusion</td>
+                    <td data-label="Résolution / Max Frames / Temps Gratuit">512x512 / 16 frames / Illimité (local)</td>
+                </tr>
+                <tr>
+                    <td data-label="Nom">DynamiCrafter</td>
+                    <td data-label="Site/Projet"><a href="https://github.com/Tencent/DynamiCrafter" target="_blank">github.com/Tencent/DynamiCrafter</a></td>
+                    <td data-label="Description">Génération vidéo à partir d’image + prompt, avec interpolation temporelle avancée.</td>
+                    <td data-label="Modèles Disponibles">DynamiCrafter</td>
+                    <td data-label="Cohérence Temporelle"><span class="stars">⭐⭐⭐</span></td>
+                    <td data-label="Réalisme"><span class="stars">⭐⭐⭐</span></td>
+                    <td data-label="Contrôle Caméra"><span class="stars">⭐⭐⭐</span></td>
+                    <td data-label="Artefacts">Interpolation limitée</td>
+                    <td data-label="Accessibilité">Gratuit, open source</td>
+                    <td data-label="Type">Projet OSS</td>
+                    <td data-label="Type de Techno">Stable Diffusion</td>
+                    <td data-label="Résolution / Max Frames / Temps Gratuit">512x512 / 17 frames / Illimité (local)</td>
+                </tr>
+                <tr>
+                    <td data-label="Nom">Rerender</td>
+                    <td data-label="Site/Projet"><a href="https://github.com/RerenderAI/Rerender" target="_blank">github.com/RerenderAI/Rerender</a></td>
+                    <td data-label="Description">Génération vidéo cohérente à partir d’images fixes et prompts.</td>
+                    <td data-label="Modèles Disponibles">Rerender A</td>
+                    <td data-label="Cohérence Temporelle"><span class="stars">⭐⭐⭐</span></td>
+                    <td data-label="Réalisme"><span class="stars">⭐⭐⭐</span></td>
+                    <td data-label="Contrôle Caméra"><span class="stars">⭐⭐</span></td>
+                    <td data-label="Artefacts">Cohérence variable</td>
+                    <td data-label="Accessibilité">Gratuit, open source</td>
+                    <td data-label="Type">Projet OSS</td>
+                    <td data-label="Type de Techno">Stable Diffusion</td>
+                    <td data-label="Résolution / Max Frames / Temps Gratuit">512x512 / 16 frames / Illimité (local)</td>
+                </tr>
+                <tr>
+                    <td data-label="Nom">SVD-XT Turbo</td>
+                    <td data-label="Site/Projet"><a href="https://huggingface.co/stabilityai/stable-video-diffusion-img2vid-xt" target="_blank">huggingface.co/stabilityai/stable-video-diffusion-img2vid-xt</a></td>
+                    <td data-label="Description">Version accélérée de SVD-XT pour génération rapide.</td>
+                    <td data-label="Modèles Disponibles">SVD-XT Turbo</td>
+                    <td data-label="Cohérence Temporelle"><span class="stars">⭐⭐⭐⭐</span></td>
+                    <td data-label="Réalisme"><span class="stars">⭐⭐⭐⭐</span></td>
+                    <td data-label="Contrôle Caméra"><span class="stars">⭐⭐⭐</span></td>
+                    <td data-label="Artefacts">Accéléré cause flou</td>
+                    <td data-label="Accessibilité">Gratuit, open source</td>
+                    <td data-label="Type">Projet OSS</td>
+                    <td data-label="Type de Techno">SVD</td>
+                    <td data-label="Résolution / Max Frames / Temps Gratuit">576x1024 / 25 frames / Illimité (local)</td>
+                </tr>
+                <tr>
+                    <td data-label="Nom">Kandinsky Video</td>
+                    <td data-label="Site/Projet"><a href="https://huggingface.co/kandinsky-community" target="_blank">huggingface.co/kandinsky-community</a></td>
+                    <td data-label="Description">Extension vidéo du modèle Kandinsky pour image-to-video.</td>
+                    <td data-label="Modèles Disponibles">Kandinsky-V</td>
+                    <td data-label="Cohérence Temporelle"><span class="stars">⭐⭐⭐</span></td>
+                    <td data-label="Réalisme"><span class="stars">⭐⭐⭐</span></td>
+                    <td data-label="Contrôle Caméra"><span class="stars">⭐⭐</span></td>
+                    <td data-label="Artefacts">Artistique élevé</td>
+                    <td data-label="Accessibilité">Gratuit, open source</td>
+                    <td data-label="Type">Projet OSS</td>
+                    <td data-label="Type de Techno">Stable Diffusion</td>
+                    <td data-label="Résolution / Max Frames / Temps Gratuit">512x512 / 16 frames / Illimité (local)</td>
+                </tr>
+                <tr>
+                    <td data-label="Nom">CogView3-Video</td>
+                    <td data-label="Site/Projet"><a href="https://github.com/THUDM/CogView3" target="_blank">github.com/THUDM/CogView3</a></td>
+                    <td data-label="Description">Composant vidéo de CogView3, supporte i2v via diffusion.</td>
+                    <td data-label="Modèles Disponibles">CogView3-V</td>
+                    <td data-label="Cohérence Temporelle"><span class="stars">⭐⭐⭐</span></td>
+                    <td data-label="Réalisme"><span class="stars">⭐⭐⭐</span></td>
+                    <td data-label="Contrôle Caméra"><span class="stars">⭐⭐</span></td>
+                    <td data-label="Artefacts">Modéré</td>
+                    <td data-label="Accessibilité">Gratuit, open source</td>
+                    <td data-label="Type">Projet OSS</td>
+                    <td data-label="Type de Techno">SVD</td>
+                    <td data-label="Résolution / Max Frames / Temps Gratuit">480p / 6s / Illimité (local)</td>
+                </tr>
+                <tr>
+                    <td data-label="Nom">StableCascade Video</td>
+                    <td data-label="Site/Projet"><a href="https://github.com/Stability-AI/StableCascade" target="_blank">github.com/Stability-AI/StableCascade</a></td>
+                    <td data-label="Description">Adaptation vidéo de Stable Cascade, compatible i2v.</td>
+                    <td data-label="Modèles Disponibles">StableCascade-V</td>
+                    <td data-label="Cohérence Temporelle"><span class="stars">⭐⭐⭐</span></td>
+                    <td data-label="Réalisme"><span class="stars">⭐⭐⭐⭐</span></td>
+                    <td data-label="Contrôle Caméra"><span class="stars">⭐⭐</span></td>
+                    <td data-label="Artefacts">Cascade flou</td>
+                    <td data-label="Accessibilité">Gratuit, open source</td>
+                    <td data-label="Type">Projet OSS</td>
+                    <td data-label="Type de Techno">Stable Diffusion</td>
+                    <td data-label="Résolution / Max Frames / Temps Gratuit">1024x1024 / 16 frames / Illimité (local)</td>
+                </tr>
+                <tr>
+                    <td data-label="Nom">VideoLDM</td>
+                    <td data-label="Site/Projet"><a href="https://github.com/CompVis/VideoLDM" target="_blank">github.com/CompVis/VideoLDM</a></td>
+                    <td data-label="Description">Génération vidéo via Latent Diffusion Models, base pour plusieurs projets.</td>
+                    <td data-label="Modèles Disponibles">VideoLDM</td>
+                    <td data-label="Cohérence Temporelle"><span class="stars">⭐⭐</span></td>
+                    <td data-label="Réalisme"><span class="stars">⭐⭐</span></td>
+                    <td data-label="Contrôle Caméra"><span class="stars">⭐</span></td>
+                    <td data-label="Artefacts">Latent élevé</td>
+                    <td data-label="Accessibilité">Gratuit, open source</td>
+                    <td data-label="Type">Projet OSS</td>
+                    <td data-label="Type de Techno">Stable Diffusion</td>
+                    <td data-label="Résolution / Max Frames / Temps Gratuit">256x256 / 16 frames / Illimité (local)</td>
+                </tr>
+                <tr>
+                    <td data-label="Nom">Gen-1 (Runway)</td>
+                    <td data-label="Site/Projet"><a href="https://runwayml.com/gen1" target="_blank">runwayml.com/gen1</a></td>
+                    <td data-label="Description">Ancien modèle Runway pour style transfer vidéo à partir d’image.</td>
+                    <td data-label="Modèles Disponibles">Gen-1</td>
+                    <td data-label="Cohérence Temporelle"><span class="stars">⭐⭐</span></td>
+                    <td data-label="Réalisme"><span class="stars">⭐⭐</span></td>
+                    <td data-label="Contrôle Caméra"><span class="stars">⭐</span></td>
+                    <td data-label="Artefacts">Déprécié</td>
+                    <td data-label="Accessibilité">Payant (déprécié)</td>
+                    <td data-label="Type">SaaS payant</td>
+                    <td data-label="Type de Techno">Stable Diffusion</td>
+                    <td data-label="Résolution / Max Frames / Temps Gratuit">720p / 4s / N/A (payant)</td>
+                </tr>
+                <tr>
+                    <td data-label="Nom">Gen-2 (Runway)</td>
+                    <td data-label="Site/Projet"><a href="https://runwayml.com/gen2" target="_blank">runwayml.com/gen2</a></td>
+                    <td data-label="Description">Prédécesseur de Gen-3, supporte image-to-video.</td>
+                    <td data-label="Modèles Disponibles">Gen-2</td>
+                    <td data-label="Cohérence Temporelle"><span class="stars">⭐⭐⭐</span></td>
+                    <td data-label="Réalisme"><span class="stars">⭐⭐⭐</span></td>
+                    <td data-label="Contrôle Caméra"><span class="stars">⭐⭐⭐</span></td>
+                    <td data-label="Artefacts">Modéré</td>
+                    <td data-label="Accessibilité">Payant</td>
+                    <td data-label="Type">SaaS payant</td>
+                    <td data-label="Type de Techno">Stable Diffusion</td>
+                    <td data-label="Résolution / Max Frames / Temps Gratuit">1080p / 16s / Essai limité</td>
+                </tr>
+                <tr>
+                    <td data-label="Nom">Stable Video Ultra</td>
+                    <td data-label="Site/Projet"><a href="https://stability.ai" target="_blank">stability.ai</a></td>
+                    <td data-label="Description">Version améliorée de SVD non encore publiée (rumorée).</td>
+                    <td data-label="Modèles Disponibles">SVD-Ultra</td>
+                    <td data-label="Cohérence Temporelle"><span class="stars">⭐⭐⭐⭐</span></td>
+                    <td data-label="Réalisme"><span class="stars">⭐⭐⭐⭐</span></td>
+                    <td data-label="Contrôle Caméra"><span class="stars">⭐⭐⭐</span></td>
+                    <td data-label="Artefacts">N/A</td>
+                    <td data-label="Accessibilité">Non disponible</td>
+                    <td data-label="Type">Recherche</td>
+                    <td data-label="Type de Techno">SVD</td>
+                    <td data-label="Résolution / Max Frames / Temps Gratuit">N/A / N/A / N/A</td>
+                </tr>
+                <tr>
+                    <td data-label="Nom">LTX Studio</td>
+                    <td data-label="Site/Projet"><a href="https://ltx.studio" target="_blank">ltx.studio</a></td>
+                    <td data-label="Description">Plateforme web pour générer des vidéos à partir d’images avec contrôle caméra.</td>
+                    <td data-label="Modèles Disponibles">LTX-I2V</td>
+                    <td data-label="Cohérence Temporelle"><span class="stars">⭐⭐⭐</span></td>
+                    <td data-label="Réalisme"><span class="stars">⭐⭐⭐</span></td>
+                    <td data-label="Contrôle Caméra"><span class="stars">⭐⭐⭐⭐</span></td>
+                    <td data-label="Artefacts">Modéré</td>
+                    <td data-label="Accessibilité">Gratuit limité, payant</td>
+                    <td data-label="Type">SaaS</td>
+                    <td data-label="Type de Techno">Stable Diffusion</td>
+                    <td data-label="Résolution / Max Frames / Temps Gratuit">720p / 5s / Limité gratuit</td>
+                </tr>
+                <tr>
+                    <td data-label="Nom">Infinite Nature</td>
+                    <td data-label="Site/Projet"><a href="https://infinite-nature.github.io" target="_blank">infinite-nature.github.io</a></td>
+                    <td data-label="Description">Génération de vidéos naturelles à partir d’images paysages.</td>
+                    <td data-label="Modèles Disponibles">Infinite Nature</td>
+                    <td data-label="Cohérence Temporelle"><span class="stars">⭐⭐⭐</span></td>
+                    <td data-label="Réalisme"><span class="stars">⭐⭐⭐⭐</span></td>
+                    <td data-label="Contrôle Caméra"><span class="stars">⭐⭐</span></td>
+                    <td data-label="Artefacts">Paysage instable</td>
+                    <td data-label="Accessibilité">Recherche</td>
+                    <td data-label="Type">Recherche</td>
+                    <td data-label="Type de Techno">Stable Diffusion</td>
+                    <td data-label="Résolution / Max Frames / Temps Gratuit">N/A / N/A / N/A</td>
+                </tr>
+                <tr>
+                    <td data-label="Nom">NeRFFaceVideo</td>
+                    <td data-label="Site/Projet"><a href="https://github.com/NeRFFaceVideo/NeRFFaceVideo" target="_blank">github.com/NeRFFaceVideo/NeRFFaceVideo</a></td>
+                    <td data-label="Description">Génération vidéo de visage à partir d’image unique.</td>
+                    <td data-label="Modèles Disponibles">NeRFFaceVideo</td>
+                    <td data-label="Cohérence Temporelle"><span class="stars">⭐⭐⭐</span></td>
+                    <td data-label="Réalisme"><span class="stars">⭐⭐⭐</span></td>
+                    <td data-label="Contrôle Caméra"><span class="stars">⭐⭐</span></td>
+                    <td data-label="Artefacts">Visage déformé</td>
+                    <td data-label="Accessibilité">Gratuit, open source</td>
+                    <td data-label="Type">Projet OSS</td>
+                    <td data-label="Type de Techno">SVD</td>
+                    <td data-label="Résolution / Max Frames / Temps Gratuit">256x256 / 100 frames / Illimité (local)</td>
+                </tr>
+                <tr>
+                    <td data-label="Nom">Vid2Vid</td>
+                    <td data-label="Site/Projet"><a href="https://nvlabs.github.io/vid2vid" target="_blank">nvlabs.github.io/vid2vid</a></td>
+                    <td data-label="Description">Traduction vidéo à vidéo, adaptable à i2v via image initiale.</td>
+                    <td data-label="Modèles Disponibles">Vid2Vid</td>
+                    <td data-label="Cohérence Temporelle"><span class="stars">⭐⭐⭐</span></td>
+                    <td data-label="Réalisme"><span class="stars">⭐⭐⭐</span></td>
+                    <td data-label="Contrôle Caméra"><span class="stars">⭐⭐</span></td>
+                    <td data-label="Artefacts">Traduction variable</td>
+                    <td data-label="Accessibilité">Gratuit, open source</td>
+                    <td data-label="Type">Projet OSS</td>
+                    <td data-label="Type de Techno">Stable Diffusion</td>
+                    <td data-label="Résolution / Max Frames / Temps Gratuit">512x512 / Varie / Illimité (local)</td>
+                </tr>
+                <tr>
+                    <td data-label="Nom">MoDi</td>
+                    <td data-label="Site/Projet"><a href="https://github.com/microsoft/MoDi" target="_blank">github.com/microsoft/MoDi</a></td>
+                    <td data-label="Description">Modèle Microsoft pour génération vidéo multimodale (texte + image).</td>
+                    <td data-label="Modèles Disponibles">MoDi</td>
+                    <td data-label="Cohérence Temporelle"><span class="stars">⭐⭐⭐</span></td>
+                    <td data-label="Réalisme"><span class="stars">⭐⭐⭐</span></td>
+                    <td data-label="Contrôle Caméra"><span class="stars">⭐⭐</span></td>
+                    <td data-label="Artefacts">Restreint</td>
+                    <td data-label="Accessibilité">Accès restreint</td>
+                    <td data-label="Type">Recherche</td>
+                    <td data-label="Type de Techno">I2VGen</td>
+                    <td data-label="Résolution / Max Frames / Temps Gratuit">N/A / N/A / N/A</td>
+                </tr>
+                <tr>
+                    <td data-label="Nom">Imagen Video</td>
+                    <td data-label="Site/Projet"><a href="https://imagen.research.google/video" target="_blank">imagen.research.google/video</a></td>
+                    <td data-label="Description">Modèle Google pour vidéo haute résolution, non open.</td>
+                    <td data-label="Modèles Disponibles">Imagen Video</td>
+                    <td data-label="Cohérence Temporelle"><span class="stars">⭐⭐⭐⭐</span></td>
+                    <td data-label="Réalisme"><span class="stars">⭐⭐⭐⭐</span></td>
+                    <td data-label="Contrôle Caméra"><span class="stars">⭐⭐⭐</span></td>
+                    <td data-label="Artefacts">N/A</td>
+                    <td data-label="Accessibilité">Non public</td>
+                    <td data-label="Type">Recherche</td>
+                    <td data-label="Type de Techno">Stable Diffusion</td>
+                    <td data-label="Résolution / Max Frames / Temps Gratuit">1024x1024 / 2s / N/A</td>
+                </tr>
+                <tr>
+                    <td data-label="Nom">Vidu</td>
+                    <td data-label="Site/Projet"><a href="https://vidu.ai" target="_blank">vidu.ai</a></td>
+                    <td data-label="Description">Plateforme chinoise concurrente de Sora, supporte i2v.</td>
+                    <td data-label="Modèles Disponibles">Vidu 1.0</td>
+                    <td data-label="Cohérence Temporelle"><span class="stars">⭐⭐⭐⭐</span></td>
+                    <td data-label="Réalisme"><span class="stars">⭐⭐⭐⭐</span></td>
+                    <td data-label="Contrôle Caméra"><span class="stars">⭐⭐⭐</span></td>
+                    <td data-label="Artefacts">Limité</td>
+                    <td data-label="Accessibilité">Accès limité</td>
+                    <td data-label="Type">SaaS</td>
+                    <td data-label="Type de Techno">Stable Diffusion</td>
+                    <td data-label="Résolution / Max Frames / Temps Gratuit">720p / 4s / 80 crédits/jour</td>
+                </tr>
+                <tr>
+                    <td data-label="Nom">Zeroscope XL</td>
+                    <td data-label="Site/Projet"><a href="https://huggingface.co/cerspense/zeroscope_v2_XL" target="_blank">huggingface.co/cerspense/zeroscope_v2_XL</a></td>
+                    <td data-label="Description">Version XL de ZeroScope pour résolution supérieure.</td>
+                    <td data-label="Modèles Disponibles">ZeroScope XL</td>
+                    <td data-label="Cohérence Temporelle"><span class="stars">⭐⭐⭐</span></td>
+                    <td data-label="Réalisme"><span class="stars">⭐⭐</span></td>
+                    <td data-label="Contrôle Caméra"><span class="stars">⭐</span></td>
+                    <td data-label="Artefacts">Élevé</td>
+                    <td data-label="Accessibilité">Gratuit, open source</td>
+                    <td data-label="Type">Projet OSS</td>
+                    <td data-label="Type de Techno">Stable Diffusion</td>
+                    <td data-label="Résolution / Max Frames / Temps Gratuit">1024x576 / 24 frames / Illimité (local)</td>
+                </tr>
+                <tr>
+                    <td data-label="Nom">AnimateDiff-Light</td>
+                    <td data-label="Site/Projet"><a href="https://github.com/Artiprocher/AnimateDiff-Light" target="_blank">github.com/Artiprocher/AnimateDiff-Light</a></td>
+                    <td data-label="Description">Version allégée d’AnimateDiff pour machines modestes.</td>
+                    <td data-label="Modèles Disponibles">AnimateDiff-Light</td>
+                    <td data-label="Cohérence Temporelle"><span class="stars">⭐⭐</span></td>
+                    <td data-label="Réalisme"><span class="stars">⭐⭐</span></td>
+                    <td data-label="Contrôle Caméra"><span class="stars">⭐⭐</span></td>
+                    <td data-label="Artefacts">Allégé cause qualité basse</td>
+                    <td data-label="Accessibilité">Gratuit, open source</td>
+                    <td data-label="Type">Projet OSS</td>
+                    <td data-label="Type de Techno">Stable Diffusion</td>
+                    <td data-label="Résolution / Max Frames / Temps Gratuit">512x512 / 16 frames / Illimité (local)</td>
+                </tr>
+                <tr>
+                    <td data-label="Nom">SVD Community Models</td>
+                    <td data-label="Site/Projet"><a href="https://civitai.com" target="_blank">civitai.com</a></td>
+                    <td data-label="Description">Modèles fine-tunés de SVD partagés par la communauté.</td>
+                    <td data-label="Modèles Disponibles">SVD-FT, SVD-Realism</td>
+                    <td data-label="Cohérence Temporelle"><span class="stars">⭐⭐⭐</span></td>
+                    <td data-label="Réalisme"><span class="stars">⭐⭐⭐</span></td>
+                    <td data-label="Contrôle Caméra"><span class="stars">⭐⭐</span></td>
+                    <td data-label="Artefacts">Varie par modèle</td>
+                    <td data-label="Accessibilité">Gratuit</td>
+                    <td data-label="Type">Communauté</td>
+                    <td data-label="Type de Techno">SVD</td>
+                    <td data-label="Résolution / Max Frames / Temps Gratuit">576x1024 / 25 frames / Illimité (local)</td>
+                </tr>
+                <tr>
+                    <td data-label="Nom">ComfyUI-I2V Nodes</td>
+                    <td data-label="Site/Projet"><a href="https://github.com/comfyanonymous/ComfyUI" target="_blank">github.com/comfyanonymous/ComfyUI</a></td>
+                    <td data-label="Description">Nœuds pour intégrer SVD, AnimateDiff, etc. dans ComfyUI.</td>
+                    <td data-label="Modèles Disponibles">Plugins I2V</td>
+                    <td data-label="Cohérence Temporelle"><span class="stars">⭐⭐⭐</span></td>
+                    <td data-label="Réalisme"><span class="stars">⭐⭐⭐</span></td>
+                    <td data-label="Contrôle Caméra"><span class="stars">⭐⭐⭐</span></td>
+                    <td data-label="Artefacts">Dépend du node</td>
+                    <td data-label="Accessibilité">Gratuit, open source</td>
+                    <td data-label="Type">Outil OSS</td>
+                    <td data-label="Type de Techno">Stable Diffusion</td>
+                    <td data-label="Résolution / Max Frames / Temps Gratuit">Varie / Varie / Illimité (local)</td>
+                </tr>
+                <tr>
+                    <td data-label="Nom">Stable Diffusion WebUI I2V</td>
+                    <td data-label="Site/Projet"><a href="https://github.com/AUTOMATIC1111/stable-diffusion-webui" target="_blank">github.com/AUTOMATIC1111/stable-diffusion-webui</a></td>
+                    <td data-label="Description">Extensions pour vidéo dans WebUI (ex: SVD plugin).</td>
+                    <td data-label="Modèles Disponibles">SVD plugin</td>
+                    <td data-label="Cohérence Temporelle"><span class="stars">⭐⭐⭐</span></td>
+                    <td data-label="Réalisme"><span class="stars">⭐⭐⭐</span></td>
+                    <td data-label="Contrôle Caméra"><span class="stars">⭐⭐</span></td>
+                    <td data-label="Artefacts">Plugin variable</td>
+                    <td data-label="Accessibilité">Gratuit, open source</td>
+                    <td data-label="Type">Outil OSS</td>
+                    <td data-label="Type de Techno">Stable Diffusion</td>
+                    <td data-label="Résolution / Max Frames / Temps Gratuit">512x512 / 25 frames / Illimité (local)</td>
+                </tr>
+                <tr>
+                    <td data-label="Nom">VideoFusion</td>
+                    <td data-label="Site/Projet"><a href="https://github.com/VideoFusion/VideoFusion" target="_blank">github.com/VideoFusion/VideoFusion</a></td>
+                    <td data-label="Description">Fusion de plusieurs images en vidéo cohérente.</td>
+                    <td data-label="Modèles Disponibles">VideoFusion</td>
+                    <td data-label="Cohérence Temporelle"><span class="stars">⭐⭐⭐</span></td>
+                    <td data-label="Réalisme"><span class="stars">⭐⭐⭐</span></td>
+                    <td data-label="Contrôle Caméra"><span class="stars">⭐⭐</span></td>
+                    <td data-label="Artefacts">Fusion instable</td>
+                    <td data-label="Accessibilité">Gratuit, open source</td>
+                    <td data-label="Type">Projet OSS</td>
+                    <td data-label="Type de Techno">Stable Diffusion</td>
+                    <td data-label="Résolution / Max Frames / Temps Gratuit">512x512 / 16 frames / Illimité (local)</td>
+                </tr>
+                <tr>
+                    <td data-label="Nom">Dreamix</td>
+                    <td data-label="Site/Projet"><a href="https://dreamix-video.github.io" target="_blank">dreamix-video.github.io</a></td>
+                    <td data-label="Description">Génération vidéo à partir d’image + motion prompt.</td>
+                    <td data-label="Modèles Disponibles">Dreamix</td>
+                    <td data-label="Cohérence Temporelle"><span class="stars">⭐⭐⭐</span></td>
+                    <td data-label="Réalisme"><span class="stars">⭐⭐⭐</span></td>
+                    <td data-label="Contrôle Caméra"><span class="stars">⭐⭐</span></td>
+                    <td data-label="Artefacts">Motion variable</td>
+                    <td data-label="Accessibilité">Gratuit, open source</td>
+                    <td data-label="Type">Projet OSS</td>
+                    <td data-label="Type de Techno">Stable Diffusion</td>
+                    <td data-label="Résolution / Max Frames / Temps Gratuit">256x256 / 16 frames / Illimité (local)</td>
+                </tr>
+                <tr>
+                    <td data-label="Nom">CtrlVideo</td>
+                    <td data-label="Site/Projet"><a href="https://github.com/ctrlvideo/ctrlvideo" target="_blank">github.com/ctrlvideo/ctrlvideo</a></td>
+                    <td data-label="Description">Contrôle spatial et temporel dans la génération vidéo.</td>
+                    <td data-label="Modèles Disponibles">CtrlVideo</td>
+                    <td data-label="Cohérence Temporelle"><span class="stars">⭐⭐⭐⭐</span></td>
+                    <td data-label="Réalisme"><span class="stars">⭐⭐⭐</span></td>
+                    <td data-label="Contrôle Caméra"><span class="stars">⭐⭐⭐⭐</span></td>
+                    <td data-label="Artefacts">Contrôle forcé</td>
+                    <td data-label="Accessibilité">Gratuit, open source</td>
+                    <td data-label="Type">Projet OSS</td>
+                    <td data-label="Type de Techno">Stable Diffusion</td>
+                    <td data-label="Résolution / Max Frames / Temps Gratuit">512x512 / 16 frames / Illimité (local)</td>
+                </tr>
+                <tr>
+                    <td data-label="Nom">RAVE</td>
+                    <td data-label="Site/Projet"><a href="https://github.com/rave-video/rave" target="_blank">github.com/rave-video/rave</a></td>
+                    <td data-label="Description">Génération vidéo rapide avec contrôle de mouvement.</td>
+                    <td data-label="Modèles Disponibles">RAVE</td>
+                    <td data-label="Cohérence Temporelle"><span class="stars">⭐⭐⭐</span></td>
+                    <td data-label="Réalisme"><span class="stars">⭐⭐⭐</span></td>
+                    <td data-label="Contrôle Caméra"><span class="stars">⭐⭐⭐</span></td>
+                    <td data-label="Artefacts">Rapide cause erreurs</td>
+                    <td data-label="Accessibilité">Gratuit, open source</td>
+                    <td data-label="Type">Projet OSS</td>
+                    <td data-label="Type de Techno">SVD</td>
+                    <td data-label="Résolution / Max Frames / Temps Gratuit">576x1024 / 14 frames / Illimité (local)</td>
+                </tr>
+                <tr>
+                    <td data-label="Nom">T2V-Turbo</td>
+                    <td data-label="Site/Projet"><a href="https://github.com/T2V-Turbo/T2V-Turbo" target="_blank">github.com/T2V-Turbo/T2V-Turbo</a></td>
+                    <td data-label="Description">Version accélérée de text-to-video, adaptable à i2v.</td>
+                    <td data-label="Modèles Disponibles">T2V-Turbo</td>
+                    <td data-label="Cohérence Temporelle"><span class="stars">⭐⭐</span></td>
+                    <td data-label="Réalisme"><span class="stars">⭐⭐</span></td>
+                    <td data-label="Contrôle Caméra"><span class="stars">⭐</span></td>
+                    <td data-label="Artefacts">Accéléré élevé</td>
+                    <td data-label="Accessibilité">Gratuit, open source</td>
+                    <td data-label="Type">Projet OSS</td>
+                    <td data-label="Type de Techno">Stable Diffusion</td>
+                    <td data-label="Résolution / Max Frames / Temps Gratuit">512x512 / 24 frames / Illimité (local)</td>
+                </tr>
+                <tr>
+                    <td data-label="Nom">PixArt Video</td>
+                    <td data-label="Site/Projet"><a href="https://pixart-alpha.github.io" target="_blank">pixart-alpha.github.io</a></td>
+                    <td data-label="Description">Extension vidéo du modèle PixArt, supporte i2v.</td>
+                    <td data-label="Modèles Disponibles">PixArt-V</td>
+                    <td data-label="Cohérence Temporelle"><span class="stars">⭐⭐⭐</span></td>
+                    <td data-label="Réalisme"><span class="stars">⭐⭐⭐</span></td>
+                    <td data-label="Contrôle Caméra"><span class="stars">⭐⭐</span></td>
+                    <td data-label="Artefacts">Artistique</td>
+                    <td data-label="Accessibilité">Gratuit, open source</td>
+                    <td data-label="Type">Projet OSS</td>
+                    <td data-label="Type de Techno">Stable Diffusion</td>
+                    <td data-label="Résolution / Max Frames / Temps Gratuit">1024x1024 / 16 frames / Illimité (local)</td>
+                </tr>
+                <tr>
+                    <td data-label="Nom">Stable Video 4D</td>
+                    <td data-label="Site/Projet"><a href="https://github.com/Stability-AI/SV4D" target="_blank">github.com/Stability-AI/SV4D</a></td>
+                    <td data-label="Description">Génération de vidéos 4D (temps + profondeur) à partir d’images.</td>
+                    <td data-label="Modèles Disponibles">SV4D 2.0</td>
+                    <td data-label="Cohérence Temporelle"><span class="stars">⭐⭐⭐</span></td>
+                    <td data-label="Réalisme"><span class="stars">⭐⭐⭐</span></td>
+                    <td data-label="Contrôle Caméra"><span class="stars">⭐⭐⭐⭐</span></td>
+                    <td data-label="Artefacts">4D déformation</td>
+                    <td data-label="Accessibilité">Gratuit, open source</td>
+                    <td data-label="Type">Projet OSS</td>
+                    <td data-label="Type de Techno">SVD</td>
+                    <td data-label="Résolution / Max Frames / Temps Gratuit">576x1024 / 25 frames / Illimité (local)</td>
+                </tr>
+                <tr>
+                    <td data-label="Nom">Vid2Dream</td>
+                    <td data-label="Site/Projet"><a href="https://huggingface.co/spaces/vid2dream" target="_blank">huggingface.co/spaces/vid2dream</a></td>
+                    <td data-label="Description">Espace Hugging Face pour transformer vidéos en rêves animés.</td>
+                    <td data-label="Modèles Disponibles">Vid2Dream</td>
+                    <td data-label="Cohérence Temporelle"><span class="stars">⭐⭐</span></td>
+                    <td data-label="Réalisme"><span class="stars">⭐⭐</span></td>
+                    <td data-label="Contrôle Caméra"><span class="stars">⭐</span></td>
+                    <td data-label="Artefacts">Rêve instable</td>
+                    <td data-label="Accessibilité">Gratuit</td>
+                    <td data-label="Type">Plateforme hébergée</td>
+                    <td data-label="Type de Techno">Stable Diffusion</td>
+                    <td data-label="Résolution / Max Frames / Temps Gratuit">512x512 / 16 frames / Limité API</td>
+                </tr>
+                <tr>
+                    <td data-label="Nom">MotionBrush</td>
+                    <td data-label="Site/Projet"><a href="https://motionbrush.com" target="_blank">motionbrush.com</a></td>
+                    <td data-label="Description">Outil pour animer des zones spécifiques d’une image.</td>
+                    <td data-label="Modèles Disponibles">MotionBrush</td>
+                    <td data-label="Cohérence Temporelle"><span class="stars">⭐⭐⭐</span></td>
+                    <td data-label="Réalisme"><span class="stars">⭐⭐⭐</span></td>
+                    <td data-label="Contrôle Caméra"><span class="stars">⭐⭐</span></td>
+                    <td data-label="Artefacts">Zone limitée</td>
+                    <td data-label="Accessibilité">Gratuit limité</td>
+                    <td data-label="Type">SaaS</td>
+                    <td data-label="Type de Techno">Stable Diffusion</td>
+                    <td data-label="Résolution / Max Frames / Temps Gratuit">720p / 5s / Limité gratuit</td>
+                </tr>
+                <tr>
+                    <td data-label="Nom">DeepMotion Animate 3D</td>
+                    <td data-label="Site/Projet"><a href="https://deepmotion.com/animate-3d" target="_blank">deepmotion.com/animate-3d</a></td>
+                    <td data-label="Description">Génération vidéo 3D à partir d’images 2D.</td>
+                    <td data-label="Modèles Disponibles">Animate 3D</td>
+                    <td data-label="Cohérence Temporelle"><span class="stars">⭐⭐⭐</span></td>
+                    <td data-label="Réalisme"><span class="stars">⭐⭐⭐</span></td>
+                    <td data-label="Contrôle Caméra"><span class="stars">⭐⭐⭐</span></td>
+                    <td data-label="Artefacts">3D conversion</td>
+                    <td data-label="Accessibilité">Freemium</td>
+                    <td data-label="Type">SaaS</td>
+                    <td data-label="Type de Techno">Stable Diffusion</td>
+                    <td data-label="Résolution / Max Frames / Temps Gratuit">720p / 10s / Freemium limité</td>
+                </tr>
+            </tbody>
+            <tfoot>
+                <tr>
+                    <td colspan="12" class="results-footer" id="resultsFooter">Résultats : <span id="resultCount">65</span> / 65</td>
+                </tr>
+            </tfoot>
+        </table>
+    </div>
+    <footer>
+        &copy; 2025 Thibaut LOMBARD <a href="https://lombard-web-services.github.io/Docs/" target="_blank">https://lombard-web-services.github.io/Docs/</a>
+    </footer>
+
+    <script>
+        const searchInput = document.getElementById('searchInput');
+        const searchBtn = document.getElementById('searchBtn');
+        const table = document.querySelector('table');
+        const tbody = table.querySelector('tbody');
+        const rows = tbody.getElementsByTagName('tr');
+        const totalRows = rows.length;
+        const resultCountSpan = document.getElementById('resultCount');
+        const resultsFooter = document.getElementById('resultsFooter');
+
+        // Initial count
+        updateResults(0);
+
+        function performSearch(inputValue) {
+            const searchTerm = inputValue.toLowerCase().trim();
+            
+            let visibleCount = 0;
+            
+            for (let i = 0; i < rows.length; i++) {
+                const row = rows[i];
+                const cells = row.getElementsByTagName('td');
+                let found = false;
+                
+                for (let j = 0; j < cells.length; j++) {
+                    if (cells[j] && cells[j].textContent.toLowerCase().indexOf(searchTerm) > -1) {
+                        found = true;
+                        break;
+                    }
+                }
+                
+                if (found) {
+                    row.classList.remove('fade-out');
+                    row.style.display = '';
+                    visibleCount++;
+                } else {
+                    row.classList.add('fade-out');
+                    setTimeout(() => {
+                        row.style.display = 'none';
+                    }, 300); // Delay to allow fade effect
+                }
+            }
+            
+            updateResults(visibleCount);
+        }
+
+        function updateResults(count) {
+            resultCountSpan.textContent = count;
+            resultsFooter.textContent = `Résultats : ${count} / ${totalRows}`;
+        }
+
+        // Live search on keyup
+        searchInput.addEventListener('keyup', function() {
+            performSearch(this.value);
+        });
+
+        // Search on button click
+        searchBtn.addEventListener('click', function() {
+            performSearch(searchInput.value);
+        });
+
+        // Focus on input when button clicked
+        searchBtn.addEventListener('click', function() {
+            searchInput.focus();
+        });
+
+        // Theme toggle
+        function toggleTheme() {
+            const body = document.body;
+            const currentTheme = body.getAttribute('data-theme');
+            const newTheme = currentTheme === 'light' ? 'dark' : 'light';
+            body.setAttribute('data-theme', newTheme);
+            const button = document.querySelector('.theme-switch');
+            button.textContent = newTheme === 'dark' ? '☀️ Light Mode' : '🌙 Dark Mode';
+        }
+    </script>
+</body>
+</html>
