@@ -129,15 +129,15 @@ A summary table of the main auction platforms in France for vehicles, high-tech 
 
 **Copyright © Thibaut LOMBARD, Lombard Web Services**
 
-🔗 [View license details here](https://github.com/Lombard-Web-Services/Docs)
 
-This work is licensed under the **Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International (CC BY-NC-ND 4.0)**.
+This project is licensed under the **Creative Commons Attribution-NonCommercial-ShareAlike (CC BY-NC-SA)** license.
 
-### ✏️ **What does this mean?**
-- **Attribution (BY)** — You must give appropriate credit.
-- **NonCommercial (NC)** — You may not use the material for commercial purposes.
-- **NoDerivatives (ND)** — If you remix, transform, or build upon the material, you may not distribute the modified material.
+**What does it mean?**
 
-For full legal terms, see the [Creative Commons page](https://creativecommons.org/licenses/by-nc-nd/4.0/).
+- **Attribution (BY)**: You must give appropriate credit, provide a link to the license, and indicate if changes were made.
+- **NonCommercial (NC)**: You may not use the material for commercial purposes.
+- **ShareAlike (SA)**: If you remix, transform, or build upon the material, you must distribute your contributions under the same license as the original.
+
+[Learn more about this license here](https://creativecommons.org/licenses/by-nc-sa/4.0/).
 
 ✨ _Made with care by Thibaut LOMBARD – Lombard Web Services._
