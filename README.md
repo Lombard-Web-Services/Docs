@@ -125,7 +125,7 @@ A summary table of the main auction platforms in France for vehicles, high-tech 
 
 ## 📜 License
 
-![License: CC BY-NC-ND](https://github.com/Lombard-Web-Services/Docs/blob/main/CC_BY-NC-ND.png)
+![Creative Commons BY-NC-SA](https://github.com/Lombard-Web-Services/Android-Telemetry/blob/main/CC_BY-NC-SA.png?raw=true)
 
 **Copyright © Thibaut LOMBARD, Lombard Web Services**
 
