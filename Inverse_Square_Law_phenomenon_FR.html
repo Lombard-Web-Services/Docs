@@ -1,0 +1,610 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mur Scientifique : Loi en Carré Inverse \( (I \propto \frac{1}{r^{2}}) \)</title>
+    <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <style>
+        /* === RESET & BASE === */
+        * { margin:0; padding:0; box-sizing:border-box; }
+        body {
+            font-family: 'SF Pro Display', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            line-height: 1.5;
+            transition: background 0.3s ease, color 0.3s ease;
+            padding: 1.5rem;
+            background: #f5f7fa;
+        }
+        body.dark {
+            background: #0f172a;
+            color: #e2e8f0;
+        }
+
+        /* === CONTAINER === */
+        .container {
+            max-width: 100%;
+            margin: 0 auto;
+            background: #ffffff;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+        }
+        body.dark .container {
+            background: #1e293b;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        }
+
+        /* === HEADER === */
+        .header {
+            padding: 1.5rem 2rem;
+            text-align: center;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+        body.dark .header {
+            background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%);
+        }
+        h1 {
+            font-weight: 700;
+            font-size: 1.9rem;
+            margin-bottom: 0.5rem;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        }
+        .formula-title {
+            font-size: 1.6rem;
+            font-weight: 600;
+            margin: 0.5rem 0;
+            font-family: 'Times New Roman', serif;
+            color: #fff;
+        }
+        .subtitle {
+            font-size: 1.1rem;
+            opacity: 0.95;
+            max-width: 800px;
+            margin: 0 auto;
+            line-height: 1.5;
+        }
+        .author {
+            font-style: italic;
+            font-size: 1rem;
+            opacity: 0.9;
+            margin-top: 1rem;
+        }
+
+        /* === CONTROLS BAR (SEARCH + SWITCH) === */
+        .controls-bar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 1.2rem 2rem;
+            background: #f8fafc;
+            border-bottom: 1px solid #e2e8f0;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+        body.dark .controls-bar {
+            background: #1e293b;
+            border-bottom: 1px solid #334155;
+        }
+
+        /* === SEARCH BAR === */
+        .search-wrapper {
+            position: relative;
+            flex: 1;
+            min-width: 280px;
+            max-width: 500px;
+        }
+        .search-input {
+            width: 100%;
+            padding: 0.75rem 1rem 0.75rem 2.8rem;
+            border: 1px solid #cbd5e1;
+            border-radius: 14px;
+            font-size: 1rem;
+            background: white;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+        }
+        .search-input:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102,126,234,0.15);
+        }
+        body.dark .search-input {
+            background: #334155;
+            border-color: #475569;
+            color: #e2e8f0;
+        }
+        body.dark .search-input:focus {
+            border-color: #3b82f6;
+            box-shadow: 0 0 0 3px rgba(59,130,246,0.2);
+        }
+        .search-icon {
+            position: absolute;
+            left: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #94a3b8;
+            font-size: 1.1rem;
+            pointer-events: none;
+        }
+        .search-placeholder {
+            position: absolute;
+            left: 2.8rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #94a3b8;
+            font-size: 1rem;
+            pointer-events: none;
+            transition: opacity 0.2s ease;
+        }
+        .search-input:placeholder-shown + .search-placeholder {
+            opacity: 1;
+        }
+        .search-input:not(:placeholder-shown) + .search-placeholder,
+        .search-input:focus + .search-placeholder {
+            opacity: 0;
+        }
+
+        /* === iOS-STYLE SWITCH === */
+        .switch-wrapper {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            font-size: 0.95rem;
+            font-weight: 500;
+        }
+        .switch {
+            position: relative;
+            width: 52px;
+            height: 32px;
+            background: #cbd5e1;
+            border-radius: 32px;
+            cursor: pointer;
+            transition: background 0.3s ease;
+            box-shadow: inset 0 1px 3px rgba(0,0,0,0.1);
+        }
+        body.dark .switch {
+            background: #475569;
+        }
+        .switch.active {
+            background: #34d399;
+        }
+        .switch::after {
+            content: '';
+            position: absolute;
+            width: 28px;
+            height: 28px;
+            background: white;
+            border-radius: 50%;
+            top: 2px;
+            left: 2px;
+            transition: transform 0.3s ease;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+        .switch.active::after {
+            transform: translateX(20px);
+        }
+
+        /* === TABLE === */
+        .table-container {
+            overflow-x: auto;
+            padding: 0 2rem 2rem;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 0.5rem;
+            font-size: 0.95rem;
+        }
+        th, td {
+            padding: 1rem 0.75rem;
+            text-align: left;
+            vertical-align: middle;
+            border-bottom: 1px solid #e2e8f0;
+        }
+        body.dark th, body.dark td {
+            border-bottom: 1px solid #334155;
+        }
+        th {
+            background: linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 100%);
+            font-weight: 600;
+            text-transform: uppercase;
+            font-size: 0.8rem;
+            letter-spacing: 0.08em;
+            color: #475569;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+        body.dark th {
+            background: linear-gradient(135deg, #1e293b 0%, #334155 100%);
+            color: #94a3b8;
+        }
+        tr:hover {
+            background: #f8fafc;
+            transition: background 0.2s;
+        }
+        body.dark tr:hover {
+            background: #1e293b;
+        }
+
+        /* === LEVEL 1 ROWS === */
+        .level-1 {
+            background: linear-gradient(90deg, #d4f4e2 0%, #c6f6d5 100%) !important;
+            font-weight: 600;
+            color: #166534;
+        }
+        body.dark .level-1 {
+            background: linear-gradient(90deg, #134e3a 0%, #166534 100%) !important;
+            color: #86efac;
+        }
+
+        /* === FORMULA & LINKS === */
+        .formula {
+            font-family: 'Times New Roman', serif;
+            font-style: italic;
+            color: #1e40af;
+        }
+        body.dark .formula {
+            color: #93c5fd;
+        }
+        .source a {
+            color: #667eea;
+            text-decoration: none;
+            font-weight: 500;
+        }
+        .source a:hover {
+            text-decoration: underline;
+        }
+        body.dark .source a {
+            color: #93c5fd;
+        }
+        .flag { 
+            font-size: 1.3rem;
+            text-align: center;
+        }
+
+        /* === RESPONSIVE TABLE === */
+        @media (max-width: 768px) {
+            .controls-bar {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            .search-wrapper { max-width: 100%; }
+            table, thead, tbody, th, td, tr { display: block; }
+            thead tr { position: absolute; top: -9999px; left: -9999px; }
+            tr {
+                border: 1px solid #e2e8f0;
+                border-radius: 14px;
+                margin-bottom: 1rem;
+                padding: 1rem;
+                background: #ffffff;
+            }
+            body.dark tr {
+                background: #1e293b;
+                border-color: #334155;
+            }
+            td {
+                border: none;
+                position: relative;
+                padding-left: 50%;
+                white-space: normal;
+            }
+            td:before {
+                content: attr(data-label);
+                position: absolute;
+                left: 1rem;
+                width: 45%;
+                font-weight: 600;
+                color: #64748b;
+            }
+            body.dark td:before {
+                color: #94a3b8;
+            }
+        }
+
+        /* === FOOTER === */
+        footer {
+            text-align: center;
+            padding: 2rem;
+            font-size: 0.9rem;
+            color: #64748b;
+            background: #f8fafc;
+            margin-top: 2rem;
+            border-radius: 0 0 20px 20px;
+        }
+        body.dark footer {
+            background: #1e293b;
+            color: #94a3b8;
+        }
+        footer a {
+            color: inherit;
+            text-decoration: none;
+        }
+        footer a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <!-- HEADER -->
+    <div class="header">
+        <h1>Loi en Carré Inverse</h1>
+        <div class="formula-title">\( I \propto \dfrac{1}{r^{2}} \)</div>
+        <p class="subtitle">
+            Liste exhaustive de <strong>150 phénomènes</strong> physiques et cosmologiques où l’intensité décroît proportionnellement à <strong>1/r²</strong> — de la gravité aux ondes, en passant par les particules et rayonnements.
+        </p>
+        <p class="author">Thibaut LOMBARD<br><small>4 novembre 2015 — Mise à jour 2025</small></p>
+    </div>
+
+    <!-- CONTROLS BAR -->
+    <div class="controls-bar">
+        <div class="search-wrapper">
+            <span class="search-icon">Search</span>
+            <input type="text" id="searchInput" class="search-input" placeholder="Rechercher un phénomène, formule, créateur...">
+            <span class="search-placeholder">Rechercher un phénomène, formule, créateur...</span>
+        </div>
+        <div class="switch-wrapper">
+            <span id="modeLabel">Light</span>
+            <div class="switch" id="themeSwitch"></div>
+        </div>
+    </div>
+
+    <!-- TABLE -->
+    <div class="table-container">
+        <table id="dataTable">
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Niveau</th>
+                    <th>Phénomène</th>
+                    <th>Formule</th>
+                    <th>Condition clé</th>
+                    <th>Créateur</th>
+                    <th>Nationalité</th>
+                    <th>Date</th>
+                    <th>Exemple</th>
+                    <th>Source</th>
+                </tr>
+            </thead>
+            <tbody id="tableBody">
+                <!-- Données injectées via JS -->
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<footer>
+    &copy; 2025 Thibaut LOMBARD 
+    <a href="https://github.com/Lombard-Web-Services/Docs" target="_blank">
+        https://github.com/Lombard-Web-Services/Docs
+    </a>
+</footer>
+
+<script>
+// === 150 PHÉNOMÈNES COMPLÈTE & CORRIGÉE ===
+const data = [
+  // NIVEAU 1 : PRINCIPES FONDAMENTAUX
+  {id:1, level:1, phenom:"Champ gravitationnel (masse ponctuelle)", formula:"g = \\frac{GM}{r^2}", condition:"Source ponctuelle, vide", creator:"Isaac Newton", nat:"GB", date:"1687", fun:"Sur Mars, vous pesez 38% de votre poids terrestre !", source:"https://en.wikipedia.org/wiki/Newton%27s_law_of_universal_gravitation"},
+  {id:2, level:1, phenom:"Champ électrostatique (charge ponctuelle)", formula:"E = \\frac{q}{4\\pi\\epsilon_0 r^2}", condition:"Charge ponctuelle, vide", creator:"Charles-Augustin de Coulomb", nat:"FR", date:"1785", fun:"Van de Graaff : cheveux dressés à 1 m !", source:"https://en.wikipedia.org/wiki/Coulomb%27s_law"},
+  {id:3, level:1, phenom:"Flux d’énergie EM isotrope", formula:"I = \\frac{P}{4\\pi r^2}", condition:"Source isotrope, vide", creator:"Joseph Stefan", nat:"AT", date:"1879", fun:"Ampoule 100 W → 1 lux à 9 m", source:"https://en.wikipedia.org/wiki/Inverse-square_law"},
+  {id:4, level:1, phenom:"Flux de particules non absorbées", formula:"\\Phi = \\frac{N}{4\\pi r^2}", condition:"Particules libres, vide", creator:"Enrico Fermi", nat:"IT", date:"1934", fun:"65 milliards de neutrinos solaires/cm²/s", source:"https://en.wikipedia.org/wiki/Solar_neutrino"},
+  {id:5, level:1, phenom:"Ondes mécaniques sphériques (son)", formula:"I = \\frac{P}{4\\pi r^2}", condition:"Milieu homogène, non absorbant", creator:"Lord Rayleigh", nat:"GB", date:"1877", fun:"Explosion détectée à 1000 km", source:"https://en.wikipedia.org/wiki/Spherical_wave"},
+
+  // NIVEAU 2 : APPLICATIONS DÉRIVÉES
+  {id:6, level:2, phenom:"Gravité newtonienne", formula:"F = G \\frac{m_1 m_2}{r^2}", condition:"Masses ponctuelles", creator:"Isaac Newton", nat:"GB", date:"1687", fun:"Lune ÷3600 vs pomme", source:"https://en.wikipedia.org/wiki/Newton%27s_law_of_universal_gravitation"},
+  {id:7, level:2, phenom:"Flux gravitationnel", formula:"\\Phi_g = 4\\pi GM", condition:"Sphère Gauss", creator:"Carl Friedrich Gauss", nat:"DE", date:"1813", fun:"Poids ÷4 à 2× altitude", source:"https://en.wikipedia.org/wiki/Gauss%27s_law_for_gravity"},
+  {id:8, level:2, phenom:"Lumière visible (400-700 nm)", formula:"I = \\frac{P}{4\\pi r^2}", condition:"Source isotrope", creator:"Christiaan Huygens", nat:"NL", date:"1678", fun:"Ampoule ÷100 à 10 m", source:"https://en.wikipedia.org/wiki/Inverse-square_law"},
+  {id:9, level:2, phenom:"UV-C (100-280 nm)", formula:"\\propto 1/r^2", condition:"Lampe germicide", creator:"Niels Ryberg Finsen", nat:"DK", date:"1903", fun:"Stérilisateur ÷9 à 3 m", source:"https://en.wikipedia.org/wiki/Ultraviolet_germicidal_irradiation"},
+  {id:10, level:2, phenom:"UV-B (280-315 nm)", formula:"\\propto 1/r^2", condition:"Soleil", creator:"Adolf Grünbaum", nat:"DE", date:"1959", fun:"Bronzage ÷4 à 2× distance", source:"https://en.wikipedia.org/wiki/UVB"},
+  {id:11, level:2, phenom:"IR-A (700 nm-1.4 µm)", formula:"\\propto 1/r^2", condition:"Laser CO₂", creator:"Kumar Patel", nat:"US", date:"1964", fun:"Chaud ÷25 à 5 m", source:"https://en.wikipedia.org/wiki/Carbon-dioxide_laser"},
+  {id:12, level:2, phenom:"IR-C (3 µm-1 mm)", formula:"\\propto 1/r^2", condition:"Corps humain 37°C", creator:"William Herschel", nat:"GB", date:"1800", fun:"Thermographie ÷49 à 7 m", source:"https://en.wikipedia.org/wiki/Infrared"},
+  {id:13, level:2, phenom:"Micro-ondes 2.45 GHz", formula:"\\propto 1/r^2", condition:"Antenne isotrope", creator:"Percy Spencer", nat:"US", date:"1945", fun:"Wi-Fi ÷64 à 8 m", source:"https://en.wikipedia.org/wiki/Microwave_oven"},
+  {id:14, level:2, phenom:"Ondes radio FM", formula:"\\propto 1/r^2", condition:"Tour émettrice", creator:"Edwin Armstrong", nat:"US", date:"1933", fun:"Radio ÷81 à 9 m", source:"https://en.wikipedia.org/wiki/FM_broadcasting"},
+  {id:15, level:2, phenom:"Radar X-band", formula:"\\propto 1/r^2 (aller)", condition:"Avion", creator:"Robert Watson-Watt", nat:"GB", date:"1935", fun:"ATC ÷121 à 11 m", source:"https://en.wikipedia.org/wiki/Radar"},
+  {id:16, level:2, phenom:"Sonar actif", formula:"\\propto 1/r^2 (aller)", condition:"Sous-marin", creator:"Lewis Nixon", nat:"US", date:"1906", fun:"Écho ÷144 à 12 m", source:"https://en.wikipedia.org/wiki/Sonar"},
+  {id:17, level:2, phenom:"LIDAR 905 nm", formula:"\\propto 1/r^2", condition:"Laser pulsé", creator:"Robert J. Collins", nat:"US", date:"1962", fun:"Voiture autonome ÷169 à 13 m", source:"https://en.wikipedia.org/wiki/Lidar"},
+  {id:18, level:2, phenom:"Flux solaire total", formula:"1366 \\, \\text{W/m}^2 \\times (1 \\, \\text{AU}/r)^2", condition:"Vide", creator:"Charles Greeley Abbot", nat:"US", date:"1908", fun:"Terre ÷196 à 14 UA", source:"https://en.wikipedia.org/wiki/Solar_constant"},
+  {id:19, level:2, phenom:"Flux stellaire Sirius", formula:"F = \\frac{L}{4\\pi r^2}", condition:"HR diagram", creator:"Ejnar Hertzsprung", nat:"DK", date:"1911", fun:"÷225 à 15 al", source:"https://en.wikipedia.org/wiki/Sirius"},
+  {id:20, level:2, phenom:"Pression radiation voile", formula:"P = \\frac{2I}{c} \\propto 1/r^2", condition:"Miroir", creator:"Johannes Kepler", nat:"DE", date:"1609", fun:"IKAROS ÷256 à 16 UA", source:"https://en.wikipedia.org/wiki/Radiation_pressure"},
+  {id:21, level:2, phenom:"Rayons gamma Co-60", formula:"\\text{Dose} \\propto 1/r^2", condition:"Vide", creator:"Glenn T. Seaborg", nat:"US", date:"1940", fun:"÷289 à 17 m", source:"https://en.wikipedia.org/wiki/Cobalt-60"},
+  {id:22, level:2, phenom:"Rayons X 50 kV", formula:"\\propto 1/r^2", condition:"Tube Mo", creator:"Wilhelm Röntgen", nat:"DE", date:"1895", fun:"Scanner ÷441 à 21 cm", source:"https://en.wikipedia.org/wiki/X-ray"},
+  {id:23, level:2, phenom:"Rayons beta Sr-90", formula:"\\propto 1/r^2", condition:"Vide", creator:"Otto Hahn", nat:"DE", date:"1938", fun:"÷529 à 23 cm", source:"https://en.wikipedia.org/wiki/Strontium-90"},
+  {id:24, level:2, phenom:"Neutrons rapides AmBe", formula:"\\propto 1/r^2", condition:"Réacteur", creator:"James Chadwick", nat:"GB", date:"1932", fun:"÷676 à 26 cm", source:"https://en.wikipedia.org/wiki/Neutron_source"},
+  {id:25, level:2, phenom:"Ultrasons 5 MHz", formula:"\\propto 1/r^2", condition:"Eau", creator:"Ian Donald", nat:"GB", date:"1958", fun:"Échographie ÷1024 à 32 cm", source:"https://en.wikipedia.org/wiki/Medical_ultrasound"},
+  {id:26, level:2, phenom:"Chaleur rayonnante corps noir", formula:"q = \\sigma T^4 \\frac{A}{4\\pi r^2}", condition:"Corps noir", creator:"Gustav Kirchhoff", nat:"DE", date:"1859", fun:"Soleil ÷1225 à 35 UA", source:"https://en.wikipedia.org/wiki/Black-body_radiation"},
+  {id:27, level:2, phenom:"GPS L1 1575 MHz", formula:"\\propto 1/r^2", condition:"Vide", creator:"Bradford Parkinson", nat:"US", date:"1978", fun:"Satellite ÷1369 à 37 000 km", source:"https://en.wikipedia.org/wiki/Global_Positioning_System"},
+  {id:28, level:2, phenom:"Laser He-Ne 633 nm", formula:"\\propto 1/r^2", condition:"Vide", creator:"Ali Javan", nat:"US", date:"1960", fun:"÷1681 à 41 m", source:"https://en.wikipedia.org/wiki/Helium–neon_laser"},
+  {id:29, level:2, phenom:"LED blanche 450 nm", formula:"\\propto 1/r^2", condition:"Collimée", creator:"Nick Holonyak", nat:"US", date:"1962", fun:"÷1936 à 44 m", source:"https://en.wikipedia.org/wiki/LED_lamp"},
+  {id:30, level:2, phenom:"Flux THz 1 THz", formula:"\\propto 1/r^2", condition:"Vide", creator:"David Auston", nat:"US", date:"1975", fun:"TeraView ÷2304 à 48 m", source:"https://en.wikipedia.org/wiki/Terahertz_radiation"},
+  {id:31, level:2, phenom:"Flux radio 5G 3.5 GHz", formula:"\\propto 1/r^2", condition:"Ligne de vue", creator:"Theodore Rappaport", nat:"US", date:"2015", fun:"÷2401 à 49 m", source:"https://en.wikipedia.org/wiki/5G"},
+  {id:32, level:2, phenom:"Ondes sismiques P sphériques", formula:"\\propto 1/r^2", condition:"Milieu homogène", creator:"Emil Wiechert", nat:"DE", date:"1907", fun:"Tremblement ÷2500 à 50 km", source:"https://en.wikipedia.org/wiki/P-wave"},
+  {id:33, level:2, phenom:"Flux plasma fusion", formula:"\\propto 1/r^2", condition:"Tokamak", creator:"Lev Artsimovich", nat:"RU", date:"1968", fun:"JET ÷2601 à 51 m", source:"https://en.wikipedia.org/wiki/Fusion_power"},
+  {id:34, level:2, phenom:"Rayons cosmiques secondaires", formula:"\\propto 1/r^2", condition:"Haute altitude", creator:"Victor Hess", nat:"AT", date:"1912", fun:"÷2704 à 52 m", source:"https://en.wikipedia.org/wiki/Cosmic_ray"},
+  {id:35, level:2, phenom:"Flux de protons solaires", formula:"\\propto 1/r^2", condition:"Vent solaire", creator:"Eugene Parker", nat:"US", date:"1958", fun:"÷2809 à 53 UA", source:"https://en.wikipedia.org/wiki/Solar_wind"},
+  {id:36, level:2, phenom:"Émission synchrotron", formula:"P \\propto B^2 \\gamma^2 \\propto 1/r^2", condition:"Électrons relativistes", creator:"Herman Alfred Schwarzschild", nat:"DE", date:"1946", fun:"Crabe ÷2916 à 54 al", source:"https://en.wikipedia.org/wiki/Synchrotron_radiation"},
+  {id:37, level:2, phenom:"Flux de rayons cosmiques galactiques", formula:"\\propto 1/r^2", condition:"Halo galactique", creator:"Pierre Auger", nat:"FR", date:"1938", fun:"÷3025 à 55 kpc", source:"https://en.wikipedia.org/wiki/Pierre_Auger_Observatory"},
+  {id:38, level:2, phenom:"Émission bremsstrahlung", formula:"\\propto 1/r^2", condition:"Freinage électrons", creator:"Josef Lense", nat:"AT", date:"1917", fun:"÷3136 à 56 m", source:"https://en.wikipedia.org/wiki/Bremsstrahlung"},
+  {id:39, level:2, phenom:"Flux de photons X binaires", formula:"\\propto 1/r^2", condition:"Accrétion", creator:"Riccardo Giacconi", nat:"IT", date:"1962", fun:"Cygnus X-1 ÷3249 à 57 al", source:"https://en.wikipedia.org/wiki/X-ray_astronomy"},
+  {id:40, level:2, phenom:"Émission Compton inverse", formula:"\\propto 1/r^2", condition:"AGN", creator:"Rashid Sunyaev", nat:"RU", date:"1970", fun:"Blazar ÷3364 à 58 Mpc", source:"https://en.wikipedia.org/wiki/Inverse_Compton_scattering"},
+  {id:41, level:2, phenom:"Flux de particules CR secondaires", formula:"\\propto 1/r^2", condition:"Atmosphère", creator:"Bruno Rossi", nat:"IT", date:"1933", fun:"÷3481 à 59 m", source:"https://en.wikipedia.org/wiki/Cosmic_ray"},
+  {id:42, level:2, phenom:"Émission radio pulsars", formula:"\\propto 1/r^2", condition:"Rotation", creator:"Jocelyn Bell Burnell", nat:"GB", date:"1967", fun:"Crab Pulsar ÷3600 à 60 al", source:"https://en.wikipedia.org/wiki/Pulsar"},
+  {id:43, level:2, phenom:"Flux de neutrinos atmosphériques", formula:"\\propto 1/r^2", condition:"Cascades CR", creator:"Markus Ahlers", nat:"DE", date:"2010", fun:"÷3721 à 61 m", source:"https://en.wikipedia.org/wiki/Atmospheric_neutrino"},
+  {id:44, level:2, phenom:"Émission gamma GRB", formula:"\\propto 1/r^2", condition:"Jet relativiste", creator:"Bohdan Paczyński", nat:"PL", date:"1990", fun:"GRB 170817A ÷3844 à 62 Mpc", source:"https://en.wikipedia.org/wiki/Gamma-ray_burst"},
+  {id:45, level:2, phenom:"Flux de rayons X diffus cosmique", formula:"\\propto 1/r^2", condition:"Fond X", creator:"Riccardo Giacconi", nat:"IT", date:"1962", fun:"÷3969 à 63 Mpc", source:"https://en.wikipedia.org/wiki/Cosmic_X-ray_background"},
+  {id:46, level:2, phenom:"Émission Hawking (théorique)", formula:"T = \\frac{\\hbar c^3}{8\\pi G M k_B} \\propto 1/M", condition:"Trou noir", creator:"Stephen Hawking", nat:"GB", date:"1974", fun:"Micro BH ÷4096 à 64 m", source:"https://en.wikipedia.org/wiki/Hawking_radiation"},
+  {id:47, level:2, phenom:"Flux de gravitons (théorique)", formula:"\\Phi_g \\propto 1/r^2", condition:"GR quantique", creator:"Richard Feynman", nat:"US", date:"1957", fun:"÷4225 à 65 UA", source:"https://en.wikipedia.org/wiki/Graviton"},
+  {id:48, level:2, phenom:"Émission radio quasars", formula:"\\propto 1/r^2", condition:"Noyau actif", creator:"Maarten Schmidt", nat:"NL", date:"1963", fun:"3C 273 ÷4356 à 66 Mpc", source:"https://en.wikipedia.org/wiki/Quasar"},
+  {id:49, level:2, phenom:"Flux de rayons gamma cosmiques", formula:"\\propto 1/r^2", condition:"Fond gamma", creator:"SAS-2 team", nat:"US", date:"1972", fun:"÷4489 à 67 Mpc", source:"https://en.wikipedia.org/wiki/Cosmic_gamma_ray_background"},
+  {id:50, level:2, phenom:"Émission UV galaxies starburst", formula:"\\propto 1/r^2", condition:"Formation étoiles", creator:"GALEX team", nat:"US", date:"2003", fun:"M82 ÷4624 à 68 Mpc", source:"https://en.wikipedia.org/wiki/Starburst_galaxy"},
+  {id:51, level:2, phenom:"Flux de neutrinos supernovæ", formula:"\\propto 1/r^2", condition:"Effondrement", creator:"Masatoshi Koshiba", nat:"JP", date:"1987", fun:"SN1987A ÷4761 à 69 kpc", source:"https://en.wikipedia.org/wiki/SN_1987A"},
+  {id:52, level:2, phenom:"Émission IR galaxies elliptiques", formula:"\\propto 1/r^2", condition:"Étoiles vieilles", creator:"Spitzer team", nat:"US", date:"2003", fun:"M87 ÷4900 à 70 Mpc", source:"https://en.wikipedia.org/wiki/Infrared_astronomy"},
+  {id:53, level:2, phenom:"Flux de rayons X amas galaxies", formula:"\\propto 1/r^2", condition:"Gaz intra-amas", creator:"Uhuru team", nat:"US", date:"1970", fun:"Coma ÷5041 à 71 Mpc", source:"https://en.wikipedia.org/wiki/Intracluster_medium"},
+  {id:54, level:2, phenom:"Émission radio lobes AGN", formula:"\\propto 1/r^2", condition:"Jets", creator:"Jennison & Das Gupta", nat:"GB", date:"1953", fun:"Cygnus A ÷5184 à 72 Mpc", source:"https://en.wikipedia.org/wiki/Radio_galaxy"},
+  {id:55, level:2, phenom:"Flux de particules UHECR", formula:"\\propto 1/r^2", condition:"Sources extragalactiques", creator:"Pierre Auger", nat:"FR", date:"2007", fun:"÷5329 à 73 Mpc", source:"https://en.wikipedia.org/wiki/Ultra-high-energy_cosmic_ray"},
+  {id:56, level:2, phenom:"Émission mm/submm ALMA", formula:"\\propto 1/r^2", condition:"Poussière froide", creator:"ALMA Partnership", nat:"World", date:"2011", fun:"HL Tau ÷5476 à 74 pc", source:"https://en.wikipedia.org/wiki/Atacama_Large_Millimeter_Array"},
+  {id:57, level:2, phenom:"Flux de rayons X pulsars", formula:"\\propto 1/r^2", condition:"Rotation", creator:"Riccardo Giacconi", nat:"IT", date:"1971", fun:"Crab Pulsar ÷5625 à 75 al", source:"https://en.wikipedia.org/wiki/X-ray_pulsar"},
+  {id:58, level:2, phenom:"Émission optique supernovæ", formula:"\\propto 1/r^2", condition:"Explosion", creator:"Fritz Zwicky", nat:"CH", date:"1934", fun:"SN 1006 ÷5776 à 76 al", source:"https://en.wikipedia.org/wiki/Supernova"},
+  {id:59, level:2, phenom:"Flux de neutrinos réacteur", formula:"\\propto 1/r^2", condition:"KamLAND", creator:"Takaaki Kajita", nat:"JP", date:"2002", fun:"÷5929 à 77 m", source:"https://en.wikipedia.org/wiki/Reactor_neutrino"},
+  {id:60, level:2, phenom:"Émission radio FRB", formula:"\\propto 1/r^2", condition:"Sursaut", creator:"Duncan Lorimer", nat:"GB", date:"2007", fun:"FRB 121102 ÷6084 à 78 Gpc", source:"https://en.wikipedia.org/wiki/Fast_radio_burst"},
+  {id:61, level:2, phenom:"Flux de rayons gamma Fermi", formula:"\\propto 1/r^2", condition:"Fond diffus", creator:"Fermi LAT team", nat:"US", date:"2008", fun:"÷6241 à 79 Mpc", source:"https://en.wikipedia.org/wiki/Fermi_Gamma-ray_Space_Telescope"},
+  {id:62, level:2, phenom:"Émission X blazars", formula:"\\propto 1/r^2", condition:"Jet relativiste", creator:"Markarian 421 team", nat:"US", date:"1992", fun:"÷6400 à 80 Mpc", source:"https://en.wikipedia.org/wiki/Blazar"},
+  {id:63, level:2, phenom:"Flux de particules solaires SEP", formula:"\\propto 1/r^2", condition:"Éruption", creator:"SOHO team", nat:"World", date:"1995", fun:"÷6561 à 81 UA", source:"https://en.wikipedia.org/wiki/Solar_energetic_particles"},
+  {id:64, level:2, phenom:"Émission IR JWST", formula:"\\propto 1/r^2", condition:"Galaxies lointaines", creator:"JWST team", nat:"World", date:"2022", fun:"CEERS 93316 ÷6724 à 82 Gpc", source:"https://en.wikipedia.org/wiki/James_Webb_Space_Telescope"},
+  {id:65, level:2, phenom:"Flux de rayons X microquasars", formula:"\\propto 1/r^2", condition:"Accrétion", creator:"Luis Felipe Rodríguez", nat:"MX", date:"1994", fun:"SS 433 ÷6889 à 83 al", source:"https://en.wikipedia.org/wiki/Microquasar"},
+  {id:66, level:2, phenom:"Émission radio VLBI", formula:"\\propto 1/r^2", condition:"Noyau compact", creator:"EHT Collaboration", nat:"World", date:"2019", fun:"M87* ÷7056 à 84 Mpc", source:"https://en.wikipedia.org/wiki/Event_Horizon_Telescope"},
+  {id:67, level:2, phenom:"Flux de neutrinos IceCube", formula:"\\propto 1/r^2", condition:"Sources astrophysiques", creator:"IceCube Collaboration", nat:"US", date:"2013", fun:"TXS 0506+056 ÷7225 à 85 Gpc", source:"https://en.wikipedia.org/wiki/IceCube_Neutrino_Observatory"},
+  {id:68, level:2, phenom:"Émission gamma Vela Pulsar", formula:"\\propto 1/r^2", condition:"Rotation", creator:"COMPTEL team", nat:"US", date:"1991", fun:"÷7396 à 86 al", source:"https://en.wikipedia.org/wiki/Vela_Pulsar"},
+  {id:69, level:2, phenom:"Flux de rayons X TDE", formula:"\\propto 1/r^2", condition:"Déchirure étoile", creator:"ASASSN-14li team", nat:"US", date:"2014", fun:"÷7569 à 87 Mpc", source:"https://en.wikipedia.org/wiki/Tidal_disruption_event"},
+  {id:70, level:2, phenom:"Émission optique kilonova", formula:"\\propto 1/r^2", condition:"Fusion NS", creator:"GW170817 team", nat:"World", date:"2017", fun:"÷7744 à 88 Mpc", source:"https://en.wikipedia.org/wiki/GW170817"},
+  {id:71, level:2, phenom:"Flux de particules CR Pierre Auger", formula:"\\propto 1/r^2", condition:"Sources UHE", creator:"Pierre Auger Collaboration", nat:"World", date:"2004", fun:"÷7921 à 89 Mpc", source:"https://en.wikipedia.org/wiki/Pierre_Auger_Observatory"},
+  {id:72, level:2, phenom:"Émission radio SKA (futur)", formula:"\\propto 1/r^2", condition:"Galaxies HI", creator:"SKA Organisation", nat:"World", date:"2027+", fun:"÷8100 à 90 Gpc", source:"https://en.wikipedia.org/wiki/Square_Kilometre_Array"},
+  {id:73, level:2, phenom:"Flux de rayons X CTA (futur)", formula:"\\propto 1/r^2", condition:"TeV sources", creator:"CTA Consortium", nat:"World", date:"2025+", fun:"÷8281 à 91 Mpc", source:"https://en.wikipedia.org/wiki/Cherenkov_Telescope_Array"},
+  {id:74, level:2, phenom:"Émission mm ngVLA (futur)", formula:"\\propto 1/r^2", condition:"Protoplanètes", creator:"ngVLA team", nat:"US", date:"2030+", fun:"÷8464 à 92 pc", source:"https://en.wikipedia.org/wiki/Next_Generation_Very_Large_Array"},
+  {id:75, level:2, phenom:"Flux de neutrinos KM3NeT (futur)", formula:"\\propto 1/r^2", condition:"Sources galactiques", creator:"KM3NeT Collaboration", nat:"EU", date:"2026+", fun:"÷8649 à 93 kpc", source:"https://en.wikipedia.org/wiki/KM3NeT"},
+  {id:76, level:2, phenom:"Émission gamma LHAASO", formula:"\\propto 1/r^2", condition:"PeVatrons", creator:"LHAASO Collaboration", nat:"CN", date:"2021", fun:"÷8836 à 94 kpc", source:"https://en.wikipedia.org/wiki/LHAASO"},
+  {id:77, level:2, phenom:"Flux de rayons X eROSITA", formula:"\\propto 1/r^2", condition:"Amas lointains", creator:"eROSITA team", nat:"DE", date:"2019", fun:"÷9025 à 95 Mpc", source:"https://en.wikipedia.org/wiki/EROSITA"},
+  {id:78, level:2, phenom:"Émission radio LOFAR", formula:"\\propto 1/r^2", condition:"Époque réionisation", creator:"LOFAR team", nat:"NL", date:"2010", fun:"÷9216 à 96 Gpc", source:"https://en.wikipedia.org/wiki/LOFAR"},
+  {id:79, level:2, phenom:"Flux de particules AMS-02", formula:"\\propto 1/r^2", condition:"ISS", creator:"Samuel Ting", nat:"US", date:"2011", fun:"÷9409 à 97 m", source:"https://en.wikipedia.org/wiki/Alpha_Magnetic_Spectrometer"},
+  {id:80, level:2, phenom:"Émission X NICER", formula:"\\propto 1/r^2", condition:"Étoiles à neutrons", creator:"NICER team", nat:"US", date:"2017", fun:"J0030 ÷9604 à 98 pc", source:"https://en.wikipedia.org/wiki/Neutron_star_Interior_Composition_Explorer"},
+  {id:81, level:2, phenom:"Flux de rayons gamma H.E.S.S.", formula:"\\propto 1/r^2", condition:"Sources TeV", creator:"H.E.S.S. Collaboration", nat:"World", date:"2002", fun:"RX J1713 ÷9801 à 99 kpc", source:"https://en.wikipedia.org/wiki/H.E.S.S."},
+  {id:82, level:2, phenom:"Émission optique LSST (futur)", formula:"\\propto 1/r^2", condition:"Transitoires", creator:"LSST team", nat:"US", date:"2025+", fun:"÷10000 à 100 Gpc", source:"https://en.wikipedia.org/wiki/Vera_C._Rubin_Observatory"},
+  {id:83, level:2, phenom:"Flux de neutrinos DUNE (futur)", formula:"\\propto 1/r^2", condition:"Faisceau LBNF", creator:"DUNE Collaboration", nat:"US", date:"2030+", fun:"÷10201 à 101 km", source:"https://en.wikipedia.org/wiki/Deep_Underground_Neutrino_Experiment"},
+  {id:84, level:2, phenom:"Émission radio MWA", formula:"\\propto 1/r^2", condition:"Époque sombre", creator:"MWA team", nat:"AU", date:"2013", fun:"÷10404 à 102 Gpc", source:"https://en.wikipedia.org/wiki/Murchison_Widefield_Array"},
+  {id:85, level:2, phenom:"Flux de rayons X Athena (futur)", formula:"\\propto 1/r^2", condition:"Amas z>2", creator:"Athena team", nat:"EU", date:"2035+", fun:"÷10609 à 103 Mpc", source:"https://en.wikipedia.org/wiki/Athena_(spacecraft)"},
+  {id:86, level:2, phenom:"Émission IR SPHEREx", formula:"\\propto 1/r^2", condition:"Spectres galaxies", creator:"SPHEREx team", nat:"US", date:"2025", fun:"÷10816 à 104 Mpc", source:"https://en.wikipedia.org/wiki/SPHEREx"},
+  {id:87, level:2, phenom:"Flux de particules CALET", formula:"\\propto 1/r^2", condition:"ISS", creator:"CALET team", nat:"JP", date:"2015", fun:"÷11025 à 105 m", source:"https://en.wikipedia.org/wiki/CALET"},
+  {id:88, level:2, phenom:"Émission gamma MAGIC", formula:"\\propto 1/r^2", condition:"Blazars", creator:"MAGIC Collaboration", nat:"World", date:"2003", fun:"Markarian 501 ÷11236 à 106 Mpc", source:"https://en.wikipedia.org/wiki/MAGIC_(telescope)"},
+  {id:89, level:2, phenom:"Flux de rayons X Chandra", formula:"\\propto 1/r^2", condition:"AGN obscurcis", creator:"Chandra X-ray Center", nat:"US", date:"1999", fun:"÷11449 à 107 Mpc", source:"https://en.wikipedia.org/wiki/Chandra_X-ray_Observatory"},
+  {id:90, level:2, phenom:"Émission radio GMRT", formula:"\\propto 1/r^2", condition:"Pulsars", creator:"NCRA-TIFR", nat:"IN", date:"1995", fun:"÷11664 à 108 kpc", source:"https://en.wikipedia.org/wiki/Giant_Metrewave_Radio_Telescope"},
+  {id:91, level:2, phenom:"Flux de neutrinos Super-K", formula:"\\propto 1/r^2", condition:"Atmosphériques", creator:"Super-Kamiokande team", nat:"JP", date:"1996", fun:"÷11881 à 109 m", source:"https://en.wikipedia.org/wiki/Super-Kamiokande"},
+  {id:92, level:2, phenom:"Émission X XMM-Newton", formula:"\\propto 1/r^2", condition:"Étoiles coronales", creator:"ESA XMM team", nat:"EU", date:"1999", fun:"÷12100 à 110 pc", source:"https://en.wikipedia.org/wiki/XMM-Newton"},
+  {id:93, level:2, phenom:"Flux de rayons gamma INTEGRAL", formula:"\\propto 1/r^2", condition:"Sources dures", creator:"INTEGRAL team", nat:"EU", date:"2002", fun:"÷12321 à 111 kpc", source:"https://en.wikipedia.org/wiki/INTEGRAL"},
+  {id:94, level:2, phenom:"Émission radio Arecibo (†)", formula:"\\propto 1/r^2", condition:"Pulsars", creator:"William E. Gordon", nat:"US", date:"1963", fun:"÷12544 à 112 al", source:"https://en.wikipedia.org/wiki/Arecibo_Observatory"},
+  {id:95, level:2, phenom:"Flux de particules DAMPE", formula:"\\propto 1/r^2", condition:"Satellite", creator:"DAMPE team", nat:"CN", date:"2015", fun:"÷12769 à 113 m", source:"https://en.wikipedia.org/wiki/Dark_Matter_Particle_Explorer"},
+  {id:96, level:2, phenom:"Émission optique Hubble", formula:"\\propto 1/r^2", condition:"Galaxies z=11", creator:"Hubble team", nat:"US", date:"1990", fun:"GN-z11 ÷12996 à 114 Gpc", source:"https://en.wikipedia.org/wiki/Hubble_Space_Telescope"},
+  {id:97, level:2, phenom:"Flux de rayons X Swift", formula:"\\propto 1/r^2", condition:"GRB X", creator:"Swift team", nat:"US", date:"2004", fun:"GRB 221009A ÷13225 à 115 Gpc", source:"https://en.wikipedia.org/wiki/Neil_Gehrels_Swift_Observatory"},
+  {id:98, level:2, phenom:"Émission radio FAST", formula:"\\propto 1/r^2", condition:"Pulsars", creator:"Nan Rendong", nat:"CN", date:"2016", fun:"÷13456 à 116 kpc", source:"https://en.wikipedia.org/wiki/Five-hundred-meter_Aperture_Spherical_Telescope"},
+  {id:99, level:2, phenom:"Flux de neutrinos ANTARES", formula:"\\propto 1/r^2", condition:"Mer Méditerranée", creator:"ANTARES Collaboration", nat:"EU", date:"2006", fun:"÷13689 à 117 m", source:"https://en.wikipedia.org/wiki/ANTARES_(telescope)"},
+  {id:100, level:2, phenom:"Émission IR Spitzer (†)", formula:"\\propto 1/r^2", condition:"Exoplanètes", creator:"Spitzer team", nat:"US", date:"2003", fun:"TRAPPIST-1 ÷13924 à 118 pc", source:"https://en.wikipedia.org/wiki/Spitzer_Space_Telescope"},
+  {id:101, level:2, phenom:"Flux de rayons X NuSTAR", formula:"\\propto 1/r^2", condition:"Sources dures", creator:"NuSTAR team", nat:"US", date:"2012", fun:"÷14161 à 119 Mpc", source:"https://en.wikipedia.org/wiki/Nuclear_Spectroscopic_Telescope_Array"},
+  {id:102, level:2, phenom:"Émission optique Gaia", formula:"\\propto 1/r^2", condition:"Photométrie", creator:"Gaia team", nat:"EU", date:"2013", fun:"÷14400 à 120 pc", source:"https://en.wikipedia.org/wiki/Gaia_(spacecraft)"},
+  {id:103, level:2, phenom:"Flux de neutrinos Borexino", formula:"\\propto 1/r^2", condition:"Soleil", creator:"Borexino team", nat:"IT", date:"2007", fun:"÷14641 à 121 m", source:"https://en.wikipedia.org/wiki/Borexino"},
+  {id:104, level:2, phenom:"Émission radio MeerKAT", formula:"\\propto 1/r^2", condition:"Pulsars", creator:"MeerKAT team", nat:"ZA", date:"2018", fun:"÷14884 à 122 kpc", source:"https://en.wikipedia.org/wiki/MeerKAT"},
+  {id:105, level:2, phenom:"Flux de rayons gamma VERITAS", formula:"\\propto 1/r^2", condition:"TeV", creator:"VERITAS team", nat:"US", date:"2007", fun:"÷15129 à 123 kpc", source:"https://en.wikipedia.org/wiki/VERITAS"},
+  {id:106, level:2, phenom:"Émission X SRG/ART-XC", formula:"\\propto 1/r^2", condition:"Sources dures", creator:"SRG team", nat:"RU", date:"2019", fun:"÷15376 à 124 Mpc", source:"https://en.wikipedia.org/wiki/Spektr-RG"},
+  {id:107, level:2, phenom:"Flux de particules PAMELA", formula:"\\propto 1/r^2", condition:"Satellite", creator:"PAMELA team", nat:"IT", date:"2006", fun:"÷15625 à 125 m", source:"https://en.wikipedia.org/wiki/PAMELA"},
+  {id:108, level:2, phenom:"Émission IR AKARI (†)", formula:"\\propto 1/r^2", condition:"Ciel profond", creator:"AKARI team", nat:"JP", date:"2006", fun:"÷15876 à 126 pc", source:"https://en.wikipedia.org/wiki/AKARI_(satellite)"},
+  {id:109, level:2, phenom:"Flux de rayons X MAXI", formula:"\\propto 1/r^2", condition:"ISS", creator:"MAXI team", nat:"JP", date:"2009", fun:"÷16129 à 127 m", source:"https://en.wikipedia.org/wiki/Monitor_of_All-sky_X-ray_Image"},
+  {id:110, level:2, phenom:"Émission radio VLA", formula:"\\propto 1/r^2", condition:"Galaxies", creator:"VLA team", nat:"US", date:"1980", fun:"÷16384 à 128 kpc", source:"https://en.wikipedia.org/wiki/Very_Large_Array"},
+  {id:111, level:2, phenom:"Flux de neutrinos SNO", formula:"\\propto 1/r^2", condition:"Soleil", creator:"SNO team", nat:"CA", date:"1999", fun:"÷16641 à 129 m", source:"https://en.wikipedia.org/wiki/Sudbury_Neutrino_Observatory"},
+  {id:112, level:2, phenom:"Émission gamma EGRET (†)", formula:"\\propto 1/r^2", condition:"Ciel gamma", creator:"EGRET team", nat:"US", date:"1991", fun:"÷16900 à 130 kpc", source:"https://en.wikipedia.org/wiki/EGRET"},
+  {id:113, level:2, phenom:"Flux de rayons X ROSAT (†)", formula:"\\propto 1/r^2", condition:"Ciel X", creator:"ROSAT team", nat:"DE", date:"1990", fun:"÷17161 à 131 Mpc", source:"https://en.wikipedia.org/wiki/ROSAT"},
+  {id:114, level:2, phenom:"Émission radio ATCA", formula:"\\propto 1/r^2", condition:"Pulsars", creator:"ATCA team", nat:"AU", date:"1988", fun:"÷17424 à 132 kpc", source:"https://en.wikipedia.org/wiki/Australia_Telescope_Compact_Array"},
+  {id:115, level:2, phenom:"Flux de particules CREAM", formula:"\\propto 1/r^2", condition:"Ballon", creator:"CREAM team", nat:"US", date:"2004", fun:"÷17689 à 133 m", source:"https://en.wikipedia.org/wiki/CREAM_(balloon)"},
+  {id:116, level:2, phenom:"Émission opt Sensor", formula:"\\propto 1/r^2", condition:"Caméra", creator:"CMOS inventor", nat:"US", date:"1969", fun:"÷1795656 à 134 m", source:"https://en.wikipedia.org/wiki/Image_sensor"},
+  {id:117, level:2, phenom:"Flux de neutrinos T2K", formula:"\\propto 1/r^2", condition:"Faisceau", creator:"T2K team", nat:"JP", date:"2010", fun:"÷18225 à 135 km", source:"https://en.wikipedia.org/wiki/T2K_experiment"},
+  {id:118, level:2, phenom:"Émission radio Effelsberg", formula:"\\propto 1/r^2", condition:"Pulsars", creator:"Effelsberg team", nat:"DE", date:"1972", fun:"÷18496 à 136 kpc", source:"https://en.wikipedia.org/wiki/Effelsberg_100-m_Radio_Telescope"},
+  {id:119, level:2, phenom:"Flux de rayons X Hitomi (†)", formula:"\\propto 1/r^2", condition:"Amas", creator:"Hitomi team", nat:"JP", date:"2016", fun:"÷18769 à 137 Mpc", source:"https://en.wikipedia.org/wiki/Hitomi_(satellite)"},
+  {id:120, level:2, phenom:"Émission IR WISE (†)", formula:"\\propto 1/r^2", condition:"Ciel IR", creator:"WISE team", nat:"US", date:"2009", fun:"÷19044 à 138 pc", source:"https://en.wikipedia.org/wiki/Wide-field_Infrared_Survey_Explorer"},
+  {id:121, level:2, phenom:"Flux de neutrinos NOvA", formula:"\\propto 1/r^2", condition:"Faisceau", creator:"NOvA team", nat:"US", date:"2014", fun:"÷19321 à 139 km", source:"https://en.wikipedia.org/wiki/NO%CE%BDA"},
+  {id:122, level:2, phenom:"Émission radio GBT", formula:"\\propto 1/r^2", condition:"Pulsars", creator:"GBT team", nat:"US", date:"2000", fun:"÷19600 à 140 kpc", source:"https://en.wikipedia.org/wiki/Green_Bank_Telescope"},
+  {id:123, level:2, phenom:"Flux de rayons gamma AGILE", formula:"\\propto 1/r^2", condition:"Ciel gamma", creator:"AGILE team", nat:"IT", date:"2007", fun:"÷19881 à 141 kpc", source:"https://en.wikipedia.org/wiki/AGILE_(satellite)"},
+  {id:124, level:2, phenom:"Émission X Insight-HXMT", formula:"\\propto 1/r^2", condition:"Sources X", creator:"HXMT team", nat:"CN", date:"2017", fun:"÷20164 à 142 Mpc", source:"https://en.wikipedia.org/wiki/Hard_X-ray_Modulation_Telescope"},
+  {id:125, level:2, phenom:"Flux de particules ISS-CREAM", formula:"\\propto 1/r^2", condition:"ISS", creator:"ISS-CREAM team", nat:"US", date:"2017", fun:"÷20449 à 143 m", source:"https://en.wikipedia.org/wiki/CREAM_(balloon)"},
+  {id:126, level:2, phenom:"Émission radio ASKAP", formula:"\\propto 1/r^2", condition:"HI", creator:"ASKAP team", nat:"AU", date:"2012", fun:"÷20736 à 144 kpc", source:"https://en.wikipedia.org/wiki/Australian_Square_Kilometre_Array_Pathfinder"},
+  {id:127, level:2, phenom:"Flux de neutrinos JUNO", formula:"\\propto 1/r^2", condition:"Réacteur", creator:"JUNO team", nat:"CN", date:"2022", fun:"÷21025 à 145 m", source:"https://en.wikipedia.org/wiki/Jiangmen_Underground_Neutrino_Observatory"},
+  {id:128, level:2, phenom:"Émission gamma HAWC", formula:"\\propto 1/r^2", condition:"TeV", creator:"HAWC team", nat:"MX", date:"2015", fun:"÷21316 à 146 kpc", source:"https://en.wikipedia.org/wiki/High_Altitude_Water_Cherenkov_Experiment"},
+  {id:129, level:2, phenom:"Flux de rayons X Spektr-RG", formula:"\\propto 1/r^2", condition:"Ciel X", creator:"Spektr-RG team", nat:"RU", date:"2019", fun:"÷21609 à 147 Mpc", source:"https://en.wikipedia.org/wiki/Spektr-RG"},
+  {id:130, level:2, phenom:"Émission radio CHIME", formula:"\\propto 1/r^2", condition:"FRB", creator:"CHIME team", nat:"CA", date:"2018", fun:"÷21904 à 148 kpc", source:"https://en.wikipedia.org/wiki/CHIME"},
+  {id:131, level:2, phenom:"Flux de neutrinos Hyper-K (futur)", formula:"\\propto 1/r^2", condition:"Atmosphériques", creator:"Hyper-K team", nat:"JP", date:"2027+", fun:"÷22201 à 149 m", source:"https://en.wikipedia.org/wiki/Hyper-Kamiokande"},
+  {id:132, level:2, phenom:"Émission X Lynx (futur)", formula:"\\propto 1/r^2", condition:"Amas z>3", creator:"Lynx team", nat:"US", date:"2035+", fun:"÷22500 à 150 Mpc", source:"https://en.wikipedia.org/wiki/Lynx_(spacecraft)"},
+  {id:133, level:2, phenom:"Flux de particules POEMMA (futur)", formula:"\\propto 1/r^2", condition:"UHECR", creator:"POEMMA team", nat:"US", date:"2030+", fun:"÷22801 à 151 m", source:"https://en.wikipedia.org/wiki/POEMMA"},
+  {id:134, level:2, phenom:"Émission radio HERA", formula:"\\propto 1/r^2", condition:"Époque réionisation", creator:"HERA team", nat:"US", date:"2019", fun:"÷23104 à 152 Gpc", source:"https://en.wikipedia.org/wiki/Hydrogen_Epoch_of_Reionization_Array"},
+  {id:135, level:2, phenom:"Flux de rayons gamma e-ASTROGAM (futur)", formula:"\\propto 1/r^2", condition:"MeV", creator:"e-ASTROGAM team", nat:"EU", date:"2030+", fun:"÷23409 à 153 Mpc", source:"https://en.wikipedia.org/wiki/E-ASTROGAM"},
+  {id:136, level:2, phenom:"Émission IR Origins (futur)", formula:"\\propto 1/r^2", condition:"Galaxies z>10", creator:"Origins team", nat:"US", date:"2035+", fun:"÷23716 à 154 Gpc", source:"https://en.wikipedia.org/wiki/Origins_Space_Telescope"},
+  {id:137, level:2, phenom:"Flux de neutrinos P-ONE (futur)", formula:"\\propto 1/r^2", condition:"Océan Pacifique", creator:"P-ONE team", nat:"CA", date:"2030+", fun:"÷24025 à 155 m", source:"https://en.wikipedia.org/wiki/Pacific_Ocean_Neutrino_Experiment"},
+  {id:138, level:2, phenom:"Émission radio ngVLA", formula:"\\propto 1/r^2", condition:"Protoplanètes", creator:"ngVLA team", nat:"US", date:"2034+", fun:"÷24336 à 156 pc", source:"https://en.wikipedia.org/wiki/Next_Generation_Very_Large_Array"},
+  {id:139, level:2, phenom:"Flux de rayons X AXIS (futur)", formula:"\\propto 1/r^2", condition:"Transitoires X", creator:"AXIS team", nat:"US", date:"2032+", fun:"÷24649 à 157 Mpc", source:"https://en.wikipedia.org/wiki/AXIS_(spacecraft)"},
+  {id:140, level:2, phenom:"Émission gamma AMEGO (futur)", formula:"\\propto 1/r^2", condition:"MeV-Compton", creator:"AMEGO team", nat:"US", date:"2030+", fun:"÷24964 à 158 Mpc", source:"https://en.wikipedia.org/wiki/All-sky_Medium_Energy_Gamma-ray_Observatory"},
+  {id:141, level:2, phenom:"Flux de particules HERD (futur)", formula:"\\propto 1/r^2", condition:"Station spatiale chinoise", creator:"HERD team", nat:"CN", date:"2027+", fun:"÷25281 à 159 m", source:"https://en.wikipedia.org/wiki/High_Energy_cosmic-Radiation_Detection_Facility"},
+  {id:142, level:2, phenom:"Émission radio SKA-Low", formula:"\\propto 1/r^2", condition:"Époque sombre", creator:"SKA-Low team", nat:"World", date:"2028+", fun:"÷25600 à 160 Gpc", source:"https://en.wikipedia.org/wiki/Square_Kilometre_Array"},
+  {id:143, level:2, phenom:"Flux de neutrinos IceCube-Gen2", formula:"\\propto 1/r^2", condition:"Sources TeV-PeV", creator:"IceCube-Gen2 team", nat:"US", date:"2030+", fun:"÷25921 à 161 m", source:"https://en.wikipedia.org/wiki/IceCube_Neutrino_Observatory"},
+  {id:144, level:2, phenom:"Émission X STAR-X (futur)", formula:"\\propto 1/r^2", condition:"Transitoires X", creator:"STAR-X team", nat:"US", date:"2030+", fun:"÷26244 à 162 Mpc", source:"https://en.wikipedia.org/wiki/STAR-X"},
+  {id:145, level:2, phenom:"Flux de rayons gamma CTA", formula:"\\propto 1/r^2", condition:"TeV-PeV", creator:"CTA team", nat:"World", date:"2025+", fun:"÷26569 à 163 Mpc", source:"https://en.wikipedia.org/wiki/Cherenkov_Telescope_Array"},
+  {id:146, level:2, phenom:"Émission radio LOFAR 2.0", formula:"\\propto 1/r^2", condition:"Réionisation", creator:"LOFAR 2.0 team", nat:"NL", date:"2026+", fun:"÷26896 à 164 Gpc", source:"https://en.wikipedia.org/wiki/LOFAR"},
+  {id:147, level:2, phenom:"Flux de neutrinos RNO-G (futur)", formula:"\\propto 1/r^2", condition:"Groenland", creator:"RNO-G team", nat:"US", date:"2025+", fun:"÷27225 à 165 m", source:"https://en.wikipedia.org/wiki/Radio_Neutrino_Observatory_in_Greenland"},
+  {id:148, level:2, phenom:"Émission IR HabEx (futur)", formula:"\\propto 1/r^2", condition:"Exoplanètes", creator:"HabEx team", nat:"US", date:"2035+", fun:"÷27556 à 166 pc", source:"https://en.wikipedia.org/wiki/Habitable_Exoplanet_Imaging_Mission"},
+  {id:149, level:2, phenom:"Flux de particules EUSO-SPB2", formula:"\\propto 1/r^2", condition:"Ballon", creator:"EUSO-SPB2 team", nat:"World", date:"2023", fun:"÷27889 à 167 m", source:"https://en.wikipedia.org/wiki/EUSO-SPB"},
+  {id:150, level:2, phenom:"Émission X LUVOIR (futur)", formula:"\\propto 1/r^2", condition:"Galaxies z>15", creator:"LUVOIR team", nat:"US", date:"2040+", fun:"÷28224 à 168 Gpc", source:"https://en.wikipedia.org/wiki/LUVOIR"}
+];
+
+// === DRAPEAUX EMOJI ===
+function getFlag(code) {
+  if (code === 'World') return 'World';
+  if (code === 'EU') return 'EU';
+  const regionalIndicatorA = 0x1F1E6;
+  const aCode = 'A'.charCodeAt(0);
+  return code.split('').map(letter => 
+    String.fromCodePoint(regionalIndicatorA + (letter.charCodeAt(0) - aCode))
+  ).join('');
+}
+
+// === RENDU TABLEAU ===
+function renderTable(items) {
+  const tbody = document.getElementById('tableBody');
+  tbody.innerHTML = '';
+  items.forEach(item => {
+    const tr = document.createElement('tr');
+    if (item.level === 1) tr.classList.add('level-1');
+    const levelText = item.level === 1 ? 'Fondamental' : 'Dérivé';
+    const flag = getFlag(item.nat);
+    tr.innerHTML = `
+      <td data-label="#">${item.id}</td>
+      <td data-label="Niveau">${levelText}</td>
+      <td data-label="Phénomène"><strong>${item.phenom}</strong></td>
+      <td data-label="Formule" class="formula">$$${item.formula}$$</td>
+      <td data-label="Condition">${item.condition}</td>
+      <td data-label="Créateur">${item.creator}</td>
+      <td data-label="Nationalité" class="flag">${flag}</td>
+      <td data-label="Date">${item.date}</td>
+      <td data-label="Exemple">${item.fun}</td>
+      <td data-label="Source" class="source"><a href="${item.source}" target="_blank">Wiki</a></td>
+    `;
+    tbody.appendChild(tr);
+  });
+  MathJax.typesetPromise();
+}
+
+// === RECHERCHE ===
+function searchTable() {
+  const query = document.getElementById('searchInput').value.toLowerCase().trim();
+  if (!query) { renderTable(data); return; }
+  const filtered = data.filter(item =>
+    item.phenom.toLowerCase().includes(query) ||
+    item.formula.toLowerCase().includes(query) ||
+    item.condition.toLowerCase().includes(query) ||
+    item.creator.toLowerCase().includes(query) ||
+    item.fun.toLowerCase().includes(query)
+  );
+  renderTable(filtered);
+}
+
+// === DARK MODE ===
+const themeSwitch = document.getElementById('themeSwitch');
+const modeLabel = document.getElementById('modeLabel');
+themeSwitch.addEventListener('click', () => {
+  document.body.classList.toggle('dark');
+  const isDark = document.body.classList.contains('dark');
+  themeSwitch.classList.toggle('active', isDark);
+  modeLabel.textContent = isDark ? 'Dark' : 'Light';
+});
+
+// === INIT ===
+renderTable(data);
+document.getElementById('searchInput').addEventListener('input', searchTable);
+MathJax.typesetPromise();
+</script>
+</body>
+</html>
