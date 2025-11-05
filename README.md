@@ -15,17 +15,17 @@ A compilation of key "scientific walls" in physics and cosmology: equations (LaT
 
 👉 [Access here](https://lombard-web-services.github.io/Docs/Scientific_walls_EN.html)
 
-## 🇫🇷 Loi en Carré Inverse : 150 Phénomènes Physiques et Cosmologiques
+## 🇫🇷 Loi en Carré Inverse : 150 Phénomènes Physiques et Cosmologiques  I ∝ 1/d²
 
-Liste exhaustive de **150 phénomènes** où l’intensité décroît selon \( \frac{1}{r^2} \) — gravité, ondes, rayonnements, particules.  
+Liste exhaustive de **150 phénomènes** où l’intensité décroît selon  I ∝ 1/d² — gravité, ondes, rayonnements, particules.  
 Avec formules, conditions clés, exemples concrets, drapeaux nationaux, et sources.  
 
 👉 [Accéder ici](https://lombard-web-services.github.io/Docs/Inverse_Square_Law_phenomenon_FR.html)
 
 
-## 🇬🇧 Inverse Square Law: 150 Physical & Cosmological Phenomena
+## 🇬🇧 Inverse Square Law: 150 Physical & Cosmological Phenomena I ∝ 1/d² 
 
-Exhaustive list of **150 phenomena** where intensity drops as \( \frac{1}{r^2} \) — gravity, waves, radiation, particles.  
+Exhaustive list of **150 phenomena** where intensity drops as  I ∝ 1/d² — gravity, waves, radiation, particles.  
 Includes formulas, key conditions, real-world examples, national flags, and sources.  
 
 👉 [Access here](https://lombard-web-services.github.io/Docs/Inverse_Square_Law_phenomenon_EN.html)
