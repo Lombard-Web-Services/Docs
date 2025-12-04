@@ -31,6 +31,21 @@ Includes formulas, key conditions, real-world examples, national flags, and sour
 👉 [Access here](https://lombard-web-services.github.io/Docs/Inverse_Square_Law_phenomenon_EN.html)
 
 
+## 🇫🇷 Rapports de Calculs Quantiques : Logiciel, Matériel & Physique sous-jacente  
+
+Synthèse technique d'**opérations avancées** (transformers, chaos, BigInt, etc.) croisant domaine physique, implémentation logicielle/matérielle, instructions SIMD/ASM, et gains de performance.  
+
+👉 [Accéder ici](https://lombard-web-services.github.io/Docs/rapports_calculs_quantiques_FR.html)
+
+
+
+## 🇬🇧 Quantum Computing Reports: Software, Hardware & Underlying Physics  
+
+Technical synthesis of **advanced operations** (transformers, chaos, BigInt, etc.) linking physics domains, software/hardware implementations, SIMD/ASM instructions, and performance gains.  
+
+👉 [Access here](https://lombard-web-services.github.io/Docs/rapports_calculs_quantiques_EN.html)
+
+
 ## 🇫🇷 Méthodes d’Optimisation par Diffusion
 
 Un tableau classé des méthodes d’optimisation inspirées par la diffusion, indiquant complexité, ordre de convergence, familles (spectrales, bayésiennes, entropiques, Krylov, scaling, deep), et un lien par méthode.  
