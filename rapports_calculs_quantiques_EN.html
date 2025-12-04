@@ -1,0 +1,615 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quantum Computing Software/Hardware Reports</title>
+    <style>
+        :root {
+            --bg-color: #ffffff;
+            --text-color: #1f2937;
+            --header-bg: #f8fafc;
+            --row-hover: #f1f5f9;
+            --border-color: #e2e8f0;
+            --input-bg: #ffffff;
+            --input-border: #d1d5db;
+            --input-text: #374151;
+            --shadow: 0 4px 6px -1px rgba(0, 0,0, 0.1), 0 2px 4px -1px rgba(0, 0,0, 0.06);
+            --switch-off: #cbd5e1;
+            --switch-on: #3b82f6;
+            --knob-off: #ffffff;
+            --knob-on: #ffffff;
+        }
+
+        [data-theme="dark"] {
+            --bg-color: #0f172a;
+            --text-color: #f1f5f9;
+            --header-bg: #1e293b;
+            --row-hover: #334155;
+            --border-color: #475569;
+            --input-bg: #1e293b;
+            --input-border: #475569;
+            --input-text: #e2e8f0;
+            --shadow: 0 4px 6px -1px rgba(0, 0,0, 0.2), 0 2px 4px -1px rgba(0, 0,0, 0.1);
+            --switch-off: #475569;
+            --switch-on: #60a5fa;
+            --knob-off: #e2e8f0;
+            --knob-on: #0f172a;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            background: var(--bg-color);
+            color: var(--text-color);
+            margin: 0;
+            padding: 20px;
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+
+        .title-section {
+            text-align: center;
+            margin-bottom: 30px;
+            padding: 20px;
+            background: var(--header-bg);
+            border-radius: 12px;
+            box-shadow: var(--shadow);
+        }
+
+        .main-title {
+            font-size: 2.2em;
+            font-weight: 700;
+            margin: 0 0 10px 0;
+            color: var(--text-color);
+        }
+
+        .date {
+            font-size: 1.1em;
+            color: #64748b;
+            margin: 0 0 8px 0;
+        }
+
+        [data-theme="dark"] .date {
+            color: #94a3b8;
+        }
+
+        .author {
+            font-size: 1.2em;
+            font-weight: 500;
+            color: var(--switch-on);
+            margin: 0;
+        }
+
+        .wrapper {
+            max-width: 100%;
+            width: 100vw;
+            overflow-x: auto;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding: 16px 20px;
+            background: var(--bg-color);
+            border-radius: 12px;
+            box-shadow: var(--shadow);
+        }
+
+        #searchInput {
+            flex: 1;
+            max-width: 500px;
+            padding: 12px 16px;
+            border: 2px solid var(--input-border);
+            border-radius: 8px;
+            background: var(--input-bg);
+            color: var(--input-text);
+            font-size: 16px;
+            transition: all 0.2s;
+        }
+
+        #searchInput:focus {
+            outline: none;
+            border-color: var(--switch-on);
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        }
+
+        .toggle-container {
+            margin-left: 16px;
+        }
+
+        .switch {
+            position: relative;
+            display: inline-block;
+            width: 56px;
+            height: 32px;
+        }
+
+        .switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: var(--switch-off);
+            transition: 0.4s;
+            border-radius: 32px;
+        }
+
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 24px;
+            width: 24px;
+            left: 4px;
+            bottom: 4px;
+            background-color: var(--knob-off);
+            transition: 0.4s;
+            border-radius: 50%;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        }
+
+        input:checked + .slider {
+            background-color: var(--switch-on);
+        }
+
+        input:checked + .slider:before {
+            transform: translateX(24px);
+            background-color: var(--knob-on);
+        }
+
+        .table-container {
+            background: var(--bg-color);
+            border-radius: 12px;
+            box-shadow: var(--shadow);
+            overflow: hidden;
+            margin-bottom: 20px;
+        }
+
+        .table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+            font-size: 14px;
+        }
+
+        .table thead th {
+            background: var(--header-bg);
+            color: var(--text-color);
+            font-weight: 600;
+            padding: 16px 20px;
+            text-align: left;
+            border-bottom: 2px solid var(--border-color);
+            font-size: 13px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            white-space: nowrap;
+        }
+
+        .table tbody td {
+            padding: 16px 20px;
+            border-bottom: 1px solid var(--border-color);
+            transition: background-color 0.2s;
+            vertical-align: top;
+        }
+
+        .table tbody tr:hover {
+            background-color: var(--row-hover);
+        }
+
+        .table tbody tr:last-child td {
+            border-bottom: none;
+        }
+
+        .gain {
+            font-weight: 600;
+            color: #059669;
+        }
+
+        .gain.dark {
+            color: #34d399;
+        }
+
+        .domain {
+            font-size: 12px;
+            padding: 4px 8px;
+            border-radius: 4px;
+            background: rgba(59, 130, 246, 0.1);
+            color: #1d4ed8;
+        }
+
+        [data-theme="dark"] .domain {
+            background: rgba(96, 165, 250, 0.15);
+            color: #93c5fd;
+        }
+
+        .domain.chaos { background: rgba(190, 24, 93, 0.1); color: #be185d; }
+        [data-theme="dark"] .domain.chaos { background: rgba(244, 114, 182, 0.2); color: #f9a8d4; }
+
+        .domain.relativist { background: rgba(101, 163, 13, 0.1); color: #65a30d; }
+        [data-theme="dark"] .domain.relativist { background: rgba(134, 239, 172, 0.15); color: #bbf7d0; }
+
+        .domain.signal { background: rgba(146, 64, 14, 0.1); color: #92400e; }
+        [data-theme="dark"] .domain.signal { background: rgba(251, 146, 60, 0.2); color: #fdba74; }
+
+        .dim-6d { 
+            background: rgba(139, 69, 19, 0.2); 
+            color: #8b4513; 
+            font-weight: 600;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-size: 11px;
+        }
+        [data-theme="dark"] .dim-6d { 
+            background: rgba(253, 186, 116, 0.3); 
+            color: #fcd34d; 
+        }
+
+        .dim-ndim { 
+            background: rgba(59, 130, 246, 0.2); 
+            color: #1d4ed8; 
+            font-weight: 600;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-size: 11px;
+        }
+        [data-theme="dark"] .dim-ndim { 
+            background: rgba(96, 165, 250, 0.3); 
+            color: #93c5fd; 
+        }
+
+        .dim-conj { 
+            background: rgba(168, 85, 247, 0.2); 
+            color: #7c3aed; 
+            font-weight: 600;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-size: 11px;
+        }
+        [data-theme="dark"] .dim-conj { 
+            background: rgba(216, 180, 254, 0.3); 
+            color: #e9d5ff; 
+        }
+
+        .footer {
+            text-align: center;
+            padding: 20px;
+            color: #6b7280;
+            font-size: 12px;
+            border-top: 1px solid var(--border-color);
+            background: var(--bg-color);
+        }
+
+        [data-theme="dark"] .footer {
+            color: #94a3b8;
+        }
+
+        .footer a {
+            color: var(--switch-on);
+            text-decoration: none;
+        }
+
+        .footer a:hover {
+            text-decoration: underline;
+        }
+
+        @media (max-width: 1024px) {
+            .table {
+                font-size: 13px;
+            }
+            .table thead th,
+            .table tbody td {
+                padding: 12px 12px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            body {
+                padding: 10px;
+            }
+            .header {
+                flex-direction: column;
+                gap: 16px;
+                padding: 16px;
+            }
+            .toggle-container {
+                margin-left: 0;
+            }
+            .main-title {
+                font-size: 1.8em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="title-section">
+        <h1 class="main-title">Quantum Computing Software/Hardware Reports</h1>
+        <p class="date">Thursday, December 04, 2025</p>
+        <p class="author">Thibaut LOMBARD</p>
+    </div>
+
+    <div class="wrapper">
+        <div class="header">
+            <input type="text" id="searchInput" placeholder="🔍 Search (6D, N-dim, conjugate, twistor, phase space, M5-brane...)">
+            <div class="toggle-container">
+                <label class="switch">
+                    <input type="checkbox" id="themeToggle">
+                    <span class="slider"></span>
+                </label>
+            </div>
+        </div>
+        
+        <div class="table-container">
+            <table class="table" id="operationsTable">
+                <thead>
+                    <tr>
+                        <th>Operation</th>
+                        <th>Physics/Concept Domain</th>
+                        <th>Computation Mode</th>
+                        <th>Software/Hardware Reality</th>
+                        <th>SIMD/ASM/HW Instructions</th>
+                        <th>Typical Gain</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Quantum Operations (7) -->
+                    <tr>
+                        <td>Attention computation (Q×Kᵀ)</td>
+                        <td><span class="domain">Quantum / Entanglement</span></td>
+                        <td><span class="dim-6d">6D phase space</span> (per mode)</td>
+                        <td>Massive matmul (batch, heads, seq_len)</td>
+                        <td>AVX-512 VNNI, AMX (Intel), Tensor Cores (NVIDIA)</td>
+                        <td class="gain"><span class="dark">×10–30</span> vs scalar</td>
+                    </tr>
+                    <tr>
+                        <td>Token → latent space projection</td>
+                        <td><span class="domain">Quantum / Entanglement</span></td>
+                        <td><span class="dim-6d">6D per particle</span> (QED/QFT)</td>
+                        <td>GEMV/GEMM dense</td>
+                        <td>AVX-512, BF16/FP16, AMX Tile</td>
+                        <td class="gain"><span class="dark">×20–50</span></td>
+                    </tr>
+                    <tr>
+                        <td>Retrocausal update (bidirectional)</td>
+                        <td><span class="domain">Quantum / Entanglement</span></td>
+                        <td><span class="dim-6d">CFT(2,0) M5-branes</span></td>
+                        <td>2 forward passes + fusion (BERT/xLSTM)</td>
+                        <td>FMA SIMD + memory coalescing</td>
+                        <td class="gain"><span class="dark">×8–15</span></td>
+                    </tr>
+                    <tr>
+                        <td>Constructive interferences (soft attention)</td>
+                        <td><span class="domain">Quantum / Entanglement</span></td>
+                        <td><span class="dim-6d">6D SYM orbifolds</span></td>
+                        <td>Softmax + weighted sum</td>
+                        <td>AVX-512 exp + reduce, Tensor Cores</td>
+                        <td class="gain"><span class="dark">×30</span></td>
+                    </tr>
+                    <tr>
+                        <td>Disentanglement/entanglement regularization</td>
+                        <td><span class="domain">Quantum / Entanglement</span></td>
+                        <td><span class="dim-6d">Twistors 6D→4D</span></td>
+                        <td>Gradient penalty + orthogonalization</td>
+                        <td>Matmul + truncated SVD SIMD</td>
+                        <td class="gain"><span class="dark">×15–40</span></td>
+                    </tr>
+                    <tr>
+                        <td>Global "collapse" simulation</td>
+                        <td><span class="domain">Quantum / Entanglement</span></td>
+                        <td><span class="dim-6d">6D supersymmetric</span></td>
+                        <td>Beam search, nucleus sampling (top-k/p)</td>
+                        <td>AVX-512 gather + bitonic sort</td>
+                        <td class="gain"><span class="dark">×100+</span></td>
+                    </tr>
+                    <tr>
+                        <td>Numerical squeezing</td>
+                        <td><span class="domain">Quantum / Entanglement</span></td>
+                        <td><span class="dim-6d">6D phase space QFT/CFT</span></td>
+                        <td>Time-frequency resolution beyond Heisenberg</td>
+                        <td>Non-linear FFT + simulated squeezed states</td>
+                        <td class="gain"><span class="dark">×5–20</span></td>
+                    </tr>
+
+                    <!-- Relativistic / Gravitational (1) -->
+                    <tr>
+                        <td>Simulated gravitational lensing</td>
+                        <td><span class="domain relativist">Relativistic / Gravitational</span></td>
+                        <td><span class="dim-6d">6D geodesics</span> <span class="dim-ndim">or N-dim</span></td>
+                        <td>Synthetic distortion for radar robustness</td>
+                        <td>Ray marching + geodesic deformation GPU</td>
+                        <td class="gain"><span class="dark">×3–8</span></td>
+                    </tr>
+
+                    <!-- Nonlinear Dynamics / Chaos (3) -->
+                    <tr>
+                        <td>Quasi-periodic torus breakdown</td>
+                        <td><span class="domain chaos">Chaos / Nonlinear Dynamics</span></td>
+                        <td><span class="dim-ndim">N-dim symplectic</span></td>
+                        <td>Breakdown to chaos via type-II intermittency</td>
+                        <td>Symplectic integration + rotation number analysis</td>
+                        <td class="gain"><span class="dark">×2–5</span></td>
+                    </tr>
+                    <tr>
+                        <td>Volumetric cavitation tracking</td>
+                        <td><span class="domain chaos">Chaos / Nonlinear Dynamics</span></td>
+                        <td><span class="dim-ndim">N-dim level-set</span></td>
+                        <td>Tracking via level-set φ=0 until collapse</td>
+                        <td>GPU-accelerated level-set + PDE solvers</td>
+                        <td class="gain"><span class="dark">×10–40</span></td>
+                    </tr>
+                    <tr>
+                        <td>Lyapunov exponents (Takens embedding)</td>
+                        <td><span class="domain chaos">Chaos / Nonlinear Dynamics</span></td>
+                        <td><span class="dim-ndim">N-dim recurrence</span></td>
+                        <td>Trajectory divergence detection → pre-collapse</td>
+                        <td>AVX-512 + recurrence matrix SIMD</td>
+                        <td class="gain"><span class="dark">×15</span></td>
+                    </tr>
+
+                    <!-- Signal / micro-Doppler / vibrations (3) -->
+                    <tr>
+                        <td>micro-Doppler extraction (symplectic invariants)</td>
+                        <td><span class="domain signal">Signal / Micro-Doppler</span></td>
+                        <td><span class="dim-ndim">N-dim invariants</span></td>
+                        <td>Drone/gesture detection</td>
+                        <td>Symplectic transforms + vectorized chirp FFT</td>
+                        <td class="gain"><span class="dark">×20–60</span></td>
+                    </tr>
+                    <tr>
+                        <td>Remote mechanical resonance</td>
+                        <td><span class="domain signal">Signal / Micro-Doppler</span></td>
+                        <td><span class="dim-ndim">N-dim Hilbert</span></td>
+                        <td>Passive vibration detection (surveillance)</td>
+                        <td>Hilbert transform + CWT SIMD</td>
+                        <td class="gain"><span class="dark">×12–30</span></td>
+                    </tr>
+                    <tr>
+                        <td>Classification via Lie/Symplectic groups</td>
+                        <td><span class="domain signal">Signal / Micro-Doppler</span></td>
+                        <td><span class="dim-ndim">N-dim Lie algebras</span></td>
+                        <td>Geometric invariants on radar signatures</td>
+                        <td>Complex moments + Lie algebra embeddings</td>
+                        <td class="gain"><span class="dark">×8–25</span></td>
+                    </tr>
+
+                    <!-- Tensor Computations (3) -->
+                    <tr>
+                        <td>Tensor matrix multiplication</td>
+                        <td><span class="domain">Tensorial / ML</span></td>
+                        <td><span class="dim-ndim">N-dim rank-4</span></td>
+                        <td>GEMM for transformers (attention, FFN)</td>
+                        <td>Intel AMX (1K×1K tiles), NVIDIA Tensor Cores FP8</td>
+                        <td class="gain"><span class="dark">×50–200</span></td>
+                    </tr>
+                    <tr>
+                        <td>3D tensor convolutions</td>
+                        <td><span class="domain">Tensorial / Vision</span></td>
+                        <td><span class="dim-ndim">3D→N-dim</span></td>
+                        <td>CNNs, vision transformers</td>
+                        <td>Tensor Cores (NVIDIA), XMX (Intel Arc), TPUs</td>
+                        <td class="gain"><span class="dark">×30–100</span></td>
+                    </tr>
+                    <tr>
+                        <td>Rank-3/4 tensor contractions</td>
+                        <td><span class="domain">Tensorial / Physics</span></td>
+                        <td><span class="dim-ndim">N-dim contractions</span></td>
+                        <td>Quantum circuit simulation, physics ML</td>
+                        <td>AMX-BF16, AVX-512 BF16 + tiling</td>
+                        <td class="gain"><span class="dark">×25–80</span></td>
+                    </tr>
+
+                    <!-- Big Integer Arithmetic (3) -->
+                    <tr>
+                        <td>Arbitrary BigInt multiplication</td>
+                        <td><span class="domain">Arithmetic / Crypto</span></td>
+                        <td><span class="dim-ndim">Karatsuba N-dim</span></td>
+                        <td>Karatsuba/Toom-Cook → vectorized ASM</td>
+                        <td>AVX-512IFMA, ADX, PCLMULQDQ</td>
+                        <td class="gain"><span class="dark">×10–50</span></td>
+                    </tr>
+                    <tr>
+                        <td>BigInt division (multi-precision)</td>
+                        <td><span class="domain">Arithmetic / Crypto</span></td>
+                        <td><span class="dim-ndim">Newton-Raphson N-dim</span></td>
+                        <td>Vectorized Newton-Raphson</td>
+                        <td>AVX-512 VPOPCNT + VPDPBUSD</td>
+                        <td class="gain"><span class="dark">×8–30</span></td>
+                    </tr>
+                    <tr>
+                        <td>BigInt → decimal conversion</td>
+                        <td><span class="domain">Arithmetic / I/O</span></td>
+                        <td><span class="dim-ndim">N-dim division</span></td>
+                        <td>Division by 10^n vectorized</td>
+                        <td>AVX-512 + divisor network</td>
+                        <td class="gain"><span class="dark">×20–100</span></td>
+                    </tr>
+
+                    <!-- Timing & TSC (2) -->
+                    <tr>
+                        <td>Precise timestamping (cycle-level)</td>
+                        <td><span class="domain">Timing / Low-level</span></td>
+                        <td><span class="dim-ndim">Dimension-independent</span></td>
+                        <td>Performance profiling, deterministic timing</td>
+                        <td>RDTSC/RDTSCP + LFENCE, TSC_ADJUST</td>
+                        <td class="gain"><span class="dark">×1000</span> vs chrono</td>
+                    </tr>
+                    <tr>
+                        <td>Parallel benchmarking</td>
+                        <td><span class="domain">Timing / Low-level</span></td>
+                        <td><span class="dim-ndim">Multi-core independent</span></td>
+                        <td>Invariant TSC multi-core</td>
+                        <td>RDTSCP + CPUID barrier, AVX-512 gather</td>
+                        <td class="gain"><span class="dark">×500</span></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="footer">
+        <p>&copy; Lombard Web Services <a href="https://github.com/Lombard-Web-Services/Docs" target="_blank">https://github.com/Lombard-Web-Services/Docs</a></p>
+    </div>
+
+    <script>
+        const themeToggle = document.getElementById('themeToggle');
+        const html = document.documentElement;
+        
+        const savedTheme = localStorage.getItem('theme') || 'light';
+        html.setAttribute('data-theme', savedTheme);
+        themeToggle.checked = savedTheme === 'dark';
+
+        themeToggle.addEventListener('change', () => {
+            const theme = themeToggle.checked ? 'dark' : 'light';
+            html.setAttribute('data-theme', theme);
+            document.querySelectorAll('.dark').forEach(el => 
+                el.classList.toggle('dark', theme === 'light')
+            );
+            localStorage.setItem('theme', theme);
+        });
+
+        const searchInput = document.getElementById('searchInput');
+        const table = document.getElementById('operationsTable');
+        let timeout;
+
+        searchInput.addEventListener('input', function() {
+            clearTimeout(timeout);
+            timeout = setTimeout(() => {
+                const filter = searchInput.value.toLowerCase().trim();
+                const rows = table.querySelectorAll('tbody tr');
+                let visibleCount = 0;
+
+                rows.forEach(row => {
+                    const text = row.textContent.toLowerCase();
+                    const isVisible = filter === '' || text.includes(filter);
+                    row.style.display = isVisible ? '' : 'none';
+                    if (isVisible) visibleCount++;
+                });
+
+                if (filter !== '' && visibleCount === 0) {
+                    searchInput.placeholder = `No results for "${filter}"`;
+                } else if (filter === '') {
+                    searchInput.placeholder = '🔍 Search (6D, N-dim, conjugate, twistor, phase space, M5-brane...)';
+                }
+            }, 150);
+        });
+
+        searchInput.addEventListener('focus', function() {
+            if (this.placeholder.includes('No results')) {
+                this.placeholder = '🔍 Type to search...';
+            }
+        });
+    </script>
+</body>
+</html>
