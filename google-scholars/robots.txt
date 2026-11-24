@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://lombard-web-services.github.io/Docs/google-scholars/sitemap.xml
