@@ -1,4 +1,3 @@
-/* assets/style.css */
 :root {
     --primary-color: #0f172a;
     --accent-color: #2563eb;
@@ -17,86 +16,37 @@ body {
     background-color: var(--bg-color);
 }
 
+/* --- Header Centré et Élégant --- */
 header {
     background-color: var(--primary-color);
     color: white;
-    padding: 3rem 1rem;
-    text-align: center;
+    padding: 4rem 1rem;
+    text-align: center; /* Centrage global du header */
 }
 
-header h1 { font-size: 2.5rem; margin-bottom: 0.5rem; font-weight: 700; }
-header p { font-size: 1.1rem; opacity: 0.9; max-width: 600px; margin: 0 auto; }
-
-.container {
-    max-width: 1000px;
+.header-content {
+    max-width: 800px;
     margin: 0 auto;
-    padding: 2rem 1rem;
-}
-
-.paper-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-    gap: 1.5rem;
-    margin-top: 2rem;
-}
-
-.paper-card {
-    background: var(--card-bg);
-    border: 1px solid var(--border-color);
-    border-radius: 8px;
-    padding: 1.5rem;
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
     display: flex;
     flex-direction: column;
+    align-items: center;
+    gap: 1rem;
 }
 
-.paper-card:hover {
-    transform: translateY(-4px);
-    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
-}
-
-.paper-card h2 { font-size: 1.25rem; color: var(--primary-color); margin-bottom: 0.75rem; }
-.paper-card .meta { font-size: 0.85rem; color: #64748b; margin-bottom: 1rem; }
-.paper-card .abstract { font-size: 0.95rem; margin-bottom: 1.5rem; flex-grow: 1; }
-.paper-card .keywords { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 1rem; }
-.keyword { background: #e0f2fe; color: #0369a1; padding: 0.25rem 0.5rem; border-radius: 4px; font-size: 0.75rem; font-weight: 600; }
-
-.links { display: flex; gap: 0.75rem; flex-wrap: wrap; }
-.btn {
-    display: inline-block;
-    padding: 0.5rem 1rem;
-    border-radius: 6px;
-    text-decoration: none;
-    font-size: 0.9rem;
-    font-weight: 500;
-    transition: background 0.2s;
-}
-.btn-primary { background: var(--accent-color); color: white; }
-.btn-primary:hover { background: #1d4ed8; }
-.btn-secondary { background: #f1f5f9; color: var(--text-color); border: 1px solid var(--border-color); }
-.btn-secondary:hover { background: #e2e8f0; }
-
-footer {
+header h1 { 
+    font-size: 2.5rem; 
+    font-weight: 700; 
     text-align: center;
-    padding: 2rem;
-    color: #64748b;
-    font-size: 0.9rem;
-    border-top: 1px solid var(--border-color);
-    margin-top: 3rem;
 }
 
-/* Paper Detail Page Specifics */
-.paper-detail { max-width: 800px; margin: 0 auto; padding: 2rem 1rem; }
-.paper-detail h1 { font-size: 2rem; color: var(--primary-color); margin-bottom: 0.5rem; }
-.paper-detail .author { font-size: 1.1rem; color: var(--accent-color); font-weight: 600; margin-bottom: 1.5rem; }
-.paper-detail .abstract-box { background: #f8fafc; border-left: 4px solid var(--accent-color); padding: 1.5rem; margin: 2rem 0; border-radius: 0 8px 8px 0; }
-.back-link { display: inline-block; margin-bottom: 1.5rem; color: var(--accent-color); text-decoration: none; font-weight: 500; }
-.back-link:hover { text-decoration: underline; }
-/* --- Gestion bilingue élégante --- */
-.lang-en [data-lang="fr"] { display: none !important; }
-.lang-fr [data-lang="en"] { display: none !important; }
+header p { 
+    font-size: 1.1rem; 
+    opacity: 0.9; 
+    text-align: center;
+    max-width: 600px;
+}
 
-/* --- Style du bouton de langue --- */
+/* --- Bouton de langue --- */
 .lang-btn {
     background: rgba(255, 255, 255, 0.1);
     border: 1px solid rgba(255, 255, 255, 0.3);
@@ -108,38 +58,117 @@ footer {
     font-weight: 500;
     transition: all 0.2s ease;
     backdrop-filter: blur(4px);
+    margin-top: 1rem;
 }
 
 .lang-btn:hover {
     background: rgba(255, 255, 255, 0.25);
-    border-color: rgba(255, 255, 255, 0.5);
     transform: translateY(-1px);
 }
 
-/* --- Ajustement du header pour accueillir le bouton --- */
-.header-content {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    max-width: 1000px;
+/* --- Grille et Cartes --- */
+.container {
+    max-width: 1100px;
     margin: 0 auto;
-    padding: 0 1rem;
-    text-align: left;
+    padding: 3rem 1.5rem;
 }
 
-.header-content h1 {
-    margin-bottom: 0.5rem;
+.paper-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: 2rem;
 }
 
-.header-content p {
-    margin: 0;
-    opacity: 0.9;
+.paper-card {
+    background: var(--card-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+    padding: 2rem;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    display: flex;
+    flex-direction: column;
 }
 
-@media (max-width: 768px) {
-    .header-content {
-        flex-direction: column;
-        text-align: center;
-        gap: 1rem;
-    }
+.paper-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 24px -8px rgba(0, 0, 0, 0.1);
+    border-color: var(--accent-color);
 }
+
+.paper-card h2 { 
+    font-size: 1.3rem; 
+    color: var(--primary-color); 
+    margin-bottom: 0.75rem; 
+    text-align: center; /* Centrage des titres des cartes */
+}
+
+.paper-card .meta { 
+    font-size: 0.85rem; 
+    color: #64748b; 
+    margin-bottom: 1rem; 
+    text-align: center;
+    font-weight: 500;
+}
+
+.paper-card .abstract { 
+    font-size: 0.95rem; 
+    margin-bottom: 1.5rem; 
+    flex-grow: 1; 
+    text-align: justify;
+}
+
+.paper-card .keywords { 
+    display: flex; 
+    flex-wrap: wrap; 
+    gap: 0.5rem; 
+    margin-bottom: 1.5rem; 
+    justify-content: center;
+}
+
+.keyword { 
+    background: #e0f2fe; 
+    color: #0369a1; 
+    padding: 0.25rem 0.6rem; 
+    border-radius: 6px; 
+    font-size: 0.75rem; 
+    font-weight: 600; 
+}
+
+.links { 
+    display: flex; 
+    gap: 0.75rem; 
+    flex-wrap: wrap; 
+    justify-content: center;
+}
+
+.btn {
+    display: inline-block;
+    padding: 0.6rem 1.2rem;
+    border-radius: 8px;
+    text-decoration: none;
+    font-size: 0.9rem;
+    font-weight: 600;
+    transition: all 0.2s;
+    text-align: center;
+}
+
+.btn-primary { background: var(--accent-color); color: white; }
+.btn-primary:hover { background: #1d4ed8; }
+.btn-secondary { background: #f1f5f9; color: var(--text-color); border: 1px solid var(--border-color); }
+.btn-secondary:hover { background: #e2e8f0; }
+
+/* --- Gestion bilingue --- */
+.lang-en [data-lang="fr"] { display: none !important; }
+.lang-fr [data-lang="en"] { display: none !important; }
+
+footer {
+    text-align: center;
+    padding: 3rem 1rem;
+    color: #64748b;
+    font-size: 0.9rem;
+    border-top: 1px solid var(--border-color);
+    margin-top: 2rem;
+}
+
+footer a { color: var(--accent-color); text-decoration: none; }
+footer a:hover { text-decoration: underline; }
