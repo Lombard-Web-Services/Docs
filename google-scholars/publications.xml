@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+    <channel>
+        <title>Publications de Thibaut Lombard</title>
+        <link>https://lombard-web-services.github.io/Docs/google-scholars/</link>
+        <description>Derniers préprints et recherches en IA, Physique Mathématique et QNLP par Thibaut Lombard.</description>
+        <language>fr</language>
+        <atom:link href="https://lombard-web-services.github.io/Docs/google-scholars/publications.xml" rel="self" type="application/rss+xml" />
+        
+        <item>
+            <title>Signature Thermodynamique de la Lumière en Sonoluminescence</title>
+            <link>https://lombard-web-services.github.io/Docs/google-scholars/index_sonoluminescence.html</link>
+            <description>Modélisation du collapse de bulle via le transport optimal régularisé par l'information de Fisher.</description>
+            <pubDate>Wed, 19 Oct 2025 12:00:00 GMT</pubDate>
+            <guid>10.5281/zenodo.24444546</guid>
+        </item>
+        <item>
+            <title>QTALN: Quantum Treatment of Acoustic-Linguistic Networks</title>
+            <link>https://lombard-web-services.github.io/Docs/google-scholars/index_qtaln.html</link>
+            <description>Cadre théorique unifiant la linguistique computationnelle et la mécanique quantique des systèmes ouverts.</description>
+            <pubDate>Thu, 19 Jun 2026 12:00:00 GMT</pubDate>
+            <guid>10.5281/zenodo.24444985</guid>
+        </item>
+        <item>
+            <title>The Fibonacci Distance: A Metric of Mathematical Harmony</title>
+            <link>https://lombard-web-services.github.io/Docs/google-scholars/index_fibonacci.html</link>
+            <description>Métrique innovante évaluant la conformité des séquences numériques aux propriétés de Fibonacci.</description>
+            <pubDate>Sun, 27 Apr 2025 12:00:00 GMT</pubDate>
+            <guid>10.5281/zenodo.24443954</guid>
+        </item>
+    </channel>
+</rss>
