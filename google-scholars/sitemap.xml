@@ -5,29 +5,12 @@
         <lastmod>2026-11-24</lastmod>
         <priority>1.0</priority>
     </url>
-    <url>
-        <loc>https://lombard-web-services.github.io/Docs/google-scholars/index_sonoluminescence.html</loc>
-        <lastmod>2026-11-24</lastmod>
-        <priority>0.8</priority>
-    </url>
-    <url>
-        <loc>https://lombard-web-services.github.io/Docs/google-scholars/index_qtaln.html</loc>
-        <lastmod>2026-11-24</lastmod>
-        <priority>0.8</priority>
-    </url>
-    <url>
-        <loc>https://lombard-web-services.github.io/Docs/google-scholars/index_fibonacci.html</loc>
-        <lastmod>2026-11-24</lastmod>
-        <priority>0.8</priority>
-    </url>
-    <url>
-        <loc>https://lombard-web-services.github.io/Docs/google-scholars/index_thermochrose.html</loc>
-        <lastmod>2026-11-24</lastmod>
-        <priority>0.8</priority>
-    </url>
-    <url>
-        <loc>https://lombard-web-services.github.io/Docs/google-scholars/index_holographie.html</loc>
-        <lastmod>2026-11-24</lastmod>
-        <priority>0.8</priority>
-    </url>
+    <url><loc>https://lombard-web-services.github.io/Docs/google-scholars/index_dist-framework.html</loc><lastmod>2026-11-24</lastmod><priority>0.8</priority></url>
+    <url><loc>https://lombard-web-services.github.io/Docs/google-scholars/index_fibonacci.html</loc><lastmod>2026-11-24</lastmod><priority>0.8</priority></url>
+    <url><loc>https://lombard-web-services.github.io/Docs/google-scholars/index_precision.html</loc><lastmod>2026-11-24</lastmod><priority>0.8</priority></url>
+    <url><loc>https://lombard-web-services.github.io/Docs/google-scholars/index_holographie.html</loc><lastmod>2026-11-24</lastmod><priority>0.8</priority></url>
+    <url><loc>https://lombard-web-services.github.io/Docs/google-scholars/index_qtaln.html</loc><lastmod>2026-11-24</lastmod><priority>0.8</priority></url>
+    <url><loc>https://lombard-web-services.github.io/Docs/google-scholars/index_quasi-lorentzian-IRLS.html</loc><lastmod>2026-11-24</lastmod><priority>0.8</priority></url>
+    <url><loc>https://lombard-web-services.github.io/Docs/google-scholars/index_sonoluminescence.html</loc><lastmod>2026-11-24</lastmod><priority>0.8</priority></url>
+    <url><loc>https://lombard-web-services.github.io/Docs/google-scholars/index_thermochrose.html</loc><lastmod>2026-11-24</lastmod><priority>0.8</priority></url>
 </urlset>
