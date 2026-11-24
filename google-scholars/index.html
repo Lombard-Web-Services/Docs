@@ -3,88 +3,114 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Publications & Recherches | Thibaut Lombard</title>
-    <meta name="description" content="Portfolio académique et préprints de Thibaut Lombard (Lombard Web Services) : IA, Optimisation, Physique Mathématique et QNLP.">
+    <title>Publications & Research | Thibaut Lombard</title>
+    <meta name="description" content="Academic portfolio and preprints by Thibaut Lombard: AI, Robust Optimization, Mathematical Physics, QNLP, and Distance Metrics.">
     <link rel="stylesheet" href="assets/style.css">
 </head>
-<body>
+<body class="lang-fr">
 
 <header>
-    <h1>Thibaut Lombard</h1>
-    <p>Project Manager & Machine Learning Engineer chez Lombard Web Services.<br>Recherches en Optimisation Robuste, Physique Mathématique et Traitement Quantique du Langage.</p>
+    <div class="header-content">
+        <div>
+            <h1>Thibaut Lombard</h1>
+            <p>
+                <span data-lang="fr">Project Manager & Machine Learning Engineer chez Lombard Web Services.<br>Recherches en Optimisation, Physique Mathématique, QNLP et Métriques de Distance.</span>
+                <span data-lang="en">Project Manager & Machine Learning Engineer at Lombard Web Services.<br>Research in Optimization, Mathematical Physics, QNLP, and Distance Metrics.</span>
+            </p>
+        </div>
+        <button id="lang-toggle" class="lang-btn" title="Switch language">🇫🇷 / 🇬🇧</button>
+    </div>
 </header>
 
 <div class="container">
     <div class="paper-grid">
         
-        <!-- Sonoluminescence -->
-        <article class="paper-card">
-            <h2>Signature Thermodynamique de la Lumière en Sonoluminescence</h2>
-            <div class="meta">2025 • Physique Mathématique • Zenodo</div>
-            <p class="abstract">Modélisation du collapse de bulle via le transport optimal régularisé par l'information de Fisher, résolu numériquement par L-BFGS pour éviter les singularités.</p>
-            <div class="keywords"><span class="keyword">Transport Optimal</span><span class="keyword">Information de Fisher</span><span class="keyword">L-BFGS</span></div>
-            <div class="links">
-                <a href="index_sonoluminescence.html" class="btn btn-primary">Détails & PDF</a>
-                <a href="https://doi.org/10.5281/zenodo.24444546" class="btn btn-secondary" target="_blank">DOI Zenodo</a>
-            </div>
-        </article>
-
-        <!-- QTALN -->
+        <!-- 1. QTALN -->
         <article class="paper-card">
             <h2>QTALN: Quantum Treatment of Acoustic-Linguistic Networks</h2>
-            <div class="meta">2026 • QNLP / IA • Zenodo</div>
-            <p class="abstract">Cadre théorique unifiant la linguistique computationnelle et la mécanique quantique des systèmes ouverts (équation de Lindblad) pour modéliser la décohérence sémantique.</p>
-            <div class="keywords"><span class="keyword">QNLP</span><span class="keyword">Lindblad</span><span class="keyword">Décohérence</span></div>
+            <div class="meta">2026 • Preprint • Zenodo</div>
+            <p class="abstract">
+                <span data-lang="fr">Cadre théorique hybride unifiant la linguistique computationnelle (TALN/QNLP), l'acoustique environnementale et la mécanique quantique des systèmes ouverts pour étudier la décohérence collective.</span>
+                <span data-lang="en">Hybrid theoretical framework unifying computational linguistics (QNLP), environmental acoustics, and open quantum systems to study collective decoherence.</span>
+            </p>
+            <div class="keywords"><span class="keyword">QNLP</span><span class="keyword">Lindblad</span><span class="keyword">Decoherence</span></div>
             <div class="links">
-                <a href="index_qtaln.html" class="btn btn-primary">Détails & PDF</a>
+                <a href="index_qtaln.html" class="btn btn-primary"><span data-lang="fr">Détails & PDF</span><span data-lang="en">Details & PDF</span></a>
                 <a href="https://doi.org/10.5281/zenodo.24444985" class="btn btn-secondary" target="_blank">DOI Zenodo</a>
             </div>
         </article>
 
-        <!-- Optimisation IRLS -->
+        <!-- 2. Thermochrose -->
         <article class="paper-card">
-            <h2>Quasi-Lorentzian Optimization via IRLS</h2>
-            <div class="meta">2026 • Machine Learning • Zenodo</div>
-            <p class="abstract">Technique d'optimisation robuste pour le fine-tuning de LLM (LoRA/QLoRA) sur matériel limité, résistant aux outliers grâce à une perte de Cauchy adaptative.</p>
-            <div class="keywords"><span class="keyword">IRLS</span><span class="keyword">LLM Fine-tuning</span><span class="keyword">Robustesse</span></div>
+            <h2><span data-lang="fr">Recherche des Nouvelles Formes de Chaleur : Thermochrose</span><span data-lang="en">Research on New Forms of Heat: Thermochrose</span></h2>
+            <div class="meta">2026 • Preprint • Zenodo</div>
+            <p class="abstract">
+                <span data-lang="fr">Analyse de la formule de Macedonio Melloni (1850). Démonstration que la transformation logarithmique du produit commutatif des facteurs physiques reflète une invariance profonde.</span>
+                <span data-lang="en">Analysis of Macedonio Melloni's formula (1850). Demonstrating that the logarithmic transformation of the commutative product of physical factors reflects a deep invariance.</span>
+            </p>
+            <div class="keywords"><span class="keyword">Thermochrose</span><span class="keyword">Radiation</span><span class="keyword">Decibels</span></div>
             <div class="links">
-                <a href="https://lombard-web-services.github.io/cauchy/quasi_lorentzien_irls.html" class="btn btn-primary">Détails & PDF</a>
-                <a href="https://doi.org/10.5281/zenodo.24444341" class="btn btn-secondary" target="_blank">DOI Zenodo</a>
-            </div>
-        </article>
-
-        <!-- Fibonacci Distance -->
-        <article class="paper-card">
-            <h2>The Fibonacci Distance: A Metric of Mathematical Harmony</h2>
-            <div class="meta">2025 • Mathématiques Appliquées • Zenodo</div>
-            <p class="abstract">Métrique innovante évaluant la conformité des séquences numériques aux propriétés de récurrence de Fibonacci et au nombre d'or, avec validation axiomatique.</p>
-            <div class="keywords"><span class="keyword">Métrique</span><span class="keyword">Fibonacci</span><span class="keyword">Analyse de données</span></div>
-            <div class="links">
-                <a href="index_fibonacci.html" class="btn btn-primary">Détails & PDF</a>
-                <a href="https://doi.org/10.5281/zenodo.24443954" class="btn btn-secondary" target="_blank">DOI Zenodo</a>
-            </div>
-        </article>
-
-        <!-- Thermochrose -->
-        <article class="paper-card">
-            <h2>Recherche des Nouvelles Formes de Chaleur : Thermochrose</h2>
-            <div class="meta">2026 • Histoire des Sciences / Physique • Zenodo</div>
-            <p class="abstract">Analyse de la formule de Macedonio Melloni (1850). Démonstration que la transformation logarithmique du produit commutatif des facteurs physiques reflète une invariance profonde.</p>
-            <div class="keywords"><span class="keyword">Thermochrose</span><span class="keyword">Rayonnement</span><span class="keyword">Décibels</span></div>
-            <div class="links">
-                <a href="index_thermochrose.html" class="btn btn-primary">Détails & PDF</a>
+                <a href="index_thermochrose.html" class="btn btn-primary"><span data-lang="fr">Détails & PDF</span><span data-lang="en">Details & PDF</span></a>
                 <a href="https://doi.org/10.5281/zenodo.24444728" class="btn btn-secondary" target="_blank">DOI Zenodo</a>
             </div>
         </article>
 
-        <!-- Holographie -->
+        <!-- 3. Quasi-Lorentzian IRLS -->
         <article class="paper-card">
-            <h2>Transformations géométriques pour la simulation holographique 3D</h2>
-            <div class="meta">2025 • Vision par ordinateur • Zenodo</div>
-            <p class="abstract">Méthode de simulation de rendu holographique 3D à partir d'une seule image source via des transformations géométriques (rotations et symétries) pour une pyramide.</p>
-            <div class="keywords"><span class="keyword">Holographie</span><span class="keyword">Géométrie</span><span class="keyword">Simulation</span></div>
+            <h2>Quasi-Lorentzian Optimization via IRLS</h2>
+            <div class="meta">2026 • Publication • Zenodo</div>
+            <p class="abstract">
+                <span data-lang="fr">Technique d'optimisation robuste pour le fine-tuning de LLM (LoRA/QLoRA) sur matériel limité, résistant aux outliers grâce à une perte de Cauchy adaptative.</span>
+                <span data-lang="en">Robust optimization technique for LLM fine-tuning (LoRA/QLoRA) on limited hardware, resistant to outliers via adaptive Cauchy loss.</span>
+            </p>
+            <div class="keywords"><span class="keyword">IRLS</span><span class="keyword">LLM Fine-tuning</span><span class="keyword">Robustness</span></div>
             <div class="links">
-                <a href="index_holographie.html" class="btn btn-primary">Détails & PDF</a>
+                <a href="index_quasi-lorentzian-IRLS.html" class="btn btn-primary"><span data-lang="fr">Détails & PDF</span><span data-lang="en">Details & PDF</span></a>
+                <a href="https://doi.org/10.5281/zenodo.24444546" class="btn btn-secondary" target="_blank">DOI Zenodo</a>
+            </div>
+        </article>
+
+        <!-- 4. Sonoluminescence -->
+        <article class="paper-card">
+            <h2><span data-lang="fr">Signature Thermodynamique de la Lumière en Sonoluminescence</span><span data-lang="en">Thermodynamic Signature of Light in Sonoluminescence</span></h2>
+            <div class="meta">2025 • Preprint • Zenodo</div>
+            <p class="abstract">
+                <span data-lang="fr">Modélisation du collapse de bulle via le transport optimal régularisé par l'information de Fisher. Correction de l'erreur dimensionnelle et résolution via L-BFGS.</span>
+                <span data-lang="en">Modeling bubble collapse via optimal transport regularized by Fisher information. Correction of dimensional error and resolution via L-BFGS.</span>
+            </p>
+            <div class="keywords"><span class="keyword">Optimal Transport</span><span class="keyword">Fisher Info</span><span class="keyword">L-BFGS</span></div>
+            <div class="links">
+                <a href="index_sonoluminescence.html" class="btn btn-primary"><span data-lang="fr">Détails & PDF</span><span data-lang="en">Details & PDF</span></a>
+                <a href="https://doi.org/10.5281/zenodo.24444546" class="btn btn-secondary" target="_blank">DOI Zenodo</a>
+            </div>
+        </article>
+
+        <!-- 5. Dist-Framework -->
+        <article class="paper-card">
+            <h2>dist-framework: <span data-lang="fr">Métriques de Distance</span><span data-lang="en">Distance Metrics</span></h2>
+            <div class="meta">2025 • Software • Zenodo</div>
+            <p class="abstract">
+                <span data-lang="fr">Framework Python intégrant la "Distance de Fibonacci" (conformité aux propriétés de récurrence) et le cadre formel de "Précision" (seuils R/N et distance θ).</span>
+                <span data-lang="en">Python framework integrating the "Fibonacci Distance" (conformity to recurrence properties) and the formal "Precision" framework (R/N thresholds and θ distance).</span>
+            </p>
+            <div class="keywords"><span class="keyword">Metric</span><span class="keyword">Fibonacci</span><span class="keyword">Precision</span></div>
+            <div class="links">
+                <a href="index_dist-framework.html" class="btn btn-primary"><span data-lang="fr">Détails & PDFs</span><span data-lang="en">Details & PDFs</span></a>
+                <a href="https://doi.org/10.5281/zenodo.24443954" class="btn btn-secondary" target="_blank">DOI Zenodo</a>
+            </div>
+        </article>
+
+        <!-- 6. Holographie -->
+        <article class="paper-card">
+            <h2><span data-lang="fr">Transformations géométriques pour la simulation holographique 3D</span><span data-lang="en">Geometric Transformations for 3D Holographic Simulation</span></h2>
+            <div class="meta">2025 • Preprint • Zenodo</div>
+            <p class="abstract">
+                <span data-lang="fr">Méthode de simulation de rendu holographique 3D à partir d'une seule image source via des transformations géométriques pour une pyramide.</span>
+                <span data-lang="en">Method for simulating 3D holographic rendering from a single source image via geometric transformations for a pyramid.</span>
+            </p>
+            <div class="keywords"><span class="keyword">Holography</span><span class="keyword">Geometry</span><span class="keyword">Simulation</span></div>
+            <div class="links">
+                <a href="index_holographie.html" class="btn btn-primary"><span data-lang="fr">Détails & PDF</span><span data-lang="en">Details & PDF</span></a>
                 <a href="https://doi.org/10.5281/zenodo.24431424" class="btn btn-secondary" target="_blank">DOI Zenodo</a>
             </div>
         </article>
@@ -93,9 +119,10 @@
 </div>
 
 <footer>
-    <p>&copy; 2026 Thibaut Lombard - Lombard Web Services. Tous droits réservés.</p>
+    <p>&copy; 2026 Thibaut Lombard - Lombard Web Services. <span data-lang="fr">Tous droits réservés.</span><span data-lang="en">All rights reserved.</span></p>
     <p><a href="mailto:contact@lombard-web-services.com" style="color: var(--accent-color);">contact@lombard-web-services.com</a></p>
 </footer>
 
+<script src="assets/lang.js"></script>
 </body>
 </html>
