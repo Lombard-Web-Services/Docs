@@ -92,3 +92,54 @@ footer {
 .paper-detail .abstract-box { background: #f8fafc; border-left: 4px solid var(--accent-color); padding: 1.5rem; margin: 2rem 0; border-radius: 0 8px 8px 0; }
 .back-link { display: inline-block; margin-bottom: 1.5rem; color: var(--accent-color); text-decoration: none; font-weight: 500; }
 .back-link:hover { text-decoration: underline; }
+/* --- Gestion bilingue élégante --- */
+.lang-en [data-lang="fr"] { display: none !important; }
+.lang-fr [data-lang="en"] { display: none !important; }
+
+/* --- Style du bouton de langue --- */
+.lang-btn {
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    color: white;
+    padding: 0.6rem 1.2rem;
+    border-radius: 24px;
+    cursor: pointer;
+    font-size: 1rem;
+    font-weight: 500;
+    transition: all 0.2s ease;
+    backdrop-filter: blur(4px);
+}
+
+.lang-btn:hover {
+    background: rgba(255, 255, 255, 0.25);
+    border-color: rgba(255, 255, 255, 0.5);
+    transform: translateY(-1px);
+}
+
+/* --- Ajustement du header pour accueillir le bouton --- */
+.header-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 0 1rem;
+    text-align: left;
+}
+
+.header-content h1 {
+    margin-bottom: 0.5rem;
+}
+
+.header-content p {
+    margin: 0;
+    opacity: 0.9;
+}
+
+@media (max-width: 768px) {
+    .header-content {
+        flex-direction: column;
+        text-align: center;
+        gap: 1rem;
+    }
+}
