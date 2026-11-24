@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Quasi-Lorentzian Optimization via IRLS</title>
+    
+    <!-- Balises HighWire Press pour Google Scholar -->
+    <meta name="citation_title" content="Quasi-Lorentzian Optimization via IRLS: A Robust Technique for LLM Fine-tuning on Limited Hardware">
+    <meta name="citation_author" content="LOMBARD, Thibaut">
+    <meta name="citation_publication_date" content="2026">
+    <meta name="citation_pdf_url" content="https://raw.githubusercontent.com/Lombard-Web-Services/cauchy/main/quasi_lorentzian_irls_optimization.pdf">
+    <meta name="citation_doi" content="10.5281/zenodo.24444546">
+    <meta name="description" content="Robust optimization solver based on a quasi-Lorentzian approximation of the Cauchy loss, implemented via an IRLS scheme combined with L-BFGS for LLM fine-tuning.">
+    <meta name="robots" content="index,follow">
+    <link rel="stylesheet" href="assets/style.css">
+</head>
+<body class="lang-fr">
+    <div class="paper-detail">
+        <a href="index.html" class="back-link">← <span data-lang="fr">Retour aux publications</span><span data-lang="en">Back to publications</span></a>
+        <h1>Quasi-Lorentzian Optimization via IRLS</h1>
+        <p class="author">Thibaut LOMBARD <br><span style="font-size: 0.9rem; font-weight: 400; color: #64748b;">Lombard Web Services • 2026</span></p>
+
+        <div class="abstract-box">
+            <h3><span data-lang="fr">Résumé</span><span data-lang="en">Abstract</span></h3>
+            <p data-lang="fr">Ce préprint introduit un solveur d'optimisation robuste basé sur une approximation quasi-Lorentzienne de la perte de Cauchy, implémentée via un schéma IRLS (Iteratively Reweighted Least Squares) combiné à L-BFGS. Les méthodes standard (Cross-Entropy, MSE) sont très sensibles aux outliers et aux explosions de gradient, surtout en quantification 4-bit (QLoRA). Ce travail propose une alternative mathématiquement fondée qui pondère dynamiquement les outliers, assurant une convergence stable sans sacrifier les performances sur des données propres.</p>
+            <p data-lang="en">This preprint introduces a robust optimization solver based on a quasi-Lorentzian approximation of the Cauchy loss, implemented via an Iteratively Reweighted Least Squares (IRLS) scheme combined with L-BFGS. Standard fine-tuning methods (e.g., Cross-Entropy, MSE) are highly sensitive to outliers and gradient explosions, especially under 4-bit quantization (QLoRA) on limited hardware. This work proposes a mathematically grounded alternative that dynamically down-weights outliers using Lorentzian weights, ensuring stable convergence without sacrificing performance on clean data.</p>
+        </div>
+
+        <p><strong>DOI :</strong> <a href="https://doi.org/10.5281/zenodo.24444546">10.5281/zenodo.24444546</a> <em style="font-size:0.85rem; color:#64748b;">(Note: DOI corrected to 24444546 for this specific paper)</em></p>
+
+        <div class="links" style="margin-top: 2rem;">
+            <a href="https://raw.githubusercontent.com/Lombard-Web-Services/cauchy/main/quasi_lorentzian_irls_optimization.pdf" class="btn btn-primary" target="_blank">Download Full Paper (PDF)</a>
+            <a href="https://doi.org/10.5281/zenodo.24444546" class="btn btn-secondary" target="_blank">Official Zenodo Record</a>
+            <a href="https://github.com/Lombard-Web-Services/cauchy" class="btn btn-secondary" target="_blank">GitHub Repository</a>
+        </div>
+    </div>
+    <script src="assets/lang.js"></script>
+</body>
+</html>
